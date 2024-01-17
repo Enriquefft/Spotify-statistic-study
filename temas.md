@@ -11,20 +11,141 @@
 
 ### Obtención de data:
 
-Cada entrada del dataset correspondera al userid de un alumno, y tendra como valor una lista de los artistas que escucha, la cantidad de veces que los escucha, entre otros. La data se obtendra de la API de Spotify, con el siguiente codigo (simplificado):
+Each entry in the dataset will correspond to the user ID of a student, and will have as its value a list of artists they listen to, the number of times they listen to them, among others. The data will be obtained from the Spotify API, with the following (simplified) code:
 
 ```python
-# LOG IN
+
+# Authorize and Authenticate
+# ...
 
 from spotipy import Spoify
-user_id: Const = '1234567890'
-user_data: Const = spotify.user(user_id)
+
 top_artists: Const = spotify.current_user_top_artists()
 top_tracks: Const = spotify.current_user_top_tracks()
-
 ```
 
-Para obtener los userid y data de los se debera crear un sistema de autenticación que nos permita obtener la data de las personas. Además, tendremos un data pipeline que extraiga la data relevante de la API de spotify y la almecene en un google sheets, esta podra ser exportada a un csv y luego a un dataframe de R.
+In order to obtain the user IDs and data, we will need to create an authentication system that allows us to obtain people's data. In addition, we will have a data pipeline that extracts relevant data from the Spotify API and stores it in a Google Sheets, which can then be exported to a CSV and finally to an R dataframe."
+
+### Sample data
+
+#### Track data
+
+```json
+{
+  "album": {
+    "album_type": "SINGLE",
+    "total_tracks": 1,
+    "available_markets": [...]
+    "external_urls": {
+      "spotify": "https://open.spotify.com/album/26wRfIX4WqKLKHll9O3KnF"
+    },
+    "href": "https://api.spotify.com/v1/albums/26wRfIX4WqKLKHll9O3KnF",
+    "id": "26wRfIX4WqKLKHll9O3KnF",
+    "images": [...],
+    "name": "Rara Vez",
+    "release_date": "2023-02-08",
+    "release_date_precision": "day",
+    "type": "album",
+    "uri": "spotify:album:26wRfIX4WqKLKHll9O3KnF",
+    "artists": [
+      {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/artist/5szJHKg5xeUlQ9pTqzdpic"
+        },
+        "href": "https://api.spotify.com/v1/artists/5szJHKg5xeUlQ9pTqzdpic",
+        "id": "5szJHKg5xeUlQ9pTqzdpic",
+        "name": "Taiu",
+        "type": "artist",
+        "uri": "spotify:artist:5szJHKg5xeUlQ9pTqzdpic"
+      },
+      {
+        "external_urls": {
+          "spotify": "https://open.spotify.com/artist/19HM5j0ULGSmEoRcrSe5x3"
+        },
+        "href": "https://api.spotify.com/v1/artists/19HM5j0ULGSmEoRcrSe5x3",
+        "id": "19HM5j0ULGSmEoRcrSe5x3",
+        "name": "Milo j",
+        "type": "artist",
+        "uri": "spotify:artist:19HM5j0ULGSmEoRcrSe5x3"
+      }
+    ]
+  },
+  "artists": [
+    {
+      "external_urls": {
+        "spotify": "https://open.spotify.com/artist/5szJHKg5xeUlQ9pTqzdpic"
+      },
+      "href": "https://api.spotify.com/v1/artists/5szJHKg5xeUlQ9pTqzdpic",
+      "id": "5szJHKg5xeUlQ9pTqzdpic",
+      "name": "Taiu",
+      "type": "artist",
+      "uri": "spotify:artist:5szJHKg5xeUlQ9pTqzdpic"
+    },
+    {
+      "external_urls": {
+        "spotify": "https://open.spotify.com/artist/19HM5j0ULGSmEoRcrSe5x3"
+      },
+      "href": "https://api.spotify.com/v1/artists/19HM5j0ULGSmEoRcrSe5x3",
+      "id": "19HM5j0ULGSmEoRcrSe5x3",
+      "name": "Milo j",
+      "type": "artist",
+      "uri": "spotify:artist:19HM5j0ULGSmEoRcrSe5x3"
+    }
+  ],
+  "available_markets": [...],
+  "disc_number": 1,
+  "duration_ms": 128677,
+  "explicit": false,
+  "external_ids": { "isrc": "ARUM72300004" },
+  "external_urls": {
+    "spotify": "https://open.spotify.com/track/7MVIfkyzuUmQ716j8U7yGR"
+  },
+  "href": "https://api.spotify.com/v1/tracks/7MVIfkyzuUmQ716j8U7yGR",
+  "id": "7MVIfkyzuUmQ716j8U7yGR",
+  "name": "Rara Vez",
+  "popularity": 87,
+  "preview_url": "https://p.scdn.co/mp3-preview/803366478f0973a8fb4f981688e2e033e8c1964a?cid=18e0f578df9841ea9abfa4c71c019167",
+  "track_number": 1,
+  "type": "track",
+  "uri": "spotify:track:7MVIfkyzuUmQ716j8U7yGR",
+  "is_local": false
+}
+```
+
+#### Artist data
+
+```json
+{
+  "external_urls": {
+    "spotify": "https://open.spotify.com/artist/06HL4z0CvFAxyc27GXpf02"
+  },
+  "followers": { "href": null, "total": 0 },
+  "genres": ["pop"],
+  "href": "https://api.spotify.com/v1/artists/06HL4z0CvFAxyc27GXpf02",
+  "id": "06HL4z0CvFAxyc27GXpf02",
+  "images": [
+    {
+      "url": "https://i.scdn.co/image/ab6761610000e5eb859e4c14fa59296c8649e0e4",
+      "height": 640,
+      "width": 640
+    },
+    {
+      "url": "https://i.scdn.co/image/ab67616100005174859e4c14fa59296c8649e0e4",
+      "height": 320,
+      "width": 320
+    },
+    {
+      "url": "https://i.scdn.co/image/ab6761610000f178859e4c14fa59296c8649e0e4",
+      "height": 160,
+      "width": 160
+    }
+  ],
+  "name": "Taylor Swift",
+  "popularity": 100,
+  "type": "artist",
+  "uri": "spotify:artist:06HL4z0CvFAxyc27GXpf02"
+}
+```
 
 ### Factibilidad de estudio
 
