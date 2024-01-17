@@ -22,6 +22,11 @@ from spotipy import Spoify
 
 top_artists: Const = spotify.current_user_top_artists()
 top_tracks: Const = spotify.current_user_top_tracks()
+
+# Extra data
+for track in top_tracks["items"]:
+    features = spotify.audio_features(track["id"])
+    analysis = spotify.audio_analysis(track["id"])
 ```
 
 In order to obtain the user IDs and data, we will need to create an authentication system that allows us to obtain people's data. In addition, we will have a data pipeline that extracts relevant data from the Spotify API and stores it in a Google Sheets, which can then be exported to a CSV and finally to an R dataframe."
@@ -144,6 +149,31 @@ In order to obtain the user IDs and data, we will need to create an authenticati
   "popularity": 100,
   "type": "artist",
   "uri": "spotify:artist:06HL4z0CvFAxyc27GXpf02"
+}
+```
+
+#### Audio features
+
+```json
+{
+  "acousticness": 0.00242,
+  "analysis_url": "https://api.spotify.com/v1/audio-analysis/2takcwOaAZWiXQijPHIx7B",
+  "danceability": 0.585,
+  "duration_ms": 237040,
+  "energy": 0.842,
+  "id": "2takcwOaAZWiXQijPHIx7B",
+  "instrumentalness": 0.00686,
+  "key": 9,
+  "liveness": 0.0866,
+  "loudness": -5.883,
+  "mode": 0,
+  "speechiness": 0.0556,
+  "tempo": 118.211,
+  "time_signature": 4,
+  "track_href": "https://api.spotify.com/v1/tracks/2takcwOaAZWiXQijPHIx7B",
+  "type": "audio_features",
+  "uri": "spotify:track:2takcwOaAZWiXQijPHIx7B",
+  "valence": 0.428
 }
 ```
 
