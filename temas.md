@@ -23,10 +23,14 @@ from spotipy import Spoify
 top_artists: Const = spotify.current_user_top_artists()
 top_tracks: Const = spotify.current_user_top_tracks()
 
+listened_artists: Spotify.Artist[] = []
+
 # Extra data
 for track in top_tracks["items"]:
     features = spotify.audio_features(track["id"])
     analysis = spotify.audio_analysis(track["id"])
+    listened_artists.merge(track["artists"]['items'])
+
 ```
 
 In order to obtain the user IDs and data, we will need to create an authentication system that allows us to obtain people's data. In addition, we will have a data pipeline that extracts relevant data from the Spotify API and stores it in a Google Sheets, which can then be exported to a CSV and finally to an R dataframe."
