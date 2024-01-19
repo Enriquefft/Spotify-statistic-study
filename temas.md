@@ -9,6 +9,14 @@
 - Aplicaciónes de la data en marketing
   ...
 
+### Objetivos
+
+- [x] Generos preferidos segun la universidad/instituto y distrito en el que estudian
+- [x] Relación entre 'danceability' y la edad
+  - Hipotesis: La danceability es máyor en personas entre los 15 y 25 años
+- [x] Relación entre la duración de las canciones y el genero del artista.
+- [x] Que tan variada es la música que escuchan las personas segun su edad y distrito
+
 ### Obtención de data:
 
 Each entry in the dataset will correspond to the user ID of a student, and will have as its value a list of artists they listen to, the number of times they listen to them, among others. The data will be obtained from the Spotify API, with the following (simplified) code:
@@ -276,6 +284,28 @@ This is usefull in the context of AI
   ]
 }
 ```
+
+### Variable utilizadas en el estudio
+
+#### Primarias
+
+- Centro de estudio - Categorica nominal
+- Edad - Numerica discreta - [15, 40]
+- Distrito - Categorica nominal - Distritos de Lima
+- Variedad musical - Categorica ordinal - [1, 5]
+- Generos preferidos - Categorica nominal - Generos de Spotify
+
+#### Secundarias
+
+- Danceability promedio de sus cancion preferidas - Numerica continua - [0, 1]
+- Cantidad promedio de artistas escuchados por año - Numerica continua - >= 0
+
+Mediremos la duración y la tasas de artistas preferidos para cada genero de spotify (~10)
+
+- Duración promedio de sus preferidas de Pop - Numerica continua - [0, 60000]
+  ...
+- Tasa de artistas preferidos de Pop - Numerica continua - [0, 1]
+  ...
 
 ### Factibilidad de estudio
 
