@@ -7,7 +7,7 @@
 - Aplicaciónes de la data en IA
   ...
 - Aplicaciónes de la data en marketing
-  ...
+  ¿En qué medida contribuye el análisis estadístico de data musical en el marketing de hoy en día? La música es el día a día de las personas y las empresas están interesadas en satisfacer las necesidades primarias de sus usuarios. Considerando Spotify como una de las aplicaciones musicales más conocida de la actualidad, la recuperación de sus datos resulta una caza interesante de información para el marketing de empresas, más aún siendo de carácter público. El marketing de empresas usando datos de Spotify suelen centrarse en el análisis de comportamientos y preferencias de los usuarios para crear estrategias más efectivas. Esto puede incluir la segmentación de audiencia y personalización de mensajes publicitarios, las colaboraciones musicales con artistas populares (o en tendencia) o el análisis probabilístico de tendencias, tanto las presentes como las futuras.
 
 ### Objectives
 
@@ -318,3 +318,7 @@ This is usefull in the context of AI
   ]
 }
 ```
+
+## Refereces
+
+- Hujran, O., Alikaj, A., Durrani, U., & Al-Dmour, N. A. (2020). Big Data and its Effect on the Music Industry. ACM. https://doi.org/10.1145/3378936.3378957
