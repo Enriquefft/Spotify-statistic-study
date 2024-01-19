@@ -5,7 +5,9 @@
 ### Relevancia de estudio
 
 - Aplicaciónes de la data en IA
-  ...
+  El uso de la Inteligencia Artificial (IA) en Spotify incluye el reconocimiento de emociones en las canciones, lo que sirve para mejorar las listas de reproducción personalizadas y la experiencia general del usuario. Al analizar elementos como el tono, el ritmo y la letra de una canción, Spotify puede determinar el estado de ánimo que transmite y sugerir música que se alinea con las emociones o el estado mental del usuario. Por ejemplo, si un usuario tiende a escuchar canciones más tranquilas y melódicas por la noche, Spotify puede identificar esta tendencia y recomendar canciones similares durante ese periodo del día.
+  Además, Spotify utiliza algoritmos de machine learning en su sistema de recomendación. Estos algoritmos consideran factores como la popularidad de las canciones, las tendencias musicales actuales, y lo que escuchan usuarios con gustos similares. Esto permite a Spotify ofrecer recomendaciones altamente personalizadas.
+
 - Aplicaciónes de la data en marketing
   ¿En qué medida contribuye el análisis estadístico de data musical en el marketing de hoy en día? La música es el día a día de las personas y las empresas están interesadas en satisfacer las necesidades primarias de sus usuarios. Considerando Spotify como una de las aplicaciones musicales más conocida de la actualidad, la recuperación de sus datos resulta una caza interesante de información para el marketing de empresas, más aún siendo de carácter público. El marketing de empresas usando datos de Spotify suelen centrarse en el análisis de comportamientos y preferencias de los usuarios para crear estrategias más efectivas. Esto puede incluir la segmentación de audiencia y personalización de mensajes publicitarios, las colaboraciones musicales con artistas populares (o en tendencia) o el análisis probabilístico de tendencias, tanto las presentes como las futuras.
 
@@ -322,3 +324,6 @@ This is usefull in the context of AI
 ## Refereces
 
 - Hujran, O., Alikaj, A., Durrani, U., & Al-Dmour, N. A. (2020). Big Data and its Effect on the Music Industry. ACM. https://doi.org/10.1145/3378936.3378957
+- Álvarez, P., De Quirós, J. G., & Baldassarri, S. (2023). RIADA: a Machine-Learning based infrastructure for recognising the emotions of Spotify songs. International Journal of Interactive Multimedia and Artificial Intelligence, 8(2), 168. https://doi.org/10.9781/ijimai.2022.04.002
+- Spotify for Developers. (18 de enero de 2024).
+  https://developer.spotify.com/
