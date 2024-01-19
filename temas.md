@@ -9,13 +9,13 @@
 - Aplicaciónes de la data en marketing
   ...
 
-### Objetivos
+### Objectives
 
-- [x] Generos preferidos segun la universidad/instituto y distrito en el que estudian
-- [x] Relación entre 'danceability' y la edad
-  - Hipotesis: La danceability es máyor en personas entre los 15 y 25 años
-- [x] Relación entre la duración de las canciones y el genero del artista.
-- [x] Que tan variada es la música que escuchan las personas segun su edad y distrito
+- [ ] Preferred genres according to the university/institute and district in which they study
+- [ ] Relationship between 'danceability' and age
+  - Hypothesis: Danceability is greater in people between the ages of 15 and 25
+- [ ] Relationship between song duration and artist genre
+- [ ] How varied is the music that people listen to according to their age and district
 
 ### Obtención de data:
 
@@ -42,6 +42,40 @@ for track in top_tracks["items"]:
 ```
 
 In order to obtain the user IDs and data, we will need to create an authentication system that allows us to obtain people's data. In addition, we will have a data pipeline that extracts relevant data from the Spotify API and stores it in a Google Sheets, which can then be exported to a CSV and finally to an R dataframe."
+
+### Variables used in the study
+
+#### Primary
+
+| Variable                   | Type     | Restrictions           |
+| -------------------------- | -------- | ---------------------- |
+| Study center               | Nominal  | None                   |
+| Age                        | Discrete | ~ [15, 40]             |
+| District                   | Nominal  | Lima districts         |
+| Percieved musical variety  | Ordinal  | [1, 5]                 |
+| Percieved prefered genders | Nominal  | Spotify artist genders |
+
+#### Secondary
+
+| Variable                                    | Type       | Restrictions   |
+| ------------------------------------------- | ---------- | -------------- |
+| Average danceability of prefered songs      | Continuous | [0, 1]         |
+| Average number of artists listened per year | Continuous | $\mathbb{R}^+$ |
+| Average duration of prefered Pop songs      | Continuous | [0, 60000] ms  |
+| ... of Rock songs                           | Continuous | [0, 60000] ms  |
+| ... of Reggaeton songs                      | Continuous | [0, 60000] ms  |
+| ... of blues songs                          | Continuous | [0, 60000] ms  |
+| Rate of prefered Pop artists                | Continuous | [0, 1]         |
+| ... of Rock songs                           | Continuous | [0, 1]         |
+| ... of Reggaeton songs                      | Continuous | [0, 1]         |
+| ... of blues songs                          | Continuous | [0, 1]         |
+
+### Factibilidad de estudio
+
+This study requires the users to provide their Spotify data, which might be a problem for some people. We will need to make sure that the data is anonymized and that the users are aware of what data we are collecting and how we are using it. With all this considered, we expect that an atractive web app will help us get a good amount of data.
+Regerding the target population, we expect to get a good amount of data from UTEC students as well as from other universities in Lima, specially if we consider that almost all university students use Spotify.
+
+The minimum amount of data we need is 200 entries, but for a more robust study, we would need at least 500 entries, considering the amoun of students in UTEC, this will be attainable, at worst, the data will be mostly from utec which will generate bias on the first objective.
 
 ### Sample data
 
@@ -284,31 +318,3 @@ This is usefull in the context of AI
   ]
 }
 ```
-
-### Variable utilizadas en el estudio
-
-#### Primarias
-
-- Centro de estudio - Categorica nominal
-- Edad - Numerica discreta - [15, 40]
-- Distrito - Categorica nominal - Distritos de Lima
-- Variedad musical - Categorica ordinal - [1, 5]
-- Generos preferidos - Categorica nominal - Generos de Spotify
-
-#### Secundarias
-
-- Danceability promedio de sus cancion preferidas - Numerica continua - [0, 1]
-- Cantidad promedio de artistas escuchados por año - Numerica continua - >= 0
-
-Mediremos la duración y la tasas de artistas preferidos para cada genero de spotify (~10)
-
-- Duración promedio de sus preferidas de Pop - Numerica continua - [0, 60000]
-  ...
-- Tasa de artistas preferidos de Pop - Numerica continua - [0, 1]
-  ...
-
-### Factibilidad de estudio
-
-- ¿Cuantos alumnos hay en la universidad utec? (facil acceso)
-- ¿Cuantos de ellos usan spotify?
-- ¿Cuantos responderan la encuesta?
