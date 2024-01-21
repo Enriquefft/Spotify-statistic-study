@@ -1,18 +1,20 @@
 pre-commit:
-  parallel: true
+  piped: true
   commands:
     lint:
-      root: ./spotify-data-form
+      glob: "*.{js,ts,jsx,tsx}"
+      root: spotify-data-form/
       run: bunx eslint {staged_files} --fix
-    types:
-      root: ./spotify-data-form
-      run: bunx tsc --noEmit
     test:
-      root: ./spotify-data-form
+      root: spotify-data-form/
       run: bun test
     formatting:
-      root: ./spotify-data-form
+      glob: "*.{js,jsx,ts,tsx,md,mdx,html,css,scss,json,yml}"
+      root: spotify-data-form/
       run: bunx prettier {staged_files} --write
     build:
-      root: ./spotify-data-form
+      root: spotify-data-form/
       run: bun run build
+    types:
+      root: spotify-data-form/
+      run: bunx tsc --noEmit

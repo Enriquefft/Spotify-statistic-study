@@ -17,7 +17,7 @@ export default function Home() {
 
   return (
     <main>
-      <button onClick={login}>LOGIN</button>
+      <button onClick={login}>LOGIN HERE</button>
     </main>
   );
 }
