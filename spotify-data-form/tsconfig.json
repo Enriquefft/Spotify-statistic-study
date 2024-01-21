@@ -10,7 +10,8 @@
     ".next/types/**/*.ts",
     "**/*.cjs",
     "**/*.mjs",
-    ".eslintrc.cjs"
+    ".eslintrc.cjs",
+    "./next.config.mjs"
   ],
 
   "exclude": ["node_modules"],

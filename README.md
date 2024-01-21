@@ -13,6 +13,8 @@ Project made for the Statistics II course @Utec
 
 ## Objectives
 
+This is a study which gathers data from multiple college students from lima with the goal of finding patterns in their musical preferences.
+
 - [ ] Preferred genres according to the university/institute and district in which they study
 - [ ] Relationship between 'danceability' and age
   - Hypothesis: Danceability is greater in people between the ages of 15 and 25

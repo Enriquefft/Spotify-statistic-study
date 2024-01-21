@@ -58,6 +58,9 @@ const jsRules = {
   "no-warning-comments": "warn",
 
   "new-cap": ["error", { capIsNew: false }],
+
+  // Prefer @typescript-eslint/naming-convention
+  camelcase: "off",
 };
 
 /** @type {import('eslint').Linter.Config['rules']}*/
@@ -94,6 +97,18 @@ const tsRules = {
 
   // Prefer types over interfaces
   "@typescript-eslint/consistent-type-definitions": ["error", "type"],
+
+  // Allow Nextjs server actions to be async without await
+  "@typescript-eslint/require-await": "off",
+
+  "@typescript-eslint/no-misused-promises": [
+    "error",
+    {
+      checksVoidReturn: {
+        attributes: false,
+      },
+    },
+  ],
 };
 
 /** @type {import("eslint").Linter.Config['parserOptions']}*/
