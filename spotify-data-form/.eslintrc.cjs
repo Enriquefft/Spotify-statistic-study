@@ -120,7 +120,7 @@ const parserOptions = {
 
 /** @type {import("eslint").Linter.Config} */
 const config = {
-  ignorePatterns: ["**/old/**/*", "next-env.d.ts"],
+  ignorePatterns: ["**/old/**/*", "next-env.d.ts", "database.types.ts"],
   parserOptions,
   extends: [
     "eslint:all",
