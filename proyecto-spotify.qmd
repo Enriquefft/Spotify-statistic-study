@@ -1,0 +1,51 @@
+---
+title: "Proyecto-Spotify"
+format: html
+editor: visual
+---
+
+```{r}
+librerias <- c("dplyr", "readr")
+for (paquete in librerias) {
+  if (!require(paquete, character.only = TRUE)) {
+    install.packages(paquete)
+  }
+	library(paquete, character.only = TRUE)
+}
+```
+
+```{r}
+#DF <- read_csv()
+# Cargar datos random
+DF <- mpg
+```
+
+
+# Parte de Arturo
+
+## Se asume población normal
+
+## Una muestra de menos de 30 observaciones
+```{r}
+df1 <-  sample_n(DF, 15)
+
+#t.test(df1$cty, df1$hwy, alternative = "l", var.equal = FALSE, paired = FALSE, conf.level = 0.95)
+
+# Calculando la distribución de la diferencia de medias
+# mean(df1) tiene distribución t-student con n-1 grados de libertad
+```
+$$
+\frac{\bar{x}-\mu}{\frac{s}{\sqrt{n}}} \sim T_{n-1}
+$$
+
+
+## Una muestra de más de 30 observaciones
+```{r}
+df2 <-  sample_n(DF, 50)
+
+```
+
+
+# Parte de Valentín
+
+
