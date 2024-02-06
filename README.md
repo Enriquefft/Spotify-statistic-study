@@ -72,6 +72,7 @@ The minimum amount of data we need is 200 entries, but for a more robust study, 
 | Variable                                    | Type       | Restrictions   |
 | ------------------------------------------- | ---------- | -------------- |
 | Average danceability of prefered songs      | Continuous | [0, 1]         |
+| Average loudness of prefered songs          | Continuous | [-60, 0] DB    |
 | Average number of artists listened per year | Continuous | $\mathbb{R}^+$ |
 | Average duration of prefered Pop songs      | Continuous | [0, 60000] ms  |
 | ... of Rock songs                           | Continuous | [0, 60000] ms  |
