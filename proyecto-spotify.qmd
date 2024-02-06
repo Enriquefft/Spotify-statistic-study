@@ -13,12 +13,29 @@ for (paquete in librerias) {
 	library(paquete, character.only = TRUE)
 }
 ```
+```{r}
+library(DBI)
+```
 
 ```{r}
-#DF <- read_csv()
-# Cargar datos random
-DF <- mpg
+host <- "aws-0-us-east-1.pooler.supabase.com"
+db_name <- "postgres"
+user <- "postgres.ssbtsqwpnmqovabbjzsc"
+port <- 5432
+db_password <- ""
+con <- DBI::dbConnect(RPostgres::Postgres(), 
+                      dbname = db_name, 
+                      host = host, 
+                      port = port, 
+                      user = user, 
+                      password = db_password)
 ```
+
+```{r}
+DF <- dbReadTable(con, "users")
+```
+
+
 
 
 # Parte de Arturo
@@ -34,6 +51,7 @@ df1 <-  sample_n(DF, 15)
 # Calculando la distribución de la diferencia de medias
 # mean(df1) tiene distribución t-student con n-1 grados de libertad
 ```
+
 $$
 \frac{\bar{x}-\mu}{\frac{s}{\sqrt{n}}} \sim T_{n-1}
 $$
