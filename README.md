@@ -20,6 +20,7 @@ This is a study which gathers data from multiple college students from lima with
   - Hypothesis: Danceability is greater in people between the ages of 15 and 25
 - [ ] Relationship between song duration and artist genre
 - [ ] How varied is the music that people listen to according to their age and district
+- [ ] How has the average song intenstity evolved over time (age of listener)
 
 ## Data obtention
 
