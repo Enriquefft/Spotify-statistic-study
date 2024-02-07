@@ -1,7 +1,11 @@
-"use client";
+/* eslint-disable @typescript-eslint/naming-convention */
 import { z } from "zod";
 
-const responseParamsSchema = z.preprocess(
+import { genders } from "./genders";
+import { districts } from "./districts";
+import { varieties } from "./varieties";
+
+export const spotifyAuthResponseSchema = z.preprocess(
   (val) => {
     if (typeof val !== "string") {
       throw new Error("Expected a string");
@@ -32,26 +36,7 @@ const responseParamsSchema = z.preprocess(
     ),
 );
 
-export default function Params() {
-  const params = responseParamsSchema.parse(window.location.hash);
-
-  const localState = localStorage.getItem("state");
-
-  if (localState !== params.state) {
-    throw new Error("Invalid state");
-  }
-
-  return (
-    <div>
-      {"error" in params ? (
-        <div>Failed to authenticate: {params.error}</div>
-      ) : (
-        Object.entries(params).map(([key, value]) => (
-          <div key={key}>
-            {key}: {value}
-          </div>
-        ))
-      )}
-    </div>
-  );
-}
+export const genderSchema = z.enum(genders);
+export const districtSchema = z.enum(districts);
+export const varietySchema = z.enum(varieties);
+export const studyCenterSchema = z.string().optional();

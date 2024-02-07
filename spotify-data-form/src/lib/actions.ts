@@ -1,24 +1,44 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 "use server";
 
-import { env } from "@/env.mjs";
 import { redirect } from "next/navigation";
-
-const BASE_SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize";
-const SPOTIFY_REDIRECT_URI = "http://localhost:3000/auth/callback";
-
-const authParams = new URLSearchParams({
-  response_type: "token",
-  client_id: env.SPOTIFY_CLIENT_ID,
-  redirect_uri: SPOTIFY_REDIRECT_URI,
-  scope: "user-top-read",
-});
+import { getRedirectURL } from "@/lib/spotify";
+import {
+  getUserData,
+  type UserDefinedData,
+  type UserCreation,
+} from "@/lib/data";
+import { supabaseClient } from "@/lib/supabase";
 
 /**
- * @param {string} state - The state to pass to the Spotify auth endpoint to avoid CSRF.
- * @returns {string} The URL to redirect the user to for authentication.
+ * @param state - The state to pass to the Spotify auth endpoint to avoid CSRF.
+ * @returns The URL to redirect the user to for authentication.
  */
 export async function spotifyAuthRedirect(state: string) {
-  authParams.set("state", state);
-  redirect(`${BASE_SPOTIFY_AUTH_URL}?${authParams.toString()}`);
+  redirect(await getRedirectURL(state));
+}
+
+/**
+ * @param accessToken - The access token to use to query the Spotify API.
+ * @param userDefinedData - The user's defined data to insert into the DB.
+ * @returns The user's inserted Spotify ID.
+ */
+export async function populateDB(
+  accessToken: string,
+  userDefinedData: UserDefinedData,
+) {
+  const newUserEntry: UserCreation = Object.assign(
+    userDefinedData,
+    await getUserData(accessToken),
+  );
+
+  const { data, error } = await supabaseClient
+    .from("users")
+    .insert(newUserEntry)
+    .select();
+
+  if (error) {
+    console.error(error);
+  }
+
+  return data?.at(0)?.spotifyId;
 }

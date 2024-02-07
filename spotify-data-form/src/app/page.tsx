@@ -3,7 +3,7 @@
 import { spotifyAuthRedirect } from "@/lib/actions";
 
 /**
- *
+ * @returns Home page component
  */
 export default function Home() {
   /**
@@ -17,7 +17,7 @@ export default function Home() {
 
   return (
     <main>
-      <button onClick={login}>LOGIN HERE</button>
+      <button onClick={login}>LOGIN HERE TO CONTRIBUTE</button>
     </main>
   );
 }

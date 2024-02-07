@@ -1,6 +1,21 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 /** @type {import('eslint').Linter.Config['rules']}*/
+const jsdocRulesJS = {
+  "jsdoc/check-tag-names": "off",
+};
+
+/** @type {import('eslint').Linter.Config['rules']}*/
+const jsdocRulesTS = {
+  "jsdoc/check-param-names": [
+    "error",
+    {
+      checkRestProperty: true,
+    },
+  ],
+};
+
+/** @type {import('eslint').Linter.Config['rules']}*/
 const reactRules = {
   "@typescript-eslint/naming-convention": [
     "error",
@@ -101,6 +116,7 @@ const tsRules = {
   // Allow Nextjs server actions to be async without await
   "@typescript-eslint/require-await": "off",
 
+  // Allow use of server actions in forms, onClick, etc
   "@typescript-eslint/no-misused-promises": [
     "error",
     {
@@ -120,13 +136,18 @@ const parserOptions = {
 
 /** @type {import("eslint").Linter.Config} */
 const config = {
-  ignorePatterns: ["**/old/**/*", "next-env.d.ts", "database.types.ts"],
+  ignorePatterns: [
+    "**/old/**/*",
+    "next-env.d.ts",
+    "src/schema.gen.ts",
+    "experimental",
+  ],
   parserOptions,
   extends: [
     "eslint:all",
     "next",
     "next/core-web-vitals",
-    "plugin:jsdoc/recommended",
+    "plugin:jsdoc/recommended-typescript-error",
     "plugin:@typescript-eslint/all",
     "prettier",
     "plugin:jsx-a11y/strict",
@@ -134,8 +155,8 @@ const config = {
   rules: jsRules,
   overrides: [
     {
-      files: ["./**/*.cjs", "./**/*.js"],
-      rules: tsRules,
+      files: ["*.cjs", "*.js"],
+      rules: Object.assign(tsRules, jsdocRulesJS),
       extends: ["plugin:@typescript-eslint/disable-type-checked"],
       parserOptions,
     },
@@ -147,11 +168,12 @@ const config = {
     },
     {
       files: ["*.[jt]sx"],
-      rules: reactRules,
+      rules: Object.assign(reactRules, jsdocRulesTS),
     },
   ],
   globals: {
     React: "readonly",
+    JSX: "readonly",
   },
 };
 module.exports = config;

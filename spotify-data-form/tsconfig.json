@@ -11,7 +11,7 @@
     "**/*.cjs",
     "**/*.mjs",
     ".eslintrc.cjs",
-    "./next.config.mjs"
+    "./next.config.mjs",
   ],
 
   "exclude": ["node_modules"],
@@ -19,13 +19,13 @@
   "compilerOptions": {
     "plugins": [
       {
-        "name": "next"
-      }
+        "name": "next",
+      },
     ],
 
     // Specify a set of entries that re-map imports to additional lookup locations.
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
     },
 
     ///////////////////////////////////////
@@ -222,6 +222,6 @@
 
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     // Skip type checking all .d.ts files.
-    "skipLibCheck": true
-  }
+    "skipLibCheck": true,
+  },
 }

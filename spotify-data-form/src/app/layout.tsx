@@ -10,9 +10,9 @@ export const metadata: Metadata = {
 };
 
 /**
- *
- * @param root0
- * @param root0.children
+ * @param params - The props passed to the component
+ * @param params.children - The children of the component
+ * @returns The rendered layout component
  */
 export default function RootLayout({
   children,

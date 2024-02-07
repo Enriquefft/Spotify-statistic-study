@@ -1,7 +1,7 @@
 import { supabaseClient } from "@/lib/supabase";
 
 /**
- *
+ * @returns Data display page
  */
 export default async function Page() {
   const { data, error } = await supabaseClient.from("users").select();
@@ -15,9 +15,9 @@ export default async function Page() {
       <h1>Data</h1>
 
       {data.map((user) => (
-        <div key={user.id}>
-          <p className="text-lg" key={user.id}>
-            {user.id}
+        <div key={user.spotifyId}>
+          <p className="text-lg" key={user.spotifyId}>
+            {user.spotifyId}
           </p>
 
           {Object.entries(user).map(([key, value]) => (
