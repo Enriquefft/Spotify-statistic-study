@@ -13,6 +13,7 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
     NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string(),
+    NEXT_PUBLIC_REDIRECT_URI: z.string().url(),
   },
   runtimeEnv: {
     SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
@@ -20,5 +21,6 @@ export const env = createEnv({
     MAX_ITEMS_PER_USER: process.env.MAX_ITEMS_PER_USER,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    NEXT_PUBLIC_REDIRECT_URI: process.env.NEXT_PUBLIC_REDIRECT_URI,
   },
 });

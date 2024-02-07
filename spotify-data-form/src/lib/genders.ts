@@ -124,6 +124,7 @@ export const genders = [
   "trip_hop",
   "turkish",
   "work_out",
+  "world_music",
 ] as const;
 
 export type BaseGenderDurations = Record<

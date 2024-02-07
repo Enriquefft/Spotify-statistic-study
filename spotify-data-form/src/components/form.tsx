@@ -39,23 +39,21 @@ export async function DataForm({ accessToken }: { accessToken: string }) {
   };
 
   return (
-    <form
-      className="max-w-md mx-auto bg-black p-8 rounded shadow-md text-white"
-      action={submit}
-    >
+    <form className="max-w-md mx-auto p-8 rounded shadow-md" action={submit}>
       <label className="block mt-4">
-        <span className="text-gray-700">Age</span>
+        <span>Age</span>
         <input
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 text-black block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           type="number"
           name="age"
+          required
         />
       </label>
 
       <label className="block mt-4">
-        <span className="text-gray-700">District</span>
+        <span>District</span>
         <select
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 text-black block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           name="district"
         >
           {districtSchema.options.map((district) => (
@@ -67,9 +65,9 @@ export async function DataForm({ accessToken }: { accessToken: string }) {
       </label>
 
       <label className="block mt-4">
-        <span className="text-gray-700">Perceived Favourite Gender</span>
+        <span>Perceived Favourite Gender</span>
         <select
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 text-black block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           name="percieved_favourite_gender"
         >
           {genderSchema.options.map((gender) => (
@@ -81,9 +79,9 @@ export async function DataForm({ accessToken }: { accessToken: string }) {
       </label>
 
       <label className="block mt-4">
-        <span className="text-gray-700">Perceived Variety</span>
+        <span>Perceived Variety</span>
         <select
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 text-black block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           name="percieved_variety"
         >
           {varietySchema.options.map((variety) => (
@@ -95,9 +93,9 @@ export async function DataForm({ accessToken }: { accessToken: string }) {
       </label>
 
       <label className="block mt-4">
-        <span className="text-gray-700">Study Center</span>
+        <span>Study Center</span>
         <input
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 text-black block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
           type="text"
           name="study_center"
         />

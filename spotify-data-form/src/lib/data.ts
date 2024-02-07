@@ -33,7 +33,9 @@ type UserDurationData = OmitStarting<
  * @returns - User inferred data
  */
 export async function getUserData(accessToken: string) {
-  const preferedSongs = fetchSpotifyTopItems(
+  console.log("getUserData: ");
+
+  const preferedSongs = fetchSpotifyTopItems<"tracks">(
     accessToken,
     "tracks",
     "long_term",
@@ -52,30 +54,38 @@ export async function getUserData(accessToken: string) {
 
   const genderDurations = structuredClone(baseGenderDurations);
 
+  const errors: string[] = [];
+
   for await (const songs of preferedSongs) {
     for (const song of songs) {
-      // Danceability value depends on the previous value, so we need to wait for the previous request to finish
       // eslint-disable-next-line no-await-in-loop
       const trackFeatures = await fetchTrackFeatures(accessToken, song.id);
       danceability += trackFeatures.danceability;
       loudness += trackFeatures.loudness;
       trackCount += 1;
 
-      song.artists.forEach((artist) => {
+      for (const artist of song.artists) {
         // eslint-disable-next-line no-await-in-loop
-        fetchArtistInfo(accessToken, artist.id)
-          .then((artistInfo) => {
-            for (const genre of artistInfo.genres as (typeof genders)[number][]) {
-              genderDurations[genre].duration += song.duration_ms;
-              genderDurations[genre].count += 1;
+        await fetchArtistInfo(accessToken, artist.id).then((artistInfo) => {
+          for (const genre of artistInfo.genres) {
+            const lowerGenre = genre.replace(
+              / /gu,
+              "_",
+            ) as (typeof genders)[number];
+
+            try {
+              genderDurations[lowerGenre].duration += song.duration_ms;
+              genderDurations[lowerGenre].count += 1;
+            } catch (err) {
+              errors.push(lowerGenre);
             }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-      });
+          }
+        });
+      }
     }
   }
+
+  console.log("trackCount: ", trackCount);
 
   const genderDurationEntries = Object.entries(genderDurations) as [
     (typeof genders)[number],
@@ -85,10 +95,10 @@ export async function getUserData(accessToken: string) {
   const averageGenderDurations = genderDurationEntries.reduce<UserDurationData>(
     (accum, currentGender) => {
       accum[`average_duration_${currentGender[0]}`] =
-        currentGender[1].duration / currentGender[1].count;
+        currentGender[1].duration / (currentGender[1].count || 1);
 
       accum[`listened_${currentGender[0]}_rate`] =
-        currentGender[1].count / trackCount;
+        currentGender[1].count / (trackCount || 1);
 
       return accum;
     },
@@ -96,16 +106,23 @@ export async function getUserData(accessToken: string) {
     {} as UserDurationData,
   );
 
+  console.log(
+    "averageGenderDurations - acoutstic: ",
+    averageGenderDurations.average_duration_acoustic,
+  );
+
   let artistCount = 0;
   for await (const artists of preferedArtists) {
     artistCount += artists.length;
   }
+
+  console.log("spotifyId: ", userInfo.id);
 
   return {
     ...averageGenderDurations,
     average_danceability: danceability / trackCount,
     average_loudness: loudness / trackCount,
     average_listened_artists: artistCount,
-    spotifyId: Number(userInfo.id),
+    spotifyId: userInfo.id,
   } satisfies UserInferedData;
 }

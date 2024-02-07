@@ -5,19 +5,7 @@ import { env } from "@/env.mjs";
 const BASE_SPOTIFY_API_URL = "https://api.spotify.com/v1";
 const BASE_SPOTIFY_TOP_ITEMS_URL = `${BASE_SPOTIFY_API_URL}/me/top`;
 const BASE_SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize";
-const SPOTIFY_REDIRECT_URI = "https://spotify-study.vercel.app/auth/callback";
-
-const LIMIT = 8;
-const MAX_ITEMS = env.MAX_ITEMS_PER_USER; // Max items per user, this can help to prevent bias from extremely active users
-
-type ItemType = "artists" | "tracks";
-type TimeRange = "long_term" | "medium_term" | "short_term";
-
-type SpotifyResponse<T extends ItemType> =
-  | (T extends "artists"
-      ? SpotifyApi.UsersTopArtistsResponse
-      : SpotifyApi.UsersTopTracksResponse)
-  | { error: SpotifyApi.ErrorObject };
+const SPOTIFY_REDIRECT_URI = env.NEXT_PUBLIC_REDIRECT_URI;
 
 /**
  * @param accessToken - Spotify access token
@@ -65,6 +53,21 @@ export async function fetchUserInfo(accessToken: string) {
   );
 }
 
+const LIMIT = 50;
+const MAX_ITEMS = env.MAX_ITEMS_PER_USER; // Max items per user, this can help to prevent bias from extremely active users
+
+type ItemType = "artists" | "tracks";
+type TimeRange = "long_term" | "medium_term" | "short_term";
+
+type SpotifyResponse<T extends ItemType> =
+  | (T extends "artists"
+      ? SpotifyApi.UsersTopArtistsResponse
+      : SpotifyApi.UsersTopTracksResponse)
+  | { error: SpotifyApi.ErrorObject };
+type SpotifyItem<T extends ItemType> = T extends "artists"
+  ? SpotifyApi.ArtistObjectFull
+  : SpotifyApi.TrackObjectFull;
+
 /**
  *
  * @template T {ItemType}
@@ -84,24 +87,34 @@ export async function* fetchSpotifyTopItems<T extends ItemType>(
     Authorization: `Bearer ${accessToken}`,
   };
 
-  const url = `${BASE_SPOTIFY_TOP_ITEMS_URL}/${itemType}?time_range=${timeRange}&limit=${LIMIT}`;
-
   let offset = 0;
+  let itemsCount = 0;
 
-  if (MAX_ITEMS < offset) return;
+  while (itemsCount < MAX_ITEMS) {
+    const url = `${BASE_SPOTIFY_TOP_ITEMS_URL}/${itemType}?time_range=${timeRange}&limit=${LIMIT}&offset=${offset}`;
 
-  const spotifyResponse = await fetch(`${url}&offset=${offset}`, { headers })
-    .then(async (res) => res.json() as Promise<SpotifyResponse<T>>)
-    .then(async (data) =>
-      "error" in data || data.items.length === 0 ? undefined : data.items,
-    );
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      const data = await fetch(url, { headers }).then(
+        async (res) => res.json() as Promise<SpotifyResponse<T>>,
+      );
 
-  if (!spotifyResponse) return;
+      if ("error" in data || data.items.length === 0) {
+        console.log("No more items are available");
+        break; // No more items are available
+      }
 
-  offset += LIMIT;
-  yield spotifyResponse as T extends "artists"
-    ? SpotifyApi.ArtistObjectFull[]
-    : SpotifyApi.TrackObjectFull[];
+      const items = data.items as SpotifyItem<T>[];
+
+      itemsCount += items.length;
+      offset += LIMIT;
+
+      yield items;
+    } catch (error) {
+      console.error(error);
+      break;
+    }
+  }
 }
 
 const authParams = new URLSearchParams({

@@ -26,10 +26,14 @@ export async function populateDB(
   accessToken: string,
   userDefinedData: UserDefinedData,
 ) {
+  console.log("populateDB: ", userDefinedData);
+
   const newUserEntry: UserCreation = Object.assign(
     userDefinedData,
     await getUserData(accessToken),
   );
+
+  console.log("new user: ", newUserEntry.spotifyId);
 
   const { data, error } = await supabaseClient
     .from("users")
