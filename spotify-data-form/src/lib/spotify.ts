@@ -21,6 +21,21 @@ type SpotifyResponse<T extends ItemType> =
 
 /**
  * @param accessToken - Spotify access token
+ * @param artistId - Spotify artist id
+ * @returns - Spotify artist info
+ */
+export async function fetchArtistInfo(accessToken: string, artistId: string) {
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+  };
+  const url = `${BASE_SPOTIFY_API_URL}/artists/${artistId}`;
+  return fetch(url, { headers }).then(
+    async (res) => res.json() as Promise<SpotifyApi.ArtistObjectFull>,
+  );
+}
+
+/**
+ * @param accessToken - Spotify access token
  * @param trackId - Spotify track id
  * @returns - Spotify track features
  */

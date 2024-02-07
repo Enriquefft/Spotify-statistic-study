@@ -3,7 +3,7 @@
 import { withNoSSR } from "@/lib/utils";
 import { spotifyAuthResponseSchema } from "@/lib/schemas";
 
-import { DataForm } from "@/ui/form";
+import { DataForm } from "@/components/form";
 
 /**
  * @returns /auth/callback page component
