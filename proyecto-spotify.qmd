@@ -5,16 +5,13 @@ editor: visual
 ---
 
 ```{r}
-librerias <- c("dplyr", "readr")
+librerias <- c("dplyr", "readr", "DBI")
 for (paquete in librerias) {
   if (!require(paquete, character.only = TRUE)) {
     install.packages(paquete)
   }
 	library(paquete, character.only = TRUE)
 }
-```
-```{r}
-library(DBI)
 ```
 
 ```{r}
@@ -36,6 +33,49 @@ DF <- dbReadTable(con, "users")
 ```
 
 
+# Caso de esutdio 1
+
+Analizaremos la variable danceability por edad
+
+```{r}
+DF %>%
+  filter(age == 18) %>%
+  select(average_danceability) -> df1
+DF %>%
+  filter(age == 19) %>%
+  select(average_danceability) -> df2
+```
+
+```{r}
+dif_medias <- function(x, mu1, mu2, s1, s2, n1, n2){ 
+  m <- mu1 - mu2 
+  s <- sqrt((s1^2/n1) + (s2^2/n2)) 
+  v <- (s1^2/n1 + s2^2/n2)^2/((s1^2/n1)^2/(n1-1) + (s2^2/n2)^2/(n2-1)) 
+  #return(pt((x-m)/s,round(v),lower.tail = FALSE)) 
+  return(pt((x-m)/s,round(v))) 
+}
+
+# Parámetros
+mu1 <- mean(df1$average_danceability)
+mu2 <- mean(df2$average_danceability)
+s1 <- sd(df1$average_danceability)
+s2 <- sd(df2$average_danceability)
+n1 <- length(df1$average_danceability)
+n2 <- length(df2$average_danceability)
+```
+
+¿Cómo es el intervalo de confianza de la diferencia de medias?
+```{r}
+dif_medias(0, mu1, mu2, s1, s2, n1, n2)
+```
+
+
+¿Cómo es la distribución de la diferencia de medias?
+```{r}
+#plot(density(df1$average_danceability))
+Xs <- seq(2, 6, by = 0.001)
+plot(Xs, dif_medias(Xs,mu1,mu2,s1,s2,n1,n2), type = "l", col = "red")
+```
 
 
 # Parte de Arturo
