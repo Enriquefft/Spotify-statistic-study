@@ -5,7 +5,7 @@ import { env } from "@/env.mjs";
 const BASE_SPOTIFY_API_URL = "https://api.spotify.com/v1";
 const BASE_SPOTIFY_TOP_ITEMS_URL = `${BASE_SPOTIFY_API_URL}/me/top`;
 const BASE_SPOTIFY_AUTH_URL = "https://accounts.spotify.com/authorize";
-const SPOTIFY_REDIRECT_URI = "http://localhost:3000/auth/callback";
+const SPOTIFY_REDIRECT_URI = "/auth/callback";
 
 const LIMIT = 8;
 const MAX_ITEMS = env.MAX_ITEMS_PER_USER; // Max items per user, this can help to prevent bias from extremely active users
