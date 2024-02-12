@@ -50,20 +50,14 @@ Entendemos para este caso que, como el tamaño de muestra es menor a 30, la medi
 
 #### a. ¿Cuál es la probabilidad de que la media muestral sea mayor a 0.75?
 
-$$
-P(\overline{x}>0.75
-)$$
+$P(\overline{x}>0.75)$
 
-$$
-P\left(\frac{\overline{x}-\mu}{\frac{s}{\sqrt{n}}} > \frac{0.75-\mu}{\frac{s}{\sqrt{n}}}\right)
-$$
+$P\left(\frac{\overline{x}-\mu}{\frac{s}{\sqrt{n}}} > \frac{0.75-\mu}{\frac{s}{\sqrt{n}}}\right)$
 
-$$
-P(T(n-1)>a)
-$$
+$P(T(n-1)>a)$
 
 ```{r}
-pt(a,n-1)
+#pt(a,n-1)
 ```
 
 #### b. ¿Será posible determinar un intervalo de confianza para la media muestral? Consideremos un nivel de confianza del 95%.
@@ -107,7 +101,7 @@ Calculamos si la varianza es igual o diferente
 var.test(df1$average_loudness, df2$average_loudness, ratio = 1, alternative = "two.sided", conf.level = 0.95)
 ```
 
-Vemos que la varianza es diferente
+Asumimos varianzas diferentes
 
 Estamos en el caso de: no se conoce $\sigma_1$ y $\sigma\_2$ pero se sabe que son diferentes
 
@@ -130,7 +124,7 @@ alpha <- 0.05
 t <- qt(1-alpha/2,v)
 ```
 
-a)  ¿Cuál es la probabilidad de que, en promedio, la intensidad de la música escuchada por los encuestados menores a 25 años supere en 10 decibeles a la intensidad de la música escuchada por los encuestados mayores a 25 años?
+#### a. ¿Cuál es la probabilidad de que, en promedio, la intensidad de la música escuchada por los encuestados menores a 25 años supere en 10 decibeles a la intensidad de la música escuchada por los encuestados mayores a 25 años?
 
 $$
 \mathbb{P}(\overline{X}_1 - \overline{X}_2 > 10) = 1 - \mathbb{P}(\overline{X}_1 - \overline{X}_2 \leq 10) = 1 - \mathbb{P}\left(T(v) \leq \frac{10 - (\mu_1 - \mu_2)}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}\right)
@@ -141,7 +135,7 @@ x <- 10
 pt((x-m)/s,v, lower.tail = FALSE)
 ```
 
-b)  Con 95% de confianza, ¿cuál es el intervalo de confianza para la diferencia de medias?
+#### b. Con 95% de confianza, ¿cuál es el intervalo de confianza para la diferencia de medias?
 
 El intervalo de confianza se calcula con la fórmula:
 
