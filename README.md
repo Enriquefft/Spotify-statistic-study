@@ -231,7 +231,7 @@ The minimum amount of data we need is 200 entries, but for a more robust study, 
 <table>
  <tr>
    <td>
-     <img src="https://avatars.githubusercontent.com/u/102536323?s=400&v=4" alt="Arturo Magno" width="200"/>
+     <img src="https://avatars.githubusercontent.com/u/104233007?v=4" alt="Arturo Magno" width="200"/>
      <br/>
      <a href="https://github.com/xkal1bur">Arturo Magno</a>
    </td>
