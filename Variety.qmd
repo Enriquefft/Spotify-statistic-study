@@ -1,0 +1,7 @@
+## Caso de estudio #2
+
+### Distribución de la varianza muestral de la variedad musical de los encuestados.
+
+### Para la muestra de encuestados entre 15 y 25 años, ¿cuál sería la máxima varianza muestral con probabilidad 0.90?
+
+### Intervalo de confianza para la varianza muestral de la variedad musical, tomando una muestra de 5 encuestados.
