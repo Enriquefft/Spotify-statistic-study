@@ -33,7 +33,50 @@ DF <- dbReadTable(con, "users")
 DF
 ```
 
-# Caso de esutdio 1
+# Caso de Estudio #1
+
+## Distribución de la media muestral de 'danceability' para los encuestados entre 15 a 25 años.
+
+El objetivo del primer caso de estudio es evaluar la variable 'danceability' en encuestados entre las edades de 15 y 25 años. Tenemos como dato la media de la población, $\mu$, que podemos calcular usando RStudio. Luego, filtramos la base de datos para los encuestados que tienen entre 15 y 25 años. Esta será nuestra muestra, y entonces buscamos su tamaño (n) y la desviación muestral (s).
+
+```{r}
+mu = mean(DF$Danceability)
+DFD <- filter(DF,"Edad" >= 15 & "Edad" <= 25)
+n = sum(complete.cases(DFD))
+s = sd(DFD$Danceability)
+```
+
+Entendemos para este caso que, como el tamaño de muestra es menor a 30, la media muestral se distribuye con una T-student de $n-1$ grados de libertad. Con esta información, podemos ahora resolver los siguientes incisos:
+
+#### a. ¿Cuál es la probabilidad de que la media muestral sea mayor a 0.75?
+
+$$
+P(\overline{x}>0.75
+)$$
+
+$$
+P\left(\frac{\overline{x}-\mu}{\frac{s}{\sqrt{n}}} > \frac{0.75-\mu}{\frac{s}{\sqrt{n}}}\right)
+$$
+
+$$
+P(T(n-1)>a)
+$$
+
+```{r}
+pt(a,n-1)
+```
+
+#### b. ¿Será posible determinar un intervalo de confianza para la media muestral? Consideremos un nivel de confianza del 95%.
+
+```{r}
+nc = 0.95
+alpha = 1 - nc
+t.test(DFD$Danceability, conf.level = nc)
+```
+
+# Caso de estudio 2
+
+# Caso de esutdio 3
 
 Analizaremos la variable danceability por edad
 
@@ -115,7 +158,4 @@ $$
 
 ```{r}
 df2 <-  sample_n(DF, 50)
-
 ```
-
-# Parte de Valentín
