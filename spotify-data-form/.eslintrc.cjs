@@ -1,12 +1,9 @@
+/* eslint-disable jsdoc/check-tag-names */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 /* eslint-disable @typescript-eslint/naming-convention */
 
 /** @type {import('eslint').Linter.Config['rules']}*/
-const jsdocRulesJS = {
-  "jsdoc/check-tag-names": "off",
-};
-
-/** @type {import('eslint').Linter.Config['rules']}*/
-const jsdocRulesTS = {
+const jsdocRules = {
   "jsdoc/check-param-names": [
     "error",
     {
@@ -103,6 +100,7 @@ const tsRules = {
   "@typescript-eslint/no-magic-numbers": [
     "error",
     {
+      enforceConst: true,
       ignoreEnums: true,
       ignore: [-1, 0, 1, 2],
       ignoreNumericLiteralTypes: true,
@@ -156,7 +154,7 @@ const config = {
   overrides: [
     {
       files: ["*.cjs", "*.js"],
-      rules: Object.assign(tsRules, jsdocRulesJS),
+      rules: jsdocRules,
       extends: ["plugin:@typescript-eslint/disable-type-checked"],
       parserOptions,
     },
@@ -168,7 +166,7 @@ const config = {
     },
     {
       files: ["*.[jt]sx"],
-      rules: Object.assign(reactRules, jsdocRulesTS),
+      rules: Object.assign(reactRules, jsdocRules),
     },
   ],
   globals: {
