@@ -4,12 +4,9 @@ Project made for the Statistics II course @Utec
 
 ## Relevance
 
-- Aplicaciónes de la data en IA
-  El uso de la Inteligencia Artificial (IA) en Spotify incluye el reconocimiento de emociones en las canciones, lo que sirve para mejorar las listas de reproducción personalizadas y la experiencia general del usuario. Al analizar elementos como el tono, el ritmo y la letra de una canción, Spotify puede determinar el estado de ánimo que transmite y sugerir música que se alinea con las emociones o el estado mental del usuario. Por ejemplo, si un usuario tiende a escuchar canciones más tranquilas y melódicas por la noche, Spotify puede identificar esta tendencia y recomendar canciones similares durante ese periodo del día.
-  Además, Spotify utiliza algoritmos de machine learning en su sistema de recomendación. Estos algoritmos consideran factores como la popularidad de las canciones, las tendencias musicales actuales, y lo que escuchan usuarios con gustos similares. Esto permite a Spotify ofrecer recomendaciones altamente personalizadas.
+- Applications of data in AI: The use of Artificial Intelligence (AI) in Spotify includes emotion recognition in songs, which serves to enhance personalized playlists and the overall user experience. By analyzing elements such as the tone, tempo, and lyrics of a song, Spotify can determine the mood it conveys and suggest music that aligns with the user's emotions or mental state. For example, if a user tends to listen to calming and melodic songs at night, Spotify can identify this trend and recommend similar songs during that time of day. Furthermore, Spotify uses machine learning algorithms in its recommendation system. These algorithms consider factors such as song popularity, current music trends, and what users with similar tastes are listening to. This allows Spotify to offer highly personalized recommendations.
 
-- Aplicaciónes de la data en marketing
-  ¿En qué medida contribuye el análisis estadístico de data musical en el marketing de hoy en día? La música es el día a día de las personas y las empresas están interesadas en satisfacer las necesidades primarias de sus usuarios. Considerando Spotify como una de las aplicaciones musicales más conocida de la actualidad, la recuperación de sus datos resulta una caza interesante de información para el marketing de empresas, más aún siendo de carácter público. El marketing de empresas usando datos de Spotify suelen centrarse en el análisis de comportamientos y preferencias de los usuarios para crear estrategias más efectivas. Esto puede incluir la segmentación de audiencia y personalización de mensajes publicitarios, las colaboraciones musicales con artistas populares (o en tendencia) o el análisis probabilístico de tendencias, tanto las presentes como las futuras.
+- Applications of data in marketing: How does statistical analysis of music data contribute to today's marketing? Music is part of people's daily lives, and companies are interested in meeting the primary needs of their users. Considering Spotify as one of the most well-known music applications today, harvesting its data presents an interesting source of information for company marketing, especially since it is public data. Companies often use data from Spotify to focus on analyzing user behaviors and preferences to create more effective strategies. This could include audience segmentation and personalizing advertising messages, collaborations with popular musicians (or trending), or probabilistic analysis of both current and future trends.
 
 ## Objectives
 
@@ -228,6 +225,28 @@ The minimum amount of data we need is 200 entries, but for a more robust study, 
   "valence": 0.428
 }
 ```
+
+## Members
+
+<table>
+ <tr>
+   <td>
+     <img src="https://avatars.githubusercontent.com/u/102536323?s=400&v=4" alt="Arturo Magno" width="200"/>
+     <br/>
+     <a href="https://github.com/xkal1bur">Arturo Magno</a>
+   </td>
+   <td>
+     <img src="https://avatars.githubusercontent.com/u/91209653?v=4" alt="Valentin Quezada" width="200"/>
+     <br/>
+     <a href="https://github.com/ValentinQuezada">Valentin Quezada</a>
+   </td>
+   <td>
+     <img src="https://avatars.githubusercontent.com/u/60308719?v=4" alt="Enrique Flores" width="200"/>
+     <br/>
+     <a href="https://github.com/Enriquefft">Enrique Flores</a>
+   </td>
+ </tr>
+</table>
 
 ## Refereces
 
