@@ -4,7 +4,29 @@ format: html
 editor: visual
 ---
 
-```{r}
+## Members
+
+<table>
+ <tr>
+   <td>
+     <img src="https://avatars.githubusercontent.com/u/104233007?v=4" alt="Arturo Magno" width="200"/>
+     <br/>
+     <a href="https://github.com/xkal1bur">Arturo Magno</a>
+   </td>
+   <td>
+     <img src="https://avatars.githubusercontent.com/u/91209653?v=4" alt="Valentin Quezada" width="200"/>
+     <br/>
+     <a href="https://github.com/ValentinQuezada">Valentin Quezada</a>
+   </td>
+   <td>
+     <img src="https://avatars.githubusercontent.com/u/60308719?v=4" alt="Enrique Flores" width="200"/>
+     <br/>
+     <a href="https://github.com/Enriquefft">Enrique Flores</a>
+   </td>
+ </tr>
+</table>
+
+```{r, message=FALSE, warning=FALSE}
 librerias <- c("dplyr", "readr", "DBI")
 for (paquete in librerias) {
   if (!require(paquete, character.only = TRUE)) {
@@ -30,7 +52,7 @@ con <- DBI::dbConnect(RPostgres::Postgres(),
 
 ```{r}
 DF <- dbReadTable(con, "users")
-DF
+head(DF)
 ```
 
 # Caso de Estudio #1
@@ -44,6 +66,9 @@ mu = mean(DF$average_danceability)
 DFD <- filter(DF,age >= 15 & age <= 25)
 n = sum(complete.cases(DFD))
 s = sd(DFD$average_danceability)
+paste("mu =", mu)
+paste("n =", n)
+paste("s =", s)
 ```
 
 Entendemos para este caso que, como el tamaño de muestra es menor a 30, la media muestral se distribuye con una T-student de $n-1$ grados de libertad. Con esta información, podemos ahora resolver los siguientes incisos:
@@ -58,7 +83,7 @@ $$P\left(T(n-1)>\frac{0.50-\mu}{\frac{s}{\sqrt{n}}}\right)$$
 
 ```{r}
 a <- (0.50 - mu)/(s/sqrt(n))
-pt(a,n-1, lower.tail = FALSE)
+paste("La probabilidad de que la media muestral sea mayor a 0.50 es", pt(a,n-1, lower.tail = FALSE),".")
 ```
 
 #### b. ¿Será posible determinar un intervalo de confianza para la media muestral? Consideremos un nivel de confianza del 95%.
@@ -66,8 +91,21 @@ pt(a,n-1, lower.tail = FALSE)
 ```{r}
 nc = 0.95
 alpha = 1 - nc
-t.test(DFD$Danceability, conf.level = nc)
+test <- t.test(DFD$average_danceability, conf.level = nc)
 ```
+
+```{r}
+paste("El intervalo de confianza para la media poblacional es [", test$conf.int[1], ";", test$conf.int[2], "] con un nivel de confianza del 95%.")
+```
+
+```{r}
+Xs <- seq(-5, 5, by = 0.001)
+plot(Xs, dt(Xs,n-1), type = "l", col = "red")
+abline(v = c(-test$conf.int[1], test$conf.int[2]), col = "blue")
+lines(Xs[Xs > a], dt(Xs[Xs > a],n-1), col = "green")
+legend("topright", legend = c("T(x,n-1)", "respuesta de la a.", "respuesta de la b."), col = c("red", "blue","green"), lty = 1)
+```
+
 
 # Caso de estudio #2
 
@@ -76,9 +114,11 @@ t.test(DFD$Danceability, conf.level = nc)
 El objetivo del segundo caso de estudio es evaluar la variable 'perceived_variety'. No obstante, nos falta como dato la varianza de la población, $\sigma^2$, para poder trabajar el caso. Nuestra base de datos entera servirá en este caso como muestra, y al ser de un tamaño mayor a 30, podemos aproximar la varianza muestral a la varianza poblacional. El principal objetivo será entonces calcular la varianza poblacional usando RStudio, pero para ello, primero debemos refactorizar la data nominal a numérica:
 
 ```{r}
-numeric_variety <- as.numeric(factor(DF$perceived_variety))
+numeric_variety <- as.numeric(factor(DF$percieved_variety))
 v = var(numeric_variety)
 n = sum(complete.cases(DF))
+paste("v =", v)
+paste("n =", n)
 ```
 
 #### a. ¿Cuál sería la máxima varianza muestral con probabilidad 0.90?
@@ -97,6 +137,7 @@ $$
 
 ```{r}
 m = qchisq(0.90,n-1) * v / (n-1)
+paste("La máxima varianza muestral con probabilidad 0.90 es", m,".")
 ```
 
 #### b. ¿Será posible determinar un intervalo de confianza para la varianza poblacional? Consideremos un nivel de confianza del 95%.
@@ -108,6 +149,7 @@ superior = (n-1) * v / qchisq(alpha/2,n-1)
 inferior = (n-1) * v / qchisq(1-alpha/2,n-1)
 paste("El intervalo de confianza para la varianza poblacional es [", inferior, ";", superior, "].")
 ```
+
 
 # Caso de estudio #3
 
@@ -130,6 +172,12 @@ s1 <- sd(df1$average_loudness)
 s2 <- sd(df2$average_loudness)
 n1 <- length(df1$average_loudness)
 n2 <- length(df2$average_loudness)
+paste("mu1 =", mu1)
+paste("mu2 =", mu2)
+paste("s1 =", s1)
+paste("s2 =", s2)
+paste("n1 =", n1)
+paste("n2 =", n2)
 ```
 
 ¿Cual es la distribución de la diferencia de medias?
@@ -140,9 +188,9 @@ Calculamos si la varianza es igual o diferente
 var.test(df1$average_loudness, df2$average_loudness, ratio = 1, alternative = "two.sided", conf.level = 0.95)
 ```
 
-Asumimos varianzas diferentes
+Vemos que las varianzas son iguales
 
-Estamos en el caso de: no se conoce $\sigma_1$ y $\sigma\_2$ pero se sabe que son diferentes
+Estamos en el caso de: no se conoce $\sigma_1$ y $\sigma\_2$ pero se sabe que son iguales.
 
 $$ 
 \begin{align*}
@@ -185,24 +233,22 @@ $$
 El intervalo de confianza es:
 
 ```{r}
-m + c(-1,1)*t*s
+ic <- m + c(-1,1)*t*s
+paste("El intervalo de confianza para la varianza poblacional es [", ic[1], ";", ic[2], "] con un nivel de confianza del 95%.")
 ```
 
 Otra forma de calcularlo:
 
 ```{r}
-t.test(df1$average_loudness, df2$average_loudness, alternative = "two.sided", var.equal = FALSE, conf.level = 0.95)
+t.test(df1$average_loudness, df2$average_loudness, alternative = "two.sided", var.equal = TRUE, conf.level = 0.95)
 ```
 
 ¿Cómo se ve la distribución de la diferencia de medias?
 
 ```{r}
-v <- 111
-t <- 2
-Xs <- seq(-5, 5, by = 0.001)
+Xs <- seq(-7, 7, by = 0.001)
 plot(Xs, dt(Xs,v), type = "l", col = "red")
-abline(v = c(-t, t), col = "blue")
-legend("topright", legend = c("T(x,v)", "t_{(1-\\alpha/2,v)}"), col = c("red", "blue"), lty = 1)
-# Hacer que mayor a t_0 sea azul
+abline(v = c(ic[1], ic[2]), col = "blue")
 lines(Xs[Xs > t], dt(Xs[Xs > t],v), col = "green")
+legend("topright", legend = c("T(x,v)", "respuesta de la a.", "respuesta de la b."), col = c("red","green", "blue"), lty = 1)
 ```
