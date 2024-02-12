@@ -30,8 +30,8 @@ con <- DBI::dbConnect(RPostgres::Postgres(),
 
 ```{r}
 DF <- dbReadTable(con, "users")
+DF
 ```
-
 
 # Caso de esutdio 1
 
@@ -57,6 +57,7 @@ n2 <- length(df2$average_danceability)
 ```
 
 ¿Cual es la distribución de la diferencia de medias?
+
 ```{r}
 m <- mu1 - mu2 
 s <- sqrt((s1^2/n1) + (s2^2/n2)) 
@@ -68,6 +69,7 @@ v <- (s1^2/n1 + s2^2/n2)^2/((s1^2/n1)^2/(n1-1) + (s2^2/n2)^2/(n2-1))
 ```
 
 ¿Cómo se ve la distribución de la diferencia de medias?
+
 ```{r}
 #plot(density(df1$average_danceability))
 Xs <- seq(2, 6, by = 0.001)
@@ -75,24 +77,27 @@ plot(Xs, dif_medias(Xs,mu1,mu2,s1,s2,n1,n2), type = "l", col = "red")
 ```
 
 ¿Cuál es la probabilidad de que la media 1 sea menor que la media 2?
+
 ```{r}
 x <- 0
 pt((x-m)/s,round(v))
 ```
 
 Con 95% de confianza, ¿cuál es el intervalo de confianza para la diferencia de medias?
+
 ```{r}
 alpha <- 0.05
 z <- qnorm(1-alpha/2)
+m + c(-1,1)*z*s
+
 ```
-
-
 
 # Parte de Arturo
 
 ## Se asume población normal
 
 ## Una muestra de menos de 30 observaciones
+
 ```{r}
 df1 <-  sample_n(DF, 15)
 
@@ -106,14 +111,11 @@ $$
 \frac{\bar{x}-\mu}{\frac{s}{\sqrt{n}}} \sim T_{n-1}
 $$
 
-
 ## Una muestra de más de 30 observaciones
+
 ```{r}
 df2 <-  sample_n(DF, 50)
 
 ```
 
-
 # Parte de Valentín
-
-
