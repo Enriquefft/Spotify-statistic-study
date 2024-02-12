@@ -76,86 +76,100 @@ t.test(DFD$Danceability, conf.level = nc)
 
 # Caso de estudio 2
 
-# Caso de esutdio 3
+# Caso de estudio 3
 
-Analizaremos la variable danceability por edad
+Distribución de la diferencia de medias de la intensidad de la música escuchada por los encuestados de edad mayor a 25 años y la intensidad de la música escuchada por los encuestados de edad menor a 25 años.
 
 ```{r}
 DF %>%
-  filter(age == 18) %>%
-  select(average_danceability) -> df1
+  filter(age <= 25) %>%
+  select(average_loudness) -> df1
 DF %>%
-  filter(age == 19) %>%
-  select(average_danceability) -> df2
+  filter(age > 25) %>%
+  select(average_loudness) -> df2
 ```
 
 ```{r}
 # Parámetros
-mu1 <- mean(df1$average_danceability)
-mu2 <- mean(df2$average_danceability)
-s1 <- sd(df1$average_danceability)
-s2 <- sd(df2$average_danceability)
-n1 <- length(df1$average_danceability)
-n2 <- length(df2$average_danceability)
+mu1 <- mean(df1$average_loudness)
+mu2 <- mean(df2$average_loudness)
+s1 <- sd(df1$average_loudness)
+s2 <- sd(df2$average_loudness)
+n1 <- length(df1$average_loudness)
+n2 <- length(df2$average_loudness)
 ```
 
 ¿Cual es la distribución de la diferencia de medias?
 
+Calculamos si la varianza es igual o diferente
+
+```{r}
+var.test(df1$average_loudness, df2$average_loudness, ratio = 1, alternative = "two.sided", conf.level = 0.95)
+```
+
+Vemos que la varianza es diferente
+
+Estamos en el caso de: no se conoce $\sigma_1$ y $\sigma\_2$ pero se sabe que son diferentes
+
+$$ 
+\begin{align*}
+& T(v) = \frac{\overline{X}_1 - \overline{X}_2 - (\mu_1 - \mu_2)} {\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}} \,,\text{ siendo} \\
+
+v &= \frac{\left(\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}\right)^2} {\frac{\left(\frac{s_1^2}{n_1}\right)^2}{n_1 - 1} + \frac{\left(\frac{s_2^2}{n_2}\right)^2}{n_2 - 1}} = \text{grados de libertad} 
+\end{align*}
+$$
+
+Valores importantes
+
 ```{r}
 m <- mu1 - mu2 
 s <- sqrt((s1^2/n1) + (s2^2/n2)) 
-v <- (s1^2/n1 + s2^2/n2)^2/((s1^2/n1)^2/(n1-1) + (s2^2/n2)^2/(n2-1)) 
+v <- round(s1^2/n1 + s2^2/n2)^2/((s1^2/n1)^2/(n1-1) + (s2^2/n2)^2/(n2-1)) 
 
+alpha <- 0.05
+t <- qt(1-alpha/2,v)
+```
 
-#return(pt((x-m)/s,round(v),lower.tail = FALSE)) 
-#(pt((x-m)/s,round(v))) 
+a)  ¿Cuál es la probabilidad de que, en promedio, la intensidad de la música escuchada por los encuestados menores a 25 años supere en 10 decibeles a la intensidad de la música escuchada por los encuestados mayores a 25 años?
+
+$$
+\mathbb{P}(\overline{X}_1 - \overline{X}_2 > 10) = 1 - \mathbb{P}(\overline{X}_1 - \overline{X}_2 \leq 10) = 1 - \mathbb{P}\left(T(v) \leq \frac{10 - (\mu_1 - \mu_2)}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}\right)
+$$
+
+```{r}
+x <- 10
+pt((x-m)/s,v, lower.tail = FALSE)
+```
+
+b)  Con 95% de confianza, ¿cuál es el intervalo de confianza para la diferencia de medias?
+
+El intervalo de confianza se calcula con la fórmula:
+
+$$
+\mathbb{P}\left(\overline{X}_1 - \overline{X}_2 - t_{(1-\alpha/2,v)} \cdot \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}} \leq \mu_1 - \mu_2 \leq \overline{X}_1 - \overline{X}_2 + t_{(1-\alpha/2,v)} \cdot \sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}\right) = 0.95
+$$
+
+El intervalo de confianza es:
+
+```{r}
+m + c(-1,1)*t*s
+```
+
+Otra forma de calcularlo:
+
+```{r}
+t.test(df1$average_loudness, df2$average_loudness, alternative = "two.sided", var.equal = FALSE, conf.level = 0.95)
 ```
 
 ¿Cómo se ve la distribución de la diferencia de medias?
 
 ```{r}
-#plot(density(df1$average_danceability))
-Xs <- seq(2, 6, by = 0.001)
-plot(Xs, dif_medias(Xs,mu1,mu2,s1,s2,n1,n2), type = "l", col = "red")
-```
-
-¿Cuál es la probabilidad de que la media 1 sea menor que la media 2?
-
-```{r}
-x <- 0
-pt((x-m)/s,round(v))
-```
-
-Con 95% de confianza, ¿cuál es el intervalo de confianza para la diferencia de medias?
-
-```{r}
-alpha <- 0.05
-z <- qnorm(1-alpha/2)
-m + c(-1,1)*z*s
-
-```
-
-# Parte de Arturo
-
-## Se asume población normal
-
-## Una muestra de menos de 30 observaciones
-
-```{r}
-df1 <-  sample_n(DF, 15)
-
-#t.test(df1$cty, df1$hwy, alternative = "l", var.equal = FALSE, paired = FALSE, conf.level = 0.95)
-
-# Calculando la distribución de la diferencia de medias
-# mean(df1) tiene distribución t-student con n-1 grados de libertad
-```
-
-$$
-\frac{\bar{x}-\mu}{\frac{s}{\sqrt{n}}} \sim T_{n-1}
-$$
-
-## Una muestra de más de 30 observaciones
-
-```{r}
-df2 <-  sample_n(DF, 50)
+v <- 111
+t <- 2
+Xs <- seq(-5, 5, by = 0.001)
+plot(Xs, dt(Xs,v), type = "l", col = "red")
+abline(v = c(-t, t), col = "blue")
+legend("topright", legend = c("T(x,v)", "t_{(1-\\alpha/2,v)}"), col = c("red", "blue"), lty = 1)
+# Hacer que mayor a t_0 sea azul
+lines(Xs[Xs > t], dt(Xs[Xs > t],v), col = "green")
 ```
