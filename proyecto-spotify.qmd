@@ -50,14 +50,20 @@ Entendemos para este caso que, como el tamaño de muestra es menor a 30, la medi
 
 #### a. ¿Cuál es la probabilidad de que la media muestral sea mayor a 0.75?
 
-$P(\overline{x}>0.75)$
+$$
+P(\overline{x}>0.75
+)$$
 
-$P\left(\frac{\overline{x}-\mu}{\frac{s}{\sqrt{n}}} > \frac{0.75-\mu}{\frac{s}{\sqrt{n}}}\right)$
+$$
+P\left(\frac{\overline{x}-\mu}{\frac{s}{\sqrt{n}}} > \frac{0.75-\mu}{\frac{s}{\sqrt{n}}}\right)
+$$
 
-$P(T(n-1)>a)$
+$$
+P(T(n-1)>...)
+$$
 
 ```{r}
-#pt(a,n-1)
+pt(a,n-1)
 ```
 
 #### b. ¿Será posible determinar un intervalo de confianza para la media muestral? Consideremos un nivel de confianza del 95%.
@@ -68,7 +74,45 @@ alpha = 1 - nc
 t.test(DFD$Danceability, conf.level = nc)
 ```
 
-# Caso de estudio 2
+# Caso de estudio #2
+
+## Distribución de la varianza muestral de la variedad musical de los encuestados.
+
+El objetivo del segundo caso de estudio es evaluar la variable 'perceived_variety'. No obstante, nos falta como dato la varianza de la población, $\sigma^2$, para poder trabajar el caso. Nuestra base de datos entera servirá en este caso como muestra, y al ser de un tamaño mayor a 30, podemos aproximar la varianza muestral a la varianza poblacional. El principal objetivo será entonces calcular la varianza poblacional usando RStudio, pero para ello, primero debemos refactorizar la data nominal a numérica:
+
+```{r}
+numeric_variety <- as.numeric(factor(DF$perceived_variety))
+v = var(numeric_variety)
+n = sum(complete.cases(DF))
+```
+
+#### a. ¿Cuál sería la máxima varianza muestral con probabilidad 0.90?
+
+$$
+P(s^2\leq m) = 0.90
+$$
+
+$$
+P\left(\frac{s^2(n-1)}{\sigma^2}\leq\frac{m(n-1)}{\sigma^2}\right)=0.90
+$$
+
+$$
+P\left(\chi^2_{(n-1)}\leq\frac{m(n-1)}{\sigma^2}\right)=0.90
+$$
+
+```{r}
+m = qchisq(0.90,n-1) * v / (n-1)
+```
+
+#### b. ¿Será posible determinar un intervalo de confianza para la varianza poblacional? Consideremos un nivel de confianza del 95%.
+
+```{r}
+nc = 0.95
+alpha = 1 - nc
+superior = (n-1) * v / qchisq(alpha/2,n-1)
+inferior = (n-1) * v / qchisq(1-alpha/2,n-1)
+paste("El intervalo de confianza para la varianza poblacional es [", inferior, ";", superior, "].")
+```
 
 # Caso de estudio 3
 
