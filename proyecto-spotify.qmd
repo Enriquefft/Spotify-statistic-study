@@ -19,7 +19,7 @@ host <- "aws-0-us-east-1.pooler.supabase.com"
 db_name <- "postgres"
 user <- "postgres.ssbtsqwpnmqovabbjzsc"
 port <- 5432
-db_password <- ""
+db_password <- "giApLgnkOSm2p0yR"
 con <- DBI::dbConnect(RPostgres::Postgres(), 
                       dbname = db_name, 
                       host = host, 
@@ -47,14 +47,6 @@ DF %>%
 ```
 
 ```{r}
-dif_medias <- function(x, mu1, mu2, s1, s2, n1, n2){ 
-  m <- mu1 - mu2 
-  s <- sqrt((s1^2/n1) + (s2^2/n2)) 
-  v <- (s1^2/n1 + s2^2/n2)^2/((s1^2/n1)^2/(n1-1) + (s2^2/n2)^2/(n2-1)) 
-  #return(pt((x-m)/s,round(v),lower.tail = FALSE)) 
-  return(pt((x-m)/s,round(v))) 
-}
-
 # Parámetros
 mu1 <- mean(df1$average_danceability)
 mu2 <- mean(df2$average_danceability)
@@ -64,18 +56,36 @@ n1 <- length(df1$average_danceability)
 n2 <- length(df2$average_danceability)
 ```
 
-¿Cómo es el intervalo de confianza de la diferencia de medias?
+¿Cual es la distribución de la diferencia de medias?
 ```{r}
-dif_medias(0, mu1, mu2, s1, s2, n1, n2)
+m <- mu1 - mu2 
+s <- sqrt((s1^2/n1) + (s2^2/n2)) 
+v <- (s1^2/n1 + s2^2/n2)^2/((s1^2/n1)^2/(n1-1) + (s2^2/n2)^2/(n2-1)) 
+
+
+#return(pt((x-m)/s,round(v),lower.tail = FALSE)) 
+#(pt((x-m)/s,round(v))) 
 ```
 
-
-¿Cómo es la distribución de la diferencia de medias?
+¿Cómo se ve la distribución de la diferencia de medias?
 ```{r}
 #plot(density(df1$average_danceability))
 Xs <- seq(2, 6, by = 0.001)
 plot(Xs, dif_medias(Xs,mu1,mu2,s1,s2,n1,n2), type = "l", col = "red")
 ```
+
+¿Cuál es la probabilidad de que la media 1 sea menor que la media 2?
+```{r}
+x <- 0
+pt((x-m)/s,round(v))
+```
+
+Con 95% de confianza, ¿cuál es el intervalo de confianza para la diferencia de medias?
+```{r}
+alpha <- 0.05
+z <- qnorm(1-alpha/2)
+```
+
 
 
 # Parte de Arturo
