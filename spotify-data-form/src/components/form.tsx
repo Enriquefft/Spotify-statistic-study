@@ -1,3 +1,4 @@
+"use client";
 import { populateDB } from "@/lib/actions";
 
 import {
@@ -15,7 +16,7 @@ import { useState } from "react";
  * @param props.accessToken Access token for the user
  * @returns User defined data form component
  */
-export async function DataForm({ accessToken }: { accessToken: string }) {
+export function DataForm({ accessToken }: { accessToken: string }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submit = async (formData: FormData) => {
