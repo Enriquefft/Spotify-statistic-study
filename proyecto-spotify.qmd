@@ -40,30 +40,25 @@ DF
 El objetivo del primer caso de estudio es evaluar la variable 'danceability' en encuestados entre las edades de 15 y 25 años. Tenemos como dato la media de la población, $\mu$, que podemos calcular usando RStudio. Luego, filtramos la base de datos para los encuestados que tienen entre 15 y 25 años. Esta será nuestra muestra, y entonces buscamos su tamaño (n) y la desviación muestral (s).
 
 ```{r}
-mu = mean(DF$Danceability)
-DFD <- filter(DF,"Edad" >= 15 & "Edad" <= 25)
+mu = mean(DF$average_danceability)
+DFD <- filter(DF,age >= 15 & age <= 25)
 n = sum(complete.cases(DFD))
-s = sd(DFD$Danceability)
+s = sd(DFD$average_danceability)
 ```
 
 Entendemos para este caso que, como el tamaño de muestra es menor a 30, la media muestral se distribuye con una T-student de $n-1$ grados de libertad. Con esta información, podemos ahora resolver los siguientes incisos:
 
-#### a. ¿Cuál es la probabilidad de que la media muestral sea mayor a 0.75?
+#### a. ¿Cuál es la probabilidad de que la media muestral sea mayor a 0.50?
 
-$$
-P(\overline{x}>0.75
-)$$
+$$P(\overline{x}>0.50)$$
 
-$$
-P\left(\frac{\overline{x}-\mu}{\frac{s}{\sqrt{n}}} > \frac{0.75-\mu}{\frac{s}{\sqrt{n}}}\right)
-$$
+$$P\left(\frac{\overline{x}-\mu}{\frac{s}{\sqrt{n}}} > \frac{0.50-\mu}{\frac{s}{\sqrt{n}}}\right)$$
 
-$$
-P(T(n-1)>...)
-$$
+$$P\left(T(n-1)>\frac{0.50-\mu}{\frac{s}{\sqrt{n}}}\right)$$
 
 ```{r}
-pt(a,n-1)
+a <- (0.50 - mu)/(s/sqrt(n))
+pt(a,n-1, lower.tail = FALSE)
 ```
 
 #### b. ¿Será posible determinar un intervalo de confianza para la media muestral? Consideremos un nivel de confianza del 95%.
@@ -114,7 +109,7 @@ inferior = (n-1) * v / qchisq(1-alpha/2,n-1)
 paste("El intervalo de confianza para la varianza poblacional es [", inferior, ";", superior, "].")
 ```
 
-# Caso de estudio 3
+# Caso de estudio #3
 
 Distribución de la diferencia de medias de la intensidad de la música escuchada por los encuestados de edad mayor a 25 años y la intensidad de la música escuchada por los encuestados de edad menor a 25 años.
 
