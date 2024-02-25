@@ -54,7 +54,6 @@ export async function fetchUserInfo(accessToken: string) {
 }
 
 const LIMIT = 50;
-const MAX_ITEMS = env.MAX_ITEMS_PER_USER; // Max items per user, this can help to prevent bias from extremely active users
 
 type ItemType = "artists" | "tracks";
 type TimeRange = "long_term" | "medium_term" | "short_term";
@@ -69,14 +68,12 @@ type SpotifyItem<T extends ItemType> = T extends "artists"
   : SpotifyApi.TrackObjectFull;
 
 /**
- *
- * @template T {ItemType}
  * @param accessToken - Spotify access token
  * @param itemType - artists | tracks
  * @param timeRange - long_term | medium_term | short_term
- * @yields {SpotifyResponse<T>['items']} - Spotify response items
+ * @returns - Spotify response items
  */
-export async function* fetchSpotifyTopItems<T extends ItemType>(
+export async function fetchSpotifyTopItems<T extends ItemType>(
   accessToken: string,
   itemType: T,
   timeRange: TimeRange = "long_term",
@@ -87,34 +84,18 @@ export async function* fetchSpotifyTopItems<T extends ItemType>(
     Authorization: `Bearer ${accessToken}`,
   };
 
-  let offset = 0;
-  let itemsCount = 0;
+  const url = `${BASE_SPOTIFY_TOP_ITEMS_URL}/${itemType}?time_range=${timeRange}&limit=${LIMIT}`;
 
-  while (itemsCount < MAX_ITEMS) {
-    const url = `${BASE_SPOTIFY_TOP_ITEMS_URL}/${itemType}?time_range=${timeRange}&limit=${LIMIT}&offset=${offset}`;
+  // eslint-disable-next-line no-await-in-loop
+  const data = await fetch(url, { headers }).then(
+    async (res) => res.json() as Promise<SpotifyResponse<T>>,
+  );
 
-    try {
-      // eslint-disable-next-line no-await-in-loop
-      const data = await fetch(url, { headers }).then(
-        async (res) => res.json() as Promise<SpotifyResponse<T>>,
-      );
-
-      if ("error" in data || data.items.length === 0) {
-        console.log("No more items are available");
-        break; // No more items are available
-      }
-
-      const items = data.items as SpotifyItem<T>[];
-
-      itemsCount += items.length;
-      offset += LIMIT;
-
-      yield items;
-    } catch (error) {
-      console.error(error);
-      break;
-    }
+  if ("error" in data || data.items.length === 0) {
+    return [];
   }
+
+  return data.items as SpotifyItem<T>[];
 }
 
 const authParams = new URLSearchParams({

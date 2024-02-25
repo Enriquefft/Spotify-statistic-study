@@ -33,8 +33,6 @@ export async function populateDB(
     await getUserData(accessToken),
   );
 
-  console.log("new user: ", newUserEntry.spotifyId);
-
   const { data, error } = await supabaseClient
     .from("users")
     .insert(newUserEntry)
@@ -44,5 +42,5 @@ export async function populateDB(
     console.error(error);
   }
 
-  return data?.at(0)?.spotifyId;
+  return data?.at(0)?.spotify_id;
 }

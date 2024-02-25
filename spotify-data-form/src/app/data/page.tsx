@@ -15,9 +15,9 @@ export default async function Page() {
       <h1>Data</h1>
 
       {data.map((user) => (
-        <div key={user.spotifyId}>
-          <p className="text-lg" key={user.spotifyId}>
-            {user.spotifyId}
+        <div key={user.spotify_id}>
+          <p className="text-lg" key={user.spotify_id}>
+            {user.spotify_id}
           </p>
 
           {Object.entries(user).map(([key, value]) => (

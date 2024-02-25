@@ -18,7 +18,7 @@ function Page() {
   const localState = localStorage.getItem("state");
 
   if (localState !== params.state) {
-    // Throw new Error("Invalid state");
+    throw new Error("Invalid state");
   }
 
   return (
