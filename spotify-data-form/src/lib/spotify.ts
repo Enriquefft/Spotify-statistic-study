@@ -91,6 +91,8 @@ export async function fetchSpotifyTopItems<T extends ItemType>(
     async (res) => res.json() as Promise<SpotifyResponse<T>>,
   );
 
+  console.log("fetched in fetchSpotifyTopItems: ");
+
   if ("error" in data || data.items.length === 0) {
     return [];
   }
