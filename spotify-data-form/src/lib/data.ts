@@ -36,7 +36,7 @@ export async function getUserData(accessToken: string) {
   let trackCount = 0;
   let loudness = 0;
 
-  for (const song of preferedSongs) {
+  for (const song of preferedSongs.items) {
     // eslint-disable-next-line no-await-in-loop
     const trackFeatures = await fetchTrackFeatures(accessToken, song.id);
     danceability += trackFeatures.danceability;
@@ -47,13 +47,13 @@ export async function getUserData(accessToken: string) {
   console.log("trackCount: ", trackCount);
 
   let artistCount = 0;
-  fetchSpotifyTopItems(accessToken, "artists", "long_term")
-    .then((artists) => {
-      artistCount = artists.length;
-    })
-    .catch((error) => {
-      console.error("Error: ", error);
-    });
+  await fetchSpotifyTopItems(accessToken, "artists", "long_term").then(
+    (data) => {
+      artistCount = data.total;
+    },
+  );
+
+  console.log("artistCount: ", artistCount);
 
   return {
     average_danceability: danceability / trackCount,

@@ -33,6 +33,8 @@ export async function populateDB(
     await getUserData(accessToken),
   );
 
+  console.log("newUserEntry", newUserEntry);
+
   const { data, error } = await supabaseClient
     .from("users")
     .insert(newUserEntry)

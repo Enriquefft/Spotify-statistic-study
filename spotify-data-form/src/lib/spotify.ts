@@ -91,13 +91,11 @@ export async function fetchSpotifyTopItems<T extends ItemType>(
     async (res) => res.json() as Promise<SpotifyResponse<T>>,
   );
 
-  console.log("fetched in fetchSpotifyTopItems: ");
-
   if ("error" in data || data.items.length === 0) {
-    return [];
+    return { total: 0, items: [] };
   }
 
-  return data.items as SpotifyItem<T>[];
+  return { total: data.total, items: data.items as SpotifyItem<T>[] };
 }
 
 const authParams = new URLSearchParams({
