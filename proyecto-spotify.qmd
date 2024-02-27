@@ -4,33 +4,31 @@ format: html
 editor: visual
 ---
 
-# Musical preference for Lima college students according to Spotify data
+# Preferencia musical de los estudiantes universitarios de Lima según datos de Spotify
 
-Project made for the Statistics II course @Utec
+Proyecto realizado para el curso de Estadística y Probabilidades II: @Utec
 
 ## Relevance
 
-- Applications of data in AI: The use of Artificial Intelligence (AI) in Spotify includes emotion recognition in songs, which serves to enhance personalized playlists and the overall user experience. By analyzing elements such as the tone, tempo, and lyrics of a song, Spotify can determine the mood it conveys and suggest music that aligns with the user's emotions or mental state. For example, if a user tends to listen to calming and melodic songs at night, Spotify can identify this trend and recommend similar songs during that time of day. Furthermore, Spotify uses machine learning algorithms in its recommendation system. These algorithms consider factors such as song popularity, current music trends, and what users with similar tastes are listening to. This allows Spotify to offer highly personalized recommendations.
+-   **Aplicaciones de datos en IA:** El uso de Inteligencia Artificial (IA) en Spotify incluye el reconocimiento de emociones en canciones, lo que sirve para mejorar listas de reproducción personalizadas y la experiencia general del usuario. Al analizar elementos como el tono, el tempo y la letra de una canción, Spotify puede determinar el estado de ánimo que transmite y sugerir música que se alinee con las emociones o el estado mental del usuario. Por ejemplo, si un usuario tiende a escuchar canciones tranquilas y melódicas por la noche, Spotify puede identificar esta tendencia y recomendar canciones similares durante ese momento del día. Además, Spotify utiliza algoritmos de aprendizaje automático en su sistema de recomendación. Estos algoritmos consideran factores como la popularidad de la canción, las tendencias musicales actuales y lo que están escuchando los usuarios con gustos similares. Esto permite a Spotify ofrecer recomendaciones altamente personalizadas.
 
-- Applications of data in marketing: How does statistical analysis of music data contribute to today's marketing? Music is part of people's daily lives, and companies are interested in meeting the primary needs of their users. Considering Spotify as one of the most well-known music applications today, harvesting its data presents an interesting source of information for company marketing, especially since it is public data. Companies often use data from Spotify to focus on analyzing user behaviors and preferences to create more effective strategies. This could include audience segmentation and personalizing advertising messages, collaborations with popular musicians (or trending), or probabilistic analysis of both current and future trends.
+-   **Aplicaciones de datos en marketing:** ¿Cómo contribuye el análisis estadístico de datos musicales al marketing actual? La música es parte de la vida diaria de las personas y las empresas están interesadas en satisfacer las necesidades principales de sus usuarios. Considerando a Spotify como una de las aplicaciones de música más conocidas hoy en día, la recolección de sus datos presenta una fuente interesante de información para el marketing de la empresa, especialmente porque son datos públicos. Las empresas a menudo utilizan datos de Spotify para centrarse en analizar los comportamientos y preferencias de los usuarios con el fin de crear estrategias más efectivas. Esto podría incluir segmentación de audiencia y personalización de mensajes publicitarios, colaboraciones con músicos populares (o en tendencia), o análisis probabilístico tanto de tendencias actuales como futuras.
 
-## Objectives
+## Objetivos
 
-This is a study which gathers data from multiple college students from lima with the goal of finding patterns in their musical preferences.
+Este es un estudio que recopila datos de múltiples estudiantes universitarios de Lima con el objetivo de encontrar patrones en sus preferencias musicales. Realizaremos casos de estudio donde investigaremos
 
-- [ ] Preferred genres according to the university/institute and district in which they study
-- [ ] Relationship between 'danceability' and age
-  - Hypothesis: Danceability is greater in people between the ages of 15 and 25
-- [ ] Relationship between song duration and artist genre
-- [ ] How varied is the music that people listen to according to their age and district
-- [ ] How has the average song intenstity evolved over time (age of listener)
+-   [ ] Estudio de la variable 'danceability', variable cuantitativa continua que mide qué tan bailable es una canción.
+-   [ ] Relación entre la 'danceability' y la edad.
+    -   Hipótesis: La 'danceability' promedio de las canciones escuchadas es mayor al 50% en personas entre las edades de 15 y 25 años.
+-   [ ] ¿Qué tan variada es la música que la gente escucha según su edad y distrito?
+-   [ ] ¿Cómo ha evolucionado la intensidad promedio de las canciones con el tiempo (edad del oyente)?
 
-## Data obtention
+## Obtención de datos
 
-Each entry in the dataset will correspond to the user ID of a student, and will have as its value a list of artists they listen to, the number of times they listen to them, among others. The data will be obtained from the Spotify API, with the following (simplified) code:
+Cada entrada en el conjunto de datos corresponderá al ID de usuario de un estudiante y tendrá como valor una lista de artistas que escuchan, el número de veces que los escuchan, entre otros. Los datos se obtendrán de la API de Spotify, con el siguiente código (simplificado):
 
-```python
-
+``` python
 # Authorize and Authenticate
 # ...
 
@@ -46,69 +44,70 @@ for track in top_tracks["items"]:
     features = spotify.audio_features(track["id"])
     analysis = spotify.audio_analysis(track["id"])
     listened_artists.merge(track["artists"]['items'])
-
 ```
 
-In order to obtain the user IDs and data, we will need to create an authentication system that allows us to obtain people's data. In addition, we will have a data pipeline that extracts relevant data from the Spotify API and stores it in a Google Sheets, which can then be exported to a CSV and finally to an R dataframe.
+Para obtener los IDs de usuario y los datos, necesitaremos crear un sistema de autenticación que nos permita obtener los datos de las personas. Además, tendremos un canal de datos que extraerá información relevante de la API de Spotify y la almacenará en Google Sheets, que luego se podrá exportar a un CSV y finalmente a un dataframe de R.
 
-## Members
+## Integrantes
 
-<table>
- <tr>
-   <td>
-     <img src="https://avatars.githubusercontent.com/u/104233007?v=4" alt="Arturo Magno" width="200"/>
-     <br/>
-     <a href="https://github.com/xkal1bur">Arturo Magno</a>
-   </td>
-   <td>
-     <img src="https://avatars.githubusercontent.com/u/91209653?v=4" alt="Valentin Quezada" width="200"/>
-     <br/>
-     <a href="https://github.com/ValentinQuezada">Valentin Quezada</a>
-   </td>
-   <td>
-     <img src="https://avatars.githubusercontent.com/u/60308719?v=4" alt="Enrique Flores" width="200"/>
-     <br/>
-     <a href="https://github.com/Enriquefft">Enrique Flores</a>
-   </td>
- </tr>
-</table>
++---------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------+
+| ![Arturo Magno](https://avatars.githubusercontent.com/u/104233007?v=4){alt="Arturo Magno"}\ | ![Valentin Quezada](https://avatars.githubusercontent.com/u/91209653?v=4){alt="Valentin Quezada"}\ | ![Enrique Flores](https://avatars.githubusercontent.com/u/60308719?v=4){alt="Enrique Flores"}\ |
+| [Arturo Magno](https://github.com/xkal1bur)                                                 | [Valentin Quezada](https://github.com/ValentinQuezada)                                             | [Enrique Flores](https://github.com/Enriquefft)                                                |
++---------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------+
 
+## Variables utilizadas en el estudio
 
-## Variables used in the study
+Este estudio requiere que los usuarios proporcionen sus datos de Spotify, lo cual podría ser un problema para algunas personas. Necesitaremos asegurarnos de que los datos estén anonimizados y que los usuarios estén al tanto de qué datos estamos recopilando y cómo los estamos utilizando. Teniendo todo esto en cuenta, esperamos que una aplicación web atractiva nos ayude a obtener una buena cantidad de datos. En cuanto al público objetivo, esperamos obtener una buena cantidad de datos de los estudiantes de UTEC, así como de otras universidades en Lima, especialmente si consideramos que casi todos los estudiantes universitarios utilizan Spotify.
 
-### Study Variables
+La cantidad mínima de datos que necesitamos son 200 entradas, pero para un estudio más robusto, necesitaríamos al menos 500 entradas. En el peor de los casos, los datos serán principalmente de UTEC, lo que generará sesgo en el primer objetivo. No obstante, intearemos recopilar la mayor cantidad de data posible, variada en su mayoría.
 
-This study requires the users to provide their Spotify data, which might be a problem for some people. We will need to make sure that the data is anonymized and that the users are aware of what data we are collecting and how we are using it. With all this considered, we expect that an atractive web app will help us get a good amount of data.
-Regerding the target population, we expect to get a good amount of data from UTEC students as well as from other universities in Lima, specially if we consider that almost all university students use Spotify.
+#### Variables primarias
 
-The minimum amount of data we need is 200 entries, but for a more robust study, we would need at least 500 entries, considering the amoun of students in UTEC, this will be attainable, at worst, the data will be mostly from utec which will generate bias on the first objective.
++-------------------------------+-----------------------+------------------------------------------------------------+
+| Variable                      | Tipo                  | Restricciones                                              |
++===============================+=======================+============================================================+
+| Centro de estudio             | Nominal categórica    | Ninguna                                                    |
++-------------------------------+-----------------------+------------------------------------------------------------+
+| Edad                          | Cuantitativa discreta | \~ \[15, 40\]                                              |
++-------------------------------+-----------------------+------------------------------------------------------------+
+| Distrito                      | Nominal categórica    | Distritos de Lima, Perú                                    |
++-------------------------------+-----------------------+------------------------------------------------------------+
+| Variedad musical percibida    | Nominal ordinal       | {Ninguna (1), Baja (2), Media (3), Alta (4), Muy alta (5)} |
++-------------------------------+-----------------------+------------------------------------------------------------+
+| Géneros preferidos percibidos | Nominal categórica    | Géneros musicales de Spotify                               |
++-------------------------------+-----------------------+------------------------------------------------------------+
 
-#### Primary
+#### Variables secundarias
 
-| Variable                   | Type     | Restrictions           |
-| -------------------------- | -------- | ---------------------- |
-| Study center               | Nominal  | None                   |
-| Age                        | Discrete | ~ [15, 40]             |
-| District                   | Nominal  | Lima districts         |
-| Percieved musical variety  | Ordinal  | [1, 5]                 |
-| Percieved prefered genders | Nominal  | Spotify artist genders |
-
-#### Secondary
-
-| Variable                                    | Type       | Restrictions   |
-| ------------------------------------------- | ---------- | -------------- |
-| Average danceability of prefered songs      | Continuous | [0, 1]         |
-| Average loudness of prefered songs          | Continuous | [-60, 0] DB    |
-| Average number of artists listened per year | Continuous | $\mathbb{R}^+$ |
-| Average duration of prefered Pop songs      | Continuous | [0, 60000] ms  |
-| ... of Rock songs                           | Continuous | [0, 60000] ms  |
-| ... of Reggaeton songs                      | Continuous | [0, 60000] ms  |
-| ... of blues songs                          | Continuous | [0, 60000] ms  |
-| Rate of prefered artists genre for Pop      | Continuous | [0, 1]         |
-| ... for Rock                                | Continuous | [0, 1]         |
-| ... for Reggaeton                           | Continuous | [0, 1]         |
-| ... for blues                               | Continuous | [0, 1]         |
-
++---------------------------------------------------------+-------------------+-----------------+
+| Variable                                                | Tipo              | Restricciones   |
++=========================================================+===================+=================+
+| 'Danceability' promedio de canciones favoritas          | Numérica continua | \[0, 1\]        |
++---------------------------------------------------------+-------------------+-----------------+
+| Característica acústica promedio de canciones favoritas | Numérica continua | \[0, 1\]        |
++---------------------------------------------------------+-------------------+-----------------+
+| Nivel de energía promedio de canciones favoritas        | Numérica continua | \[0, 1\]        |
++---------------------------------------------------------+-------------------+-----------------+
+| Intensidad de volumen promedio de canciones favoritas   | Numérica continua | \[-60, 0\] DB   |
++---------------------------------------------------------+-------------------+-----------------+
+| Promedio de artistas escuchados por año                 | Numérica continua | $\mathbb{R}^+$  |
++---------------------------------------------------------+-------------------+-----------------+
+| Duración promedio de canciones del género Pop           | Numérica continua | \[0, 60000\] ms |
++---------------------------------------------------------+-------------------+-----------------+
+| ... de canciones del género Rock                        | Numérica continua | \[0, 60000\] ms |
++---------------------------------------------------------+-------------------+-----------------+
+| ... de canciones del género Reggaeton                   | Numérica continua | \[0, 60000\] ms |
++---------------------------------------------------------+-------------------+-----------------+
+| ... de canciones del género Blues                       | Numérica continua | \[0, 60000\] ms |
++---------------------------------------------------------+-------------------+-----------------+
+| Tasa de artistas preferidos en el género Pop            | Numérica continua | \[0, 1\]        |
++---------------------------------------------------------+-------------------+-----------------+
+| ... en el género Rock                                   | Numérica continua | \[0, 1\]        |
++---------------------------------------------------------+-------------------+-----------------+
+| ... en el género Reggaeton                              | Numérica continua | \[0, 1\]        |
++---------------------------------------------------------+-------------------+-----------------+
+| ... en el género blues                                  | Numérica continua | \[0, 1\]        |
++---------------------------------------------------------+-------------------+-----------------+
 
 ```{r, message=FALSE, warning=FALSE}
 librerias <- c("dplyr", "readr", "DBI")
@@ -190,7 +189,6 @@ lines(Xs[Xs > a], dt(Xs[Xs > a],n-1), col = "green")
 legend("topright", legend = c("T(x,n-1)", "respuesta de la a.", "respuesta de la b."), col = c("red", "blue","green"), lty = 1)
 ```
 
-
 # Caso de estudio #2
 
 ## Distribución de la varianza muestral de la variedad musical de los encuestados.
@@ -234,7 +232,6 @@ inferior = (n-1) * v / qchisq(1-alpha/2,n-1)
 paste("El intervalo de confianza para la varianza poblacional es [", inferior, ";", superior, "].")
 ```
 
-
 # Caso de estudio #3
 
 Distribución de la diferencia de medias de la intensidad de la música escuchada por los encuestados de edad mayor a 25 años y la intensidad de la música escuchada por los encuestados de edad menor a 25 años.
@@ -266,23 +263,21 @@ paste("n2 =", n2)
 
 ¿Cual es la distribución de la diferencia de medias?
 
-Calculamos si la varianza es igual o diferente
+Calculamos si la varianza es igual o diferente:
 
 ```{r}
 var.test(df1$average_loudness, df2$average_loudness, ratio = 1, alternative = "two.sided", conf.level = 0.95)
 ```
 
-Vemos que las varianzas son iguales
+Vemos que las varianzas son iguales.
 
 Estamos en el caso de: no se conoce $\sigma_1$ y $\sigma\_2$ pero se sabe que son iguales.
 
-$$ 
-\begin{align*}
+\$\$ \begin{align*}
 & T(v) = \frac{\overline{X}_1 - \overline{X}_2 - (\mu_1 - \mu_2)} {\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}} \,,\text{ siendo} \\
 
 v &= \frac{\left(\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}\right)^2} {\frac{\left(\frac{s_1^2}{n_1}\right)^2}{n_1 - 1} + \frac{\left(\frac{s_2^2}{n_2}\right)^2}{n_2 - 1}} = \text{grados de libertad} 
-\end{align*}
-$$
+\end{align*} \$\$
 
 Valores importantes
 
@@ -337,10 +332,15 @@ lines(Xs[Xs > t], dt(Xs[Xs > t],v), col = "green")
 legend("topright", legend = c("T(x,v)", "respuesta de la a.", "respuesta de la b."), col = c("red","green", "blue"), lty = 1)
 ```
 
-## Refereces
+# Caso de estudio #4
 
-- Hujran, O., Alikaj, A., Durrani, U., & Al-Dmour, N. A. (2020). Big Data and its Effect on the Music Industry. ACM. https://doi.org/10.1145/3378936.3378957
-- Álvarez, P., De Quirós, J. G., & Baldassarri, S. (2023). RIADA: a Machine-Learning based infrastructure for recognising the emotions of Spotify songs. International Journal of Interactive Multimedia and Artificial Intelligence, 8(2), 168. https://doi.org/10.9781/ijimai.2022.04.002
-- Spotify for Developers. (18 de enero de 2024).
-  https://developer.spotify.com/
+```{r}
+library("randtests")
+runs.test(DF$Edad)
+```
 
+## Referenicas bibliográficas
+
+-   Hujran, O., Alikaj, A., Durrani, U., & Al-Dmour, N. A. (2020). Big Data and its Effect on the Music Industry. ACM. https://doi.org/10.1145/3378936.3378957
+-   Álvarez, P., De Quirós, J. G., & Baldassarri, S. (2023). RIADA: a Machine-Learning based infrastructure for recognising the emotions of Spotify songs. International Journal of Interactive Multimedia and Artificial Intelligence, 8(2), 168. https://doi.org/10.9781/ijimai.2022.04.002
+-   Spotify for Developers. (18 de enero de 2024). https://developer.spotify.com/
