@@ -120,35 +120,23 @@ for (paquete in librerias) {
 ```
 
 ```{r}
-host <- "aws-0-us-east-1.pooler.supabase.com"
-db_name <- "postgres"
-user <- "postgres.ssbtsqwpnmqovabbjzsc"
-port <- 5432
-db_password <- "giApLgnkOSm2p0yR"
-con <- DBI::dbConnect(RPostgres::Postgres(), 
-                      dbname = db_name, 
-                      host = host, 
-                      port = port, 
-                      user = user, 
-                      password = db_password)
-```
-
-```{r}
-DF <- dbReadTable(con, "users")
+DF <- read.csv("Data_Spotify.csv")
 head(DF)
+summary(DF$age)
 ```
 
 # Caso de Estudio #1
 
-## Distribución de la media muestral de 'danceability' para los encuestados entre 15 a 25 años.
+## Distribución de la media muestral de 'danceability' para los encuestados entre 15 a 18 años.
 
-El objetivo del primer caso de estudio es evaluar la variable 'danceability' en encuestados entre las edades de 15 y 25 años. Tenemos como dato la media de la población, $\mu$, que podemos calcular usando RStudio. Luego, filtramos la base de datos para los encuestados que tienen entre 15 y 25 años. Esta será nuestra muestra, y entonces buscamos su tamaño (n) y la desviación muestral (s).
+El objetivo del primer caso de estudio es evaluar la variable 'danceability' en encuestados entre las edades de 15 y 18 años. Tenemos como dato la media de la población, $\mu$, que podemos calcular usando RStudio. Luego, filtramos la base de datos para los encuestados que tienen entre 15 y 18 años. Esta será nuestra muestra, y entonces buscamos su tamaño (n) y la desviación muestral (s).
 
 ```{r}
-mu = mean(DF$average_danceability)
-DFD <- filter(DF,age >= 15 & age <= 25)
+library("dplyr")
+mu = mean(DF$danceability)
+DFD <- filter(DF,age >= 15 & age <= 18)
 n = sum(complete.cases(DFD))
-s = sd(DFD$average_danceability)
+s = sd(DFD$danceability)
 paste("mu =", mu)
 paste("n =", n)
 paste("s =", s)
@@ -156,17 +144,17 @@ paste("s =", s)
 
 Entendemos para este caso que, como el tamaño de muestra es menor a 30, la media muestral se distribuye con una T-student de $n-1$ grados de libertad. Con esta información, podemos ahora resolver los siguientes incisos:
 
-#### a. ¿Cuál es la probabilidad de que la media muestral sea mayor a 0.50?
+#### a. ¿Cuál es la probabilidad de que la media muestral sea mayor a 0.65?
 
-$$P(\overline{x}>0.50)$$
+$$P(\overline{x}>0.65)$$
 
-$$P\left(\frac{\overline{x}-\mu}{\frac{s}{\sqrt{n}}} > \frac{0.50-\mu}{\frac{s}{\sqrt{n}}}\right)$$
+$$P\left(\frac{\overline{x}-\mu}{\frac{s}{\sqrt{n}}} > \frac{0.65-\mu}{\frac{s}{\sqrt{n}}}\right)$$
 
-$$P\left(T(n-1)>\frac{0.50-\mu}{\frac{s}{\sqrt{n}}}\right)$$
+$$P\left(T(n-1)>\frac{0.65-\mu}{\frac{s}{\sqrt{n}}}\right)$$
 
 ```{r}
-a <- (0.50 - mu)/(s/sqrt(n))
-paste("La probabilidad de que la media muestral sea mayor a 0.50 es", pt(a,n-1, lower.tail = FALSE),".")
+a <- (0.65 - mu)/(s/sqrt(n))
+paste("La probabilidad de que la media muestral sea mayor a 0.65 es", pt(a,n-1, lower.tail = FALSE),".")
 ```
 
 #### b. ¿Será posible determinar un intervalo de confianza para la media muestral? Consideremos un nivel de confianza del 95%.
@@ -174,7 +162,7 @@ paste("La probabilidad de que la media muestral sea mayor a 0.50 es", pt(a,n-1, 
 ```{r}
 nc = 0.95
 alpha = 1 - nc
-test <- t.test(DFD$average_danceability, conf.level = nc)
+test <- t.test(DFD$danceability, conf.level = nc)
 ```
 
 ```{r}
@@ -184,9 +172,9 @@ paste("El intervalo de confianza para la media poblacional es [", test$conf.int[
 ```{r}
 Xs <- seq(-5, 5, by = 0.001)
 plot(Xs, dt(Xs,n-1), type = "l", col = "red")
-abline(v = c(-test$conf.int[1], test$conf.int[2]), col = "blue")
 lines(Xs[Xs > a], dt(Xs[Xs > a],n-1), col = "green")
-legend("topright", legend = c("T(x,n-1)", "respuesta de la a.", "respuesta de la b."), col = c("red", "blue","green"), lty = 1)
+abline(v = c(-test$conf.int[1], test$conf.int[2]), col = "blue")
+legend("topright", legend = c("T(x,n-1)", "respuesta de la a.", "respuesta de la b."), col = c("red", "green","blue"), lty = 1)
 ```
 
 # Caso de estudio #2
@@ -234,25 +222,26 @@ paste("El intervalo de confianza para la varianza poblacional es [", inferior, "
 
 # Caso de estudio #3
 
-Distribución de la diferencia de medias de la intensidad de la música escuchada por los encuestados de edad mayor a 25 años y la intensidad de la música escuchada por los encuestados de edad menor a 25 años.
+Distribución de la diferencia de medias de la intensidad de la música escuchada por los encuestados de edad mayor a 20 años y la intensidad de la música escuchada por los encuestados de edad menor a 20 años.
 
 ```{r}
+library("dplyr")
 DF %>%
-  filter(age <= 25) %>%
-  select(average_loudness) -> df1
+  filter(age <= 20) %>%
+  select(loudness) -> df1
 DF %>%
-  filter(age > 25) %>%
-  select(average_loudness) -> df2
+  filter(age > 20) %>%
+  select(loudness) -> df2
 ```
 
 ```{r}
 # Parámetros
-mu1 <- mean(df1$average_loudness)
-mu2 <- mean(df2$average_loudness)
-s1 <- sd(df1$average_loudness)
-s2 <- sd(df2$average_loudness)
-n1 <- length(df1$average_loudness)
-n2 <- length(df2$average_loudness)
+mu1 <- mean(df1$loudness)
+mu2 <- mean(df2$loudness)
+s1 <- sd(df1$loudness)
+s2 <- sd(df2$loudness)
+n1 <- length(df1$loudness)
+n2 <- length(df2$loudness)
 paste("mu1 =", mu1)
 paste("mu2 =", mu2)
 paste("s1 =", s1)
@@ -266,7 +255,7 @@ paste("n2 =", n2)
 Calculamos si la varianza es igual o diferente:
 
 ```{r}
-var.test(df1$average_loudness, df2$average_loudness, ratio = 1, alternative = "two.sided", conf.level = 0.95)
+var.test(df1$loudness, df2$loudness, ratio = 1, alternative = "two.sided", conf.level = 0.95)
 ```
 
 Vemos que las varianzas son iguales.
