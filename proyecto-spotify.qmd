@@ -258,22 +258,24 @@ Calculamos si la varianza es igual o diferente:
 var.test(df1$loudness, df2$loudness, ratio = 1, alternative = "two.sided", conf.level = 0.95)
 ```
 
-Vemos que las varianzas son iguales.
+Vemos que las varianzas son diferentes.
 
-Estamos en el caso de: no se conoce $\sigma_1$ y $\sigma\_2$ pero se sabe que son iguales.
+Estamos en el caso de: no se conoce $\sigma_1$ y $\sigma\_2$ pero se sabe que son diferentes.
 
-\$\$ \begin{align*}
+$$ 
+\begin{align*}
 & T(v) = \frac{\overline{X}_1 - \overline{X}_2 - (\mu_1 - \mu_2)} {\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}} \,,\text{ siendo} \\
 
 v &= \frac{\left(\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}\right)^2} {\frac{\left(\frac{s_1^2}{n_1}\right)^2}{n_1 - 1} + \frac{\left(\frac{s_2^2}{n_2}\right)^2}{n_2 - 1}} = \text{grados de libertad} 
-\end{align*} \$\$
+\end{align*} 
+$$
 
 Valores importantes
 
 ```{r}
 m <- mu1 - mu2 
 s <- sqrt((s1^2/n1) + (s2^2/n2)) 
-v <- round(s1^2/n1 + s2^2/n2)^2/((s1^2/n1)^2/(n1-1) + (s2^2/n2)^2/(n2-1)) 
+v <- round( (s1^2/n1 + s2^2/n2)^2/((s1^2/n1)^2/(n1-1) + (s2^2/n2)^2/(n2-1))  )
 
 alpha <- 0.05
 t <- qt(1-alpha/2,v)
@@ -308,7 +310,7 @@ paste("El intervalo de confianza para la varianza poblacional es [", ic[1], ";",
 Otra forma de calcularlo:
 
 ```{r}
-t.test(df1$average_loudness, df2$average_loudness, alternative = "two.sided", var.equal = TRUE, conf.level = 0.95)
+t.test(df1$loudness, df2$loudness, alternative = "two.sided", var.equal = FALSE, conf.level = 0.95)
 ```
 
 ¿Cómo se ve la distribución de la diferencia de medias?
