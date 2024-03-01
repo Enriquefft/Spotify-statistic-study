@@ -1,0 +1,638 @@
+---
+title: "DISEÑOEXPERIMENTOS"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+# PROCEDIMIENTO DE DISEÑO DE EXPERIMENTOS CON R
+
+1\) Copiar los datos en vectores:
+
+```{r}
+T1<-c(15, 12,18,15)
+T2<-c(17,18,17,12)
+T3<-c(15, 8, 16, 17)
+```
+
+2\) Convertirlo a data frame:
+
+```{r}
+DF<-data.frame(cbind(T1,T2,T3))
+DF
+```
+
+3\) Usar STACK
+
+```{r}
+SDF<-stack(DF)
+SDF
+summary(DF)
+summary(SDF)
+```
+
+4\) formar la tabla de ANOVA:
+
+```{r}
+AN <- aov(values~ind, data=SDF)   # indicar la data usada en data frame stack: SDF
+AN
+summary(AN) 
+```
+
+| FUENTE       | GL      | SC     | CM     | FO     | P VALOR |
+|--------------|---------|--------|--------|--------|---------|
+| TRATAMIENTOS | k-1=2   | SCTr=8 | CMTr=4 | Fo=0.4 | P=0.682 |
+| ERROR        | N-k=9   | SCE=90 | CME=10 |        |         |
+| TOTAL        | N-1= 11 | SCT=98 |        |        |         |
+
+P valor= P(F(k-1,N-k)\>Fo)
+
+```{r}
+pf(0.4,2,9, lower.tail=F)
+```
+
+5\) De aqui ya se toma el P valor y se hace la prueba de hipótesis.
+
+Ho: mu1= mu2 = mu3
+
+Ha: Existe algun MU distinto de otros.
+
+**Primera Forma:**
+
+Como Pvalor =0.68 \> alfa ==\> Acepto Ho ==\> Los mu son iguales.
+
+**Segunda forma:**
+
+La región crítica es siempre sombreado a la derecha.
+
+VC=F(1-alfa, k-1, N-k)
+
+```{r}
+qf(0.95,2, 9)
+```
+
+La region sombreada inicia en 4.25.
+
+Como Fo =0.4 no cae en la sombreada ==\> acepto Ho.
+
+## SEGUNDO EJEMPLO (data con cantidades distintas de datos)
+
+1\) ingreso los vectores (completando con NA hasta tener igual cantidad)
+
+```{r echo=TRUE}
+Tratamiento1 <- c(1.52, 1.38, 1.29, 1.48, 1.63, 1.45)
+Tratamiento2 <- c(1.63, 1.82, 1.35, 1.03, 2.30, 2.78) 
+Tratamiento3 <- c(2.56, 3.32, 2.76, 2.63, 2.12, NA) 
+
+```
+
+2\) Convertirlo a data Frame
+
+```{r}
+df <- data.frame(cbind(Tratamiento1, Tratamiento2,Tratamiento3)) 
+df
+
+```
+
+3\) Usar STACK:
+
+```{r echo =TRUE}
+sdf<-stack(df) 
+sdf
+summary(df)
+summary(sdf)
+```
+
+4\) Anova
+
+```{r echo=TRUE}
+Anova <- aov(values~ind, data=sdf)  # colocar solo el STACK DATA FRAME
+Anova
+summary(Anova) 
+```
+
+| fuente       | GL      | SC         | CM          | Fo        | P valor    |
+|--------------|---------|------------|-------------|-----------|------------|
+| Tratamientos | k-1=2   | SCTr=4.204 | CMTr=2.1019 | Fo= 10.33 | P=0.001575 |
+| Error        | N-k=14  | SCE=2.848  | CME=0.2034  |           |            |
+| Total        | N-1= 16 | SCT=7.052  |             |           |            |
+
+Ho: mu1 = mu2
+
+Ha: mu1 distinto de mu2
+
+Notar que el p valor se obtiene asI:
+
+**Pvalor= P(F(2,14) \>10.33)= 0.00175 \< alfa = 0.05**
+
+```{r}
+pf(10.33,2, 14, lower.tail=F)
+```
+
+==\> rechazo Ho ==\> Tomo Ha: **Existe alguna media distinta de otras.**
+
+5\) **DETERMINANDO CUAL ES EL PROMEDIO DISTINTO:**
+
+## Test de Tukey para comparaciones múltiples ( se determinará cual mu es mayor o menor)
+
+Para realizar un ***test de Tukey HSD*** (Honest Significant Differences) en R debe usarse el siguiente comando:
+
+```{r echo=TRUE}
+TukeyHSD(Anova, conf.level=0.95) 
+# Anova es la tabla de ANOVA que se halló arriba con el "aov". Con confianza 0.95 
+```
+
+Se ha hallado intervalos de confianza para la diferencia de 2 mu.
+
+-0.3215 \< mu2 - mu1 \<+ 1.0415 ==\> (-) \< mu2 - mu 1 \< (+) ==\> mu2 =mu1
+
++0.5048 \< mu3 - mu1 \< + 1.9344 ==\> (+) \< mu3 - mu1 \< (+) ==\> mu3\> mu1
+
++0.1448 \< mu3 - mu2 \< + 1.5744 ==\> (+)\< mu3 - mu2 \< (+) ==\> mu3 \> mu2
+
+Conclusión:
+
+**mu3\> mu1 = mu2**
+
+Nota:
+
+p adj= P valor ajustado ==\> como pvalor= 0.3760 \> alfa=0.05 ==\> acepto Ho: mu2 = mu1
+
+p adj=P valor ajustado ==\>Como p valor = 0.0014 \< alfa = 0.05 ==\>Rechazo Ho: mu3 distinto de mu 1.
+
+p adj=Pvalor ajustado ==\>como p valor = 0.0183 \< alfa = 0.05 ==\>Rechazo Ho:mu3 es distinto de mu 2.
+
+En forma gráfica:
+
+## ¿Cómo podemos visualizar estos resultados?
+
+```{r echo=TRUE}
+plot(TukeyHSD(Anova, conf.level=0.95), las=2) # Anova es el nombre de la tabla de ANOVA que se hallo mas arriba con "aov"
+```
+
+# SUPUESTOS DE ANOVA:
+
+Modelo analizado es:
+
+$$
+y_{ij}=\mu_{i}+\tau_{i}+\epsilon_{i}
+$$
+
+Los errores $\epsilon$ deben satisfacer las siguientes condiciones:
+
+1\) Generar iguales varianzas para cada tratamiento.
+
+2\) Deben ser normales con media cero.
+
+## 1) Para poner a prueba la suposición de la igualdad de varianzas
+
+El **Test de Levine para poner a prueba igualdad de varianzas** para dos poblaciones puede extenderse a $k$ poblaciones, realizando un análisis de varianza para las $k$ muestras
+
+$$ Z_{ij}=\left|X_{ij}-\widetilde{X}_{i}\right| \text{ para } j=1,\cdots,n_{i} \quad i=1,2,\cdots, k $$
+
+en donde $\widetilde{X}_{i}$ es la mediana del $i$-ésimo grupo (Test de Brown-Forsythe) o es la media del $i$-ésimo grupo (Test de Levine).
+
+Recuerden que estaríamos poniendo a prueba **las hipótesis**
+
+$$ H_{0}: \sigma_{1}=\sigma_{2}= \cdots=\sigma_{k}\\ H_{a}: \text{ al menos una varianza difiere de las demás}\\ $$
+
+## Test de Levine
+
+$$ \begin{align*} & N= \text{ número total de observaciones}\\ & k= \text{ número de grupos a comparar}\\ & n_{i}= \text{ número de observaciones en el grupo }i\\ & X_{ij}= \text{ el valor de la variable medida  para el j-ésimo caso del i-ésimo grupo}\\ & Z_{ij}=\left|X_{ij}-\widetilde{X}_{i}\right| \text{ para } j=1,\cdots,n_{i} \quad i=1,2,\cdots, r \end{align*} $$
+
+## Estadístico de prueba del Test de Levine
+
+$$ \begin{align*} & Z_{ij}=\left|X_{ij}-\widetilde{X}_{i}\right| \text{ para } j=1,\cdots,n_{i} \quad i=1,2,\cdots, r\\ & Z_{..}=\frac{1}{n}\sum_{i=1}^{r}\sum_{j=1}^{n_{i}}Z_{ij}\\ & Z_{i.}=\frac{1}{n_{i}}\sum_{j=1}^{n_{i}}Z_{ij}\\ & \text{ Y el estadístico de prueba viene dado por }\\ & W= \frac{(n-r)\sum_{i=1}^{r}n_{i}(Z_{i.}-Z_{..})}{(r-1)\sum_{i=1}^{r}\sum_{i=1}^{r}\sum_{j=1}^{n_{i}}\left(Z_{ij}-Z_{i.}\right)} \end{align*} $$
+
+**Y se rechaza** $H_{0}$ **cuando** $W > F(1-\alpha, k-1, N-k)$**.**
+
+## Código para realizar el Test de Levine en R
+
+Rechazamos $H_0$ cuando **Pr(\>F)** sea menor que $\alpha$
+
+```{r echo=TRUE}
+anova(aov(resid(aov(sdf$values~sdf$ind))**2~sdf$ind[-6])) 
+# ojo: Aqui solo se debe cambiar segun el problema, el SDF, el cual representa al STACK del DATA FRAME. 
+```
+
+Por lo tanto, en este caso n**o estaríamos rechazando la hipótesis nula** de que las varianzas sean iguales pues $p-valor= 0.2695 > \alpha= 0.05$
+
+Conclusión: las varianzas son iguales.
+
+También usando el estadístico de prueba:
+
+Fo= 1.4422
+
+Región crítica: sombreado a la derecha.
+
+V.C. = F(0.95, 2, 14)
+
+```{r}
+qf(0.95, 2, 14)
+```
+
+Como Fo cae en la región no sombreada ==\> los sigmas son iguales.
+
+Conclusiön: Las varianzas son iguales. Bien.
+
+%%%%%%%
+
+%%%%%%%
+
+Este no usar:
+
+Otro:
+
+```{r}
+leveneTest(y = sdf$values, group = sdf$ind, center = "median")
+```
+
+%%%%%%%%%%
+
+## Para poner a prueba la suposición de normalidad {.scrollable}
+
+En este caso se realiza una prueba de Shapiro-Wilk sobre los residuos es una prueba de hipótesis
+
+$$  \begin{align*} & H_{0}: \text{Los datos provienen de una distribución normal}\\ & H_{a}: \text{Los datos no provienen de una distribución normal} \end{align*} $$
+
+El estadístico de prueba es:
+
+$$ W=\frac{\left( \sum_{i=1}^n a_i*x_{(i)}\right)^2}{\sum_{i=1}^n (x_i-\bar{x})^2} $$ donde:
+
+-   $x_{(i)}$ (con el subíndice $i$ entre paréntesis) es el numero que ocupa la i-ésima posición en la muestra (con la muestra ordenada de menor a mayor)
+
+-   $\bar{x}=\frac{x_1+...+x_n}{n}$ es la media muestral
+
+-   $(a_1,...,a_n)=\frac{m^\top V^{-1}}{(m^\top V^{-1} V^{-1} m)^{1/2}}$
+
+donde $m=(m_1,...,m_n)^\top$, siendo $m_1,...,m_n$ los valores medios del estadístico ordenado, de variables aleatorias independientes e idénticamente distribuidas, muestreadas de distribuciones normales y $V$ denota la matriz de covarianzas de ese estadístico de orden.
+
+## Código para Shapiro Wilk en R
+
+```{r echo=TRUE}
+shapiro.test(resid(Anova)) 
+# aquí Anova representa la Tabla de ANOVA, que se halló mas arriba con "aov".
+```
+
+El p valor = 0.4065 \> alfa = 0.05 ==\> **NO SE RECHAZA HO**: Los datos si provienen de una normal.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Donde:
+
+$W$: Estadístico de prueba de Shapiro-Wilk
+
+*La hipótesis nula se rechazará si* $W$ *es demasiado pequeno*.**El valor de** $W$ **puede oscilar entre 0 y 1.**
+
+-   Rechazamos $H_0$: **Si p-value\<alfa, se rechaza**
+
+Con un $\alpha=0.05$ no estaríamos rechazando $H_0$, por lo tanto estamos validando que los datos provienen de una distribución normal
+
+%%%%%%%%%%%%%%%%%%%%5
+
+Hasta aquí por hoy miércoles.
+
+%%%%%%%%%%%%%**ERROR:**
+
+## Boxplot de los residuos
+
+```{r echo=TRUE}
+boxplot(resid(Anova))   # Anova es la tabla de ANOVA con "aov".
+```
+
+## Residuos vs valores ajustados
+
+```{r echo=TRUE}
+plot(Anova, which=1) 
+
+```
+
+## Q-Q plot de los residuos
+
+```{r echo=TRUE}
+plot(Anova, which=2) 
+# Anova es la tabla de ANOVA hallada con "aov" 
+```
+
+En general, si los puntos de datos caen a lo largo de alguna linea diagonal recta en una gráfica QQ, es probable (hay una tendencia) que el conjunto de datos si siga una distribución normal. Hay una tendencia a la normalidad.
+
+## Ejemplo:
+
+1.  En un estudio destinado a comparar el tiempo medio de vida de la banda de rodadura media de llantas de camiones, 28 camiones fueron divididos aleatoriamente en cuatro grupos de siete camiones. Cada grupo de siete camiones estaba equipado con neumáticos de uno de los cuatro tipos. Los datos los pueden encontrar en
+
+[Conjunto de datos](http://media.pearsoncmg.com/cmg/pmmg_mml_shared/mathstatsresources/Akritas/TireLife1Way.txt)
+
+y los mismos constan de la vida media de la banda de rodadura de los cuatro neumáticos de cada camión.
+
+## ¿Cómo cargar los datos en R?
+
+Cargue los datos en R utilizando el siguiente comando. Recuerde de colocar el archivo en su directorio de trabajo.
+
+```{r echo=TRUE}
+sdf <- read.table("http://media.pearsoncmg.com/cmg/pmmg_mml_shared/mathstatsresources/Akritas/TireLife1Way.txt", header=T) 
+sdf
+```
+
+haciendo la lectura de los datos con el código anterior se observa que tiene la forma de STACK DATA FRAME.
+
+Dicha presentación se puede regresar a la forma de Tratamientos:
+
+Unstack:
+
+```{r}
+dataf<-unstack(sdf)
+dataf
+```
+
+o también se puede digitar los datos en vectores.
+
+Paso 1
+
+Los datos ingresarlo como vectores.
+
+```{r}
+X1<-c(41.02,38.33,40.45,40.64,39.72,39.41, 40.91)
+X2<-c(40.05,41.81,40.06,41.15, 39.65,39.57,41.20) 
+X3<-c(41.92,39.45,40.65,40.38,40.29,41.85,40.36) 
+X4<-c(41.88,41.42,41.55,39.17,41.14,41.84,41.96)
+```
+
+Paso 2:
+
+a data frame:
+
+```{r}
+DF<- data.frame(cbind(X1,X2,X3,X4)) 
+DF
+```
+
+Paso 3:
+
+Usar STACK para tener dos columnas:
+
+```{r}
+SDF<-stack(DF) 
+SDF
+```
+
+## Cuales son las hipótesis?
+
+**¿Existen diferencias entre los cuatro tipos de neumáticos?**
+
+$$
+Ho: \\
+Ha:
+$$
+
+Paso 4: generar la tabla de ANOVA:
+
+```{r}
+anova1 <- aov(values~ind, data=sdf) 
+# se puede colocar sdf o SDF que representan lo mismo, segun lo definido arriba , en las dos formas de lectura de los datos.
+summary(anova1)
+```
+
+| Fuente       | GL      | SC         | CM          | Fo       | p valor |
+|--------------|---------|------------|-------------|----------|---------|
+| tratamientos | k-1= 3  | SCTr=5.318 | CMTr=1.7726 | Fo=2.051 | P=0.133 |
+| Error        | N-k=24  | SCE=20.737 | CME=0.8641  |          |         |
+| total        | N-1= 27 | SCT=26.055 |             |          |         |
+
+P Valor= P(F(k-1, N-k)\>Fo)
+
+```{r}
+pf(2.051, 3, 24, lower.tail=F)
+```
+
+Como el $p-valor=0.133 > \alpha=0.05$,==\> No se rechaza Ho ==\> **se acepta** $H_{0}$**.** Por lo tanto, se ha encontrado evidencia que muestra que no existe diferencias entre los tiempos de vida de los cuatro tipos de neumáticos ==\> son iguales la vida promedio de los 4 tipos de neumáticos.
+
+Otra forma:
+
+Valor crítico: F(1- alfa, k-1, N-k) =F(0.95, 3, 24)
+
+```{r}
+qf(0.95, 3, 24)  
+```
+
+**VC=3.0087**
+
+La región crítica es sombreada a la derecha. la parte sombreada inicia en 3.008787.
+
+Como Fo = 2.051 esta en la parte no sombreada entonces **acepto Ho.**
+
+Las medias son iguales.
+
+## Test de Tukey para comparaciones múltiples ( se determinará cual mu es mayor o menor)
+
+Para realizar un test de Tukey (Honest Significant Differences) en R debe usarse el siguiente comando:
+
+```{r echo=TRUE}
+TukeyHSD(anova1, conf.level=0.95)  
+# anova1 es la tabla de ANOVA. 
+```
+
+Como en todos los intervalos se ha obtenido:
+
+(-) \< mu(i) - mu(j) \< (+) ==\> se asumen como iguales.
+
+Todos los mu son iguales.
+
+## ¿Cómo podemos visualizar estos resultados?
+
+```{r}
+plot(TukeyHSD(anova1, conf.level=0.95), las=2)
+```
+
+**Otro ejemplo**
+
+```{r echo=TRUE}
+Tratamiento1 <- c(1.52, 1.38, 1.29, 1.48, 1.63, 1.45)
+Tratamiento2 <- c(1.63, 1.82, 1.35, 1.03, 2.30, 2.78) 
+Tratamiento3 <- c(2.56, 3.32, 2.76, 2.63, 2.12, NA) 
+df <- data.frame(cbind(Tratamiento1, Tratamiento2,Tratamiento3))
+df
+```
+
+```{r echo=TRUE}
+sdf<-stack(df) 
+sdf
+```
+
+```{r echo=TRUE}
+fit <- aov(values~ind, data=sdf)
+fit
+
+
+summary(fit)
+ 
+```
+
+tuckey
+
+```{r echo=TRUE}
+TukeyHSD(fit, conf.level=0.90)
+
+  
+```
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+NOTA:
+
+En diseño de experimentos se debe probar dos supuestos:
+
+i\) la normalidad ==\> se pueba usando Shapiro-Wilk.
+
+```{r}
+shapiro.test(resid(anova1))  # anova1 es el nombre del resultado de "aov".
+```
+
+Si P valor \> alfa ==\> Acepto Ho: Hay normalidad. ==\> sería lo correcto.
+
+Si P valor \< alfa ==\> Rechazo Ho: No hay normalidad. ==\> En este caso se debe aplicar otro test: Kruskal- Wallis
+
+ii\) la igualdad de varianzas.
+
+## 2. KRUSKAL WALLIS:
+
+Es una **prueba no paramétrica** basada en el rango que puede utilizarse para corroborar si existen diferencias significativas entre dos o más grupos de una variable independiente en una variable dependiente.
+
+Las hipótesis de la prueba son:
+
+$$ H_0: \text{Las medianas de la población son iguales}\\ H_a: \text{Las medianas de la población no son iguales} $$
+
+Test de rangos de Kruskal Wallis ***puede usarse cuando la suposición de normalidad no se satisface.***
+
+## Ejemplo 3
+
+```{r}
+T1<-c(0.3160355,1.4709109,0.2731266,0.9448799,0.4671302,1.7890170,1.9697724,3.3112350,0.3356004,4.1238980) 
+T2<-c(1.3307822,8.5920857,0.4203417,0.6899272,0.3146657,1.3534792,1.2511727,0.2681910,4.6247510,0.2207987)
+T3<-c(2.4979158,2.2154576,2.0685683,3.2668672,1.0036139,4.2635766,3.8248347,0.4834473,0.4947959,3.5627472) 
+
+```
+
+Ahora
+
+```{r}
+df3<-data.frame(cbind(T1,T2,T3)) 
+df3
+# knitr::kable(df3)
+```
+
+## Desarrollando el ejemplo 3
+
+1.  **Suposición de normalidad**
+
+```{r echo=TRUE}
+sdf3<-stack(df3) 
+Anova3<-aov(values~ind,data=sdf3)
+shapiro.test(resid(Anova3))
+```
+
+Se rechaza la suposición de normalidad, ya que $p-valor=0.0002498<\alpha$, con un $\alpha=0.05$
+
+==\> **No hay normalidad.**
+
+**Ahora una Prueba no paramétrica: (Kruskal- Wallis)**
+
+Debido a que no se cumple la suposición de normalidad, usaremos Kruskal Wallis:
+
+```{r echo=TRUE}
+kruskal.test(sdf3$values~sdf3$ind) 
+# sdf3 es el nombre del STACK DATA FRAME
+```
+
+No se rechaza la hipótesis nula, puesto que $p-valor=0.1756>\alpha$, con un $\alpha=0.05$
+
+NO RECHAZO Ho ==\> Acepto Ho: las medianas son iguales.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Adicional: Con lo que sigue , por fin: **FIN DE CURSO.**
+
+también debe de comprobarse que hay igualdad de varianzas:
+
+```{r}
+anova(aov(resid(aov(sdf3$values~sdf3$ind))**2~sdf3$ind))
+# sdf3 es el resultado de STACK DATA FRAME
+```
+
+Como p valor es 0.3099 \> alfa ==\> acepto Ho ==\> las varianzas serian iguales.
+
+SI es que se obtiene que las varianzas no son iguales ==\> debe de usarse el siguiente TEST, para verificar las hipotesis:
+
+## 3. TEST ANOVA DE WELCH:
+
+El ANOVA de Welch es una variante del análisis de varianza (ANOVA) que se utiliza cuando los grupos que se están comparando no cumple la suposición de igualdad de varianzas (homocedasticidad). A diferencia del ANOVA clásico, el ANOVA de Welch **no asume igualdad de varianzas** entre los grupos.
+
+Pone a prueba:
+
+$$ H_0: \mu_1=\mu_2=...=\mu_k\\ H_: \text{Alguna de las k medias difiere} $$
+
+## Ejemplo 4
+
+```{r}
+T1<-c(11.42621,12.98548,12.20010,10.96824,12.42231,12.12664,11.49822,11.56551,12.17427,11.36623) 
+T2<-c(14.828281,10.412155,13.704431,10.269634,14.384298,7.596698,14.188418,12.183693,11.088982,10.620460)
+T3<-c(13.352533,5.590364,6.057998,17.186662,15.183262,16.490664,7.586151,7.095219,25.503361,19.237586) 
+df4<-data.frame(cbind(T1,T2,T3))
+df4
+#knitr::kable(df4)
+```
+
+## Desarrollando el ejemplo 4
+
+1.  **Suposición de homocedasticidad (prueba de igualdad de varianzas)**
+
+```{r echo=TRUE}
+sdf4<-stack(df4) 
+# La prueba de igualdad de varianzas se hace con:
+anova(aov(resid(aov(sdf4$values~sdf4$ind))**2~sdf4$ind))
+# sdf4 es el STACK DATA FRAME.
+```
+
+Se rechaza la suposición de homocedasticidad, ya que $p-valor=0.002945<\alpha$, con un $\alpha=0.05$
+
+==\>Rechazo Ho: las varianzas son distintas.
+
+Entonces se hace la prueba de ANOVA de WELCH.
+
+**ANOVA de Welch**
+
+Debido a que no se cumple la suposición de homocedasticidad no podemos usar ANOVA de una vía, en cambio usaremos ANOVA de Welch
+
+```{r echo=TRUE}
+oneway.test(sdf4$values~sdf4$ind,data =sdf4,var.equal = F )
+# sdf4 es STACK DATA  FRAME
+```
+
+No se rechaza la hipótesis nula, puesto que $p-valor=0.7991>\alpha$, con un $\alpha=0.05$
+
+no rechazo Ho ==\> **Los mu son iguales** para todos los tratamientos.
+
+# PODEMOS DECIR:
+
+# FIN DE CURSO.

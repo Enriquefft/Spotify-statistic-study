@@ -246,4 +246,12 @@ Concluimos que en spotify son más escuchadas las canciones con mayor danceabili
 Es decir, canciones como: *Blinding Lights* de The Weeknd, con **danceability** 0.514, **energy** 0.73 y **acousticness** 0.001, son más escuchadas que canciones como: *The Night We Met* de Lord Huron, con **danceability** 0.351, **energy** 0.405 y **acousticness** 0.86.
 
 
+## Caso de estudio experimento
 
+En este experimento vamos a comparar como es que el genero percibido como favorito de las personas se relaciona con el volumen e intensidad de sus canciones escuchadas. En un estudio reciente se hablo de la "Guerra del volumen" y como es que existe una correlación entre popularidad de una cancion y su intensidad promedio. Nosotros vamos a utilizar la correlación entre intensidad y genero para responder a las siguientes preguntas:
+
+- Que genero es el que tiene mayor energía promedio?
+- Que genero es el que tiene mayor volumen promedio?
+
+- Que tan acertada es la percepción de las personas sobre su genero favorito?
+	Para este ultimo vamos a extraer la intencidad promedio de los generos más populares del siguiente [estudio]( https://github.com/isaackwy/loudness-wars-spotify)

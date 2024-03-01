@@ -21,7 +21,6 @@ Este es un estudio que recopila datos de múltiples estudiantes universitarios d
 -   [ ] Estudio de la variable 'danceability', variable cuantitativa continua que mide qué tan bailable es una canción.
 -   [ ] Relación entre la 'danceability' y la edad.
     -   Hipótesis: La 'danceability' promedio de las canciones escuchadas es mayor al 50% en personas entre las edades de 15 y 25 años.
--   [ ] ¿Qué tan variada es la música que la gente escucha según su edad y distrito?
 -   [ ] ¿Cómo ha evolucionado la intensidad promedio de las canciones con el tiempo (edad del oyente)?
 
 ## Obtención de datos
@@ -79,82 +78,73 @@ La cantidad mínima de datos que necesitamos son 200 entradas, pero para un estu
 
 #### Variables secundarias
 
-+---------------------------------------------------------+-------------------+-----------------+
-| Variable                                                | Tipo              | Restricciones   |
-+=========================================================+===================+=================+
-| 'Danceability' promedio de canciones favoritas          | Numérica continua | \[0, 1\]        |
-+---------------------------------------------------------+-------------------+-----------------+
-| Característica acústica promedio de canciones favoritas | Numérica continua | \[0, 1\]        |
-+---------------------------------------------------------+-------------------+-----------------+
-| Nivel de energía promedio de canciones favoritas        | Numérica continua | \[0, 1\]        |
-+---------------------------------------------------------+-------------------+-----------------+
-| Intensidad de volumen promedio de canciones favoritas   | Numérica continua | \[-60, 0\] DB   |
-+---------------------------------------------------------+-------------------+-----------------+
-| Promedio de artistas escuchados por año                 | Numérica continua | $\mathbb{R}^+$  |
-+---------------------------------------------------------+-------------------+-----------------+
-| Duración promedio de canciones del género Pop           | Numérica continua | \[0, 60000\] ms |
-+---------------------------------------------------------+-------------------+-----------------+
-| ... de canciones del género Rock                        | Numérica continua | \[0, 60000\] ms |
-+---------------------------------------------------------+-------------------+-----------------+
-| ... de canciones del género Reggaeton                   | Numérica continua | \[0, 60000\] ms |
-+---------------------------------------------------------+-------------------+-----------------+
-| ... de canciones del género Blues                       | Numérica continua | \[0, 60000\] ms |
-+---------------------------------------------------------+-------------------+-----------------+
-| Tasa de artistas preferidos en el género Pop            | Numérica continua | \[0, 1\]        |
-+---------------------------------------------------------+-------------------+-----------------+
-| ... en el género Rock                                   | Numérica continua | \[0, 1\]        |
-+---------------------------------------------------------+-------------------+-----------------+
-| ... en el género Reggaeton                              | Numérica continua | \[0, 1\]        |
-+---------------------------------------------------------+-------------------+-----------------+
-| ... en el género blues                                  | Numérica continua | \[0, 1\]        |
-+---------------------------------------------------------+-------------------+-----------------+
++---------------------------------------------------------+-------------------+----------------+
+| Variable                                                | Tipo              | Restricciones  |
++=========================================================+===================+================+
+| 'Danceability' promedio de canciones favoritas          | Numérica continua | \[0, 1\]       |
++---------------------------------------------------------+-------------------+----------------+
+| Característica acústica promedio de canciones favoritas | Numérica continua | \[0, 1\]       |
++---------------------------------------------------------+-------------------+----------------+
+| Nivel de energía promedio de canciones favoritas        | Numérica continua | \[0, 1\]       |
++---------------------------------------------------------+-------------------+----------------+
+| Intensidad de volumen promedio de canciones favoritas   | Numérica continua | \[-60, 0\] DB  |
++---------------------------------------------------------+-------------------+----------------+
+| Artistas escuchados por año                             | Numérica continua | $\mathbb{R}^+$ |
++---------------------------------------------------------+-------------------+----------------+
 
 ```{r, message=FALSE, warning=FALSE}
-librerias <- c("dplyr", "readr", "DBI")
+librerias <- c("dplyr", "ggplot2", "reshape2", "readr", "randtests", "tidyverse", "lmtest")
 for (paquete in librerias) {
   if (!require(paquete, character.only = TRUE)) {
-    install.packages(paquete)
+    install.packages(paquete, dependencies = TRUE)
   }
 	library(paquete, character.only = TRUE)
 }
 ```
 
 ```{r}
-DF <- read.csv("Data_Spotify.csv")
-head(DF)
-summary(DF$age)
+DF <- read_csv("spotify_data.csv")
+DF
 ```
 
 # Caso de Estudio #1
 
-## Distribución de la media muestral de 'danceability' para los encuestados entre 15 a 18 años.
+```{r}
+# Study 1 parameters
+study_1_params <- list(
+  age_min = 15,
+  age_max = 18
+)
+```
 
-El objetivo del primer caso de estudio es evaluar la variable 'danceability' en encuestados entre las edades de 15 y 18 años. Tenemos como dato la media de la población, $\mu$, que podemos calcular usando RStudio. Luego, filtramos la base de datos para los encuestados que tienen entre 15 y 18 años. Esta será nuestra muestra, y entonces buscamos su tamaño (n) y la desviación muestral (s).
+## Distribución de la media muestral de 'danceability' para los encuestados entre `{r} study_1_params$age_min` y `{r} study_1_params$age_max` años.
+
+El objetivo del primer caso de estudio es evaluar la variable 'danceability' en encuestados entre las edades de `r study_1_params$age_min` y `r study_1_params$age_max` años. Tenemos como dato la media de la población, $\mu$, que podemos calcular usando RStudio. Luego, filtramos la base de datos para los encuestados que tienen entre `r study_1_params$age_min` y `r study_1_params$age_max` años. Esta será nuestra muestra, y entonces buscamos su tamaño (n) y la desviación muestral (s).
 
 ```{r}
-library("dplyr")
-mu = mean(DF$danceability)
-DFD <- filter(DF,age >= 15 & age <= 18)
+mu = mean(DF$average_danceability)
+DFD <- filter(DF,age >= study_1_params$age_min & age <= study_1_params$age_max)
 n = sum(complete.cases(DFD))
-s = sd(DFD$danceability)
+s = sd(DFD$average_danceability)
 paste("mu =", mu)
 paste("n =", n)
 paste("s =", s)
 ```
 
-Entendemos para este caso que, como el tamaño de muestra es menor a 30, la media muestral se distribuye con una T-student de $n-1$ grados de libertad. Con esta información, podemos ahora resolver los siguientes incisos:
+Entendemos para este caso que, como el tamaño de muestra es mayor a 30, la media muestral se distribuye con una normal ($norm(\mu, \frac{\sigma}{\sqrt{n}})$). Con esta información, podemos ahora resolver los siguientes incisos:
 
-#### a. ¿Cuál es la probabilidad de que la media muestral sea mayor a 0.65?
+#### a. ¿Cuál es la probabilidad de que la media muestral sea mayor a 0.60?
 
-$$P(\overline{x}>0.65)$$
+$$P(\overline{x}>0.60)$$
 
-$$P\left(\frac{\overline{x}-\mu}{\frac{s}{\sqrt{n}}} > \frac{0.65-\mu}{\frac{s}{\sqrt{n}}}\right)$$
+$$P(\frac{\overline{x}-\mu}{\frac{\sigma}{\sqrt{n}}} > \frac{0.60-\mu}{\frac{\sigma}{\sqrt{n}}})$$
 
-$$P\left(T(n-1)>\frac{0.65-\mu}{\frac{s}{\sqrt{n}}}\right)$$
+$$P(N(\mu, \frac{\sigma}{\sqrt{n}})>\frac{0.60-\mu}{\frac{\sigma}{\sqrt{n}}})$$
 
 ```{r}
-a <- (0.65 - mu)/(s/sqrt(n))
-paste("La probabilidad de que la media muestral sea mayor a 0.65 es", pt(a,n-1, lower.tail = FALSE),".")
+a <- (0.6 - mu)/(s/sqrt(n))
+a_prob <- pnorm(a,mu, sqrt(n) ,lower.tail = FALSE)
+paste("La probabilidad de que la media muestral sea mayor a 0.60 es", a_prob,".")
 ```
 
 #### b. ¿Será posible determinar un intervalo de confianza para la media muestral? Consideremos un nivel de confianza del 95%.
@@ -162,7 +152,7 @@ paste("La probabilidad de que la media muestral sea mayor a 0.65 es", pt(a,n-1, 
 ```{r}
 nc = 0.95
 alpha = 1 - nc
-test <- t.test(DFD$danceability, conf.level = nc)
+test <- t.test(DFD$average_danceability, conf.level = nc)
 ```
 
 ```{r}
@@ -172,9 +162,18 @@ paste("El intervalo de confianza para la media poblacional es [", test$conf.int[
 ```{r}
 Xs <- seq(-5, 5, by = 0.001)
 plot(Xs, dt(Xs,n-1), type = "l", col = "red")
-lines(Xs[Xs > a], dt(Xs[Xs > a],n-1), col = "green")
 abline(v = c(-test$conf.int[1], test$conf.int[2]), col = "blue")
-legend("topright", legend = c("T(x,n-1)", "respuesta de la a.", "respuesta de la b."), col = c("red", "green","blue"), lty = 1)
+lines(Xs[Xs > a], dt(Xs[Xs > a],n-1), col = "green")
+legend("topright", legend = c("T(x,n-1)", "respuesta de la a.", "respuesta de la b."), col = c("red", "blue","green"), lty = 1)
+```
+```{r}
+
+Xs <- seq(-5, 5, by = 0.001)
+plot(Xs, dnorm(Xs), type = "l", col = "red")
+abline(v = c(-test$conf.int[1], test$conf.int[2]), col = "blue")
+lines(Xs[Xs > a], dnorm(Xs[Xs > a]), col = "green")
+legend("topright", legend = c("N(x,mu, s)", "respuesta de la a.", "respuesta de la b."), col = c("red", "blue","green"), lty = 1)
+
 ```
 
 # Caso de estudio #2
@@ -222,26 +221,25 @@ paste("El intervalo de confianza para la varianza poblacional es [", inferior, "
 
 # Caso de estudio #3
 
-Distribución de la diferencia de medias de la intensidad de la música escuchada por los encuestados de edad mayor a 20 años y la intensidad de la música escuchada por los encuestados de edad menor a 20 años.
+Distribución de la diferencia de medias de la intensidad de la música escuchada por los encuestados de edad mayor a 22 años y la intensidad de la música escuchada por los encuestados de edad menor a 18 años.
 
 ```{r}
-library("dplyr")
 DF %>%
-  filter(age <= 20) %>%
-  select(loudness) -> df1
+  filter(age <= 18) %>%
+  select(average_loudness) -> df1
 DF %>%
-  filter(age > 20) %>%
-  select(loudness) -> df2
+  filter(age > 22) %>%
+  select(average_loudness) -> df2
 ```
 
 ```{r}
 # Parámetros
-mu1 <- mean(df1$loudness)
-mu2 <- mean(df2$loudness)
-s1 <- sd(df1$loudness)
-s2 <- sd(df2$loudness)
-n1 <- length(df1$loudness)
-n2 <- length(df2$loudness)
+mu1 <- mean(df1$average_loudness)
+mu2 <- mean(df2$average_loudness)
+s1 <- sd(df1$average_loudness)
+s2 <- sd(df2$average_loudness)
+n1 <- length(df1$average_loudness)
+n2 <- length(df2$average_loudness)
 paste("mu1 =", mu1)
 paste("mu2 =", mu2)
 paste("s1 =", s1)
@@ -255,7 +253,7 @@ paste("n2 =", n2)
 Calculamos si la varianza es igual o diferente:
 
 ```{r}
-var.test(df1$loudness, df2$loudness, ratio = 1, alternative = "two.sided", conf.level = 0.95)
+var.test(df1$average_loudness, df2$average_loudness, ratio = 1, alternative = "two.sided", conf.level = 0.95)
 ```
 
 Vemos que las varianzas son diferentes.
@@ -281,7 +279,7 @@ alpha <- 0.05
 t <- qt(1-alpha/2,v)
 ```
 
-#### a. ¿Cuál es la probabilidad de que, en promedio, la intensidad de la música escuchada por los encuestados menores a 25 años supere en 10 decibeles a la intensidad de la música escuchada por los encuestados mayores a 25 años?
+#### a. ¿Cuál es la probabilidad de que, en promedio, la intensidad de la música escuchada por los encuestados menores a 18 años supere en 10 decibeles a la intensidad de la música escuchada por los encuestados mayores a 22 años?
 
 $$
 \mathbb{P}(\overline{X}_1 - \overline{X}_2 > 10) = 1 - \mathbb{P}(\overline{X}_1 - \overline{X}_2 \leq 10) = 1 - \mathbb{P}\left(T(v) \leq \frac{10 - (\mu_1 - \mu_2)}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}\right)
@@ -340,9 +338,241 @@ $$
 Y corremos el *runs.test* sobre la columna 'Age' para hallar el $p-valor$:
 
 ```{r}
-library("randtests")
 runs.test(DF$age)
 ```
+## Caso de estudio 5 (Regresión Lineal Múltiple)
+
+Ahora analizaremos si es útil el modelo de regresión múltiple para predecir la edad de una persona a partir de las variables **danceability**, **energy** y **acousticness**.
+
+Agrupo los datos en un data frame para hacer mejor el análisis de regresión múltiple y realizamos el modelo de regresión múltiple.
+
+```{r}
+df <- DF %>% select(age, average_danceability, average_energy, average_acousticness)
+regression <- lm(age ~ average_danceability + average_energy + average_acousticness, data = df)
+```
+
+
+Para empezar a visualizar cómo se relacionan, graficamos un heatmap de correlación.
+
+```{r}
+cor_matrix <- cor(df[,c("age", "average_danceability", "average_energy", "average_acousticness")])
+melted_cor_matrix <- melt(cor_matrix)
+ggplot(melted_cor_matrix, aes(x=Var1, y=Var2, fill=value)) +
+  geom_tile() +
+  theme_minimal() + 
+  scale_fill_gradient2(low="blue", high="red", mid="white", 
+                       midpoint=0, limit=c(-1,1), space="Lab", 
+                       name="Correlación") +
+  theme(axis.text.x = element_text(angle=45, hjust=1)) +
+  labs(x="", y="", title="Heatmap de correlación") +
+  geom_text(aes(label=round(value, 2)), size=4) 
+```
+
+A priori, no parece haber una correlación fuerte entre las variables, por lo que el modelo de regresión múltiple podría ser útil.
+
+Extraemos los coeficientes de la regresión múltiple para graficar las rectas de regresión simple.
+
+```{r}
+b_0 <- as.numeric(coef(regression)["(Intercept)"])
+b_1 <- as.numeric(coef(regression)["average_danceability"])
+b_2 <- as.numeric(coef(regression)["average_energy"])
+b_3 <- as.numeric(coef(regression)["average_acousticness"])
+b_3
+
+```
+
+
+Graficamos las rectas de regresión múltiple y las comparamos con las rectas de regresión simple.
+
+
+```{r, results='hold'}
+par(mfrow=c(1,3))
+plot(df$average_danceability, df$age)
+abline(b_0, b_1, col="red")
+abline(lm(df$age ~ df$average_danceability), col="blue")
+plot(df$average_energy, df$age)
+abline(b_0, b_2, col="red")
+abline(lm(df$age ~ df$average_energy), col="blue")
+title("Regresión múltiple")
+plot(df$average_acousticness, df$age)
+abline(b_0, b_3, col="red")
+abline(lm(df$age ~ df$average_acousticness), col="blue")
+legend("topleft", legend=c("Regresión múltiple", "Regresión simple"), col=c("red", "blue"), lty=1:1, cex=1)
+par(mfrow=c(1,1))
+```
+De manera individual, las rectas son diferentes, pero en general siguen la misma tendencia. Para ver la utilidad del modelo de regresión múltiple, analizamos los errores usando la independencia, la normalidad y la homocedasticidad.
+
+### Analizamos los errores
+
+```{r}
+errores <- regression$residuals
+```
+
+#### Test de independencia
+
+$$
+\mathsf{\text{Test de Durwin Watson}} \\
+Ho: \text{Los errores son independientes} \\
+Ha: \text{Los errores no son independientes}
+$$
+
+```{r}
+dw <- dwtest(regression,alternative ="two.sided",iterations = 1000)
+dw
+```
+
+El **p-value** es `r dw$p.value`, que es mayor que 0.05, además DW está entre 1.5 y 2.5, por lo que fallamos en rechazar la hipótesis nula. Los errores son independientes.
+
+#### Test de normalidad
+
+$$
+\mathsf{\text{Test de Kolmogorov Smirnov}}\\
+Ho: \text{Los errores tienen distribución normal, con media cero}\\
+Ha: \text{Los errores no tienen distribución normal, con media cero}
+$$
+
+```{r}
+ks <- ks.test(errores, "pnorm", mean(errores), sd(errores))
+ks
+```
+
+El **p-value** es `r ks$p.value`, que es mayor que 0.05, por lo que fallamos en rechazar la hipótesis nula. Los errores tienen distribución normal, con media cero.
+
+#### Test de homocedasticidad
+
+$$
+\mathsf{\text{Test de Breusch Pagan}} \\
+Ho: \text{Los errores tienen varianza constante (homocedasticidad)} \\
+Ha: \text{Los errores no tienen varianza constante (heterocedasticidad)}
+$$
+
+```{r}
+bp <- bptest(regression)
+bp
+```
+
+El **p-value** es `r bp$p.value`, que es mayor que 0.05, por lo que fallamos en rechazar la hipótesis nula. Los errores tienen varianza constante (homocedasticidad).
+
+#### Conclusión de análisis de errores
+
+Los errores son independientes, tienen distribución normal y varianza constante, por lo que el modelo de regresión múltiple es útil para predecir la edad de una persona a partir de las variables **danceability**, **energy** y **acousticness**.
+
+### Prueba de hipótesis en la regresión múltiple
+
+Ahora probaremos la significancia de los coeficientes de la regresión múltiple. La ecuación es:
+
+$$
+\text{age} = \beta_0 + \beta_1 \times \text{danceability} + \beta_2 \times \text{energy} + \beta_3 \times \text{acousticness}
+$$
+
+#### Prueba de significancia de los coeficientes
+
+Probaremos si $\beta_0, \beta_1, \beta_2, \beta_3$ son significativamente diferentes de cero. Para esto nos basta con ver el **p-value** de cada coeficiente en el modelo que nos da R.
+
+$$\mathsf{\text{Test de significancia de coeficientes}} $$
+$$Ho: \beta_0 = 0 \qquad \beta_1 = 0 \qquad \beta_2 = 0 \qquad \beta_3 = 0 $$
+$$Ha: \beta_0 \neq 0 \qquad \beta_1 \neq 0 \qquad \beta_2 \neq 0 \qquad \beta_3 \neq 0$$
+
+```{r}
+summary(regression)
+```
+
+Observamos que los **p-value** de los coeficientes $\beta_0, \beta_1, \beta_2, \beta_3$ son todos menores que 0.05, por lo que rechazamos la hipótesis nula y concluimos que los coeficientes son significativamente diferentes de cero.
+
+#### Prueba de significancia del modelo
+
+$$\mathsf{\text{Test de significancia del modelo}} $$
+$$Ho: \text{El modelo no es significativo} $$
+$$Ha: \text{El modelo es significativo}$$
+
+Vemos también que el **p-value** del modelo es menor que 0.05, por lo que rechazamos la hipótesis nula y concluimos que el modelo es significativamente diferente de cero.
+
+### Conclusión de Caso de estudio 1
+
+Determinamos que nuestro modelo de regresión múltiple es útil para predecir la edad de una persona a partir de las variables **danceability**, **energy** y **acousticness**. Además, concluimos que todas las variables son significativas para predecir la edad de una persona.
+
+Un ejemplo de la aplicación de esto es: Si tenemos la canción *Blinding Lights* de The Weeknd, con **danceability** 0.514, **energy** 0.73 y **acousticness** 0.001, entonces la edad de la persona que escucha esta canción es:
+
+```{r}
+round(b_0 + b_1 * 0.514 + b_2 * 0.73 + b_3 * 0.001)
+```
+
+
+## Caso de estudio 3 (Regresión Lineal Simple)
+
+```{r}
+df2 <- select(DF, listened_artists, age)
+regression2 <- lm(df2$listened_artists ~ df2$age)
+regression2
+```
+
+```{r}
+plot(df2$age, df2$listened_artists)
+abline(lm(df2$listened_artists ~ df2$age), col="blue")
+```
+
+Podemos observar que a medida que las personas se hacen mayores, la cantidad de artistas que escuchan al año, no parece variar mucho.
+
+```{r}
+summary(regression2)
+```
+El **p-value** del coeficiente de la edad, del intercepto y del modelo son mayores que 0.05, por lo que fallamos en rechazar la hipótesis nula.
+
+### Conclusión de Caso de estudio 2 (Regresión Lineal Simple)
+
+Concluimos que el modelo de regresión simple no es útil para predecir la cantidad de artistas anuales que se escuchan a partir de la edad. No podemos decir que la edad influye en la cantidad de artistas anuales que se escuchan.
+
+Si a pesar de esto, se insistiera en usar el modelo, se puede decir que: una persona de 20 años escucha en promedio 1031 artistas al año.
+
+```{r}
+as.numeric(round(regression2$coefficients[1] + regression2$coefficients[2] * 20))
+```
+
+## Caso de estudio 4 (Diseño de experimentos)
+
+```{r}
+df %>% select(-age) %>% stack() -> sdf3
+an_sdf3 <- aov(values ~ ind, data = sdf3)
+summary(an_sdf3)
+```
+
+| FUENTE       | GL      | SC          | CM         | FO      | P VALOR |
+|--------------|---------|-------------|------------|---------|---------|
+| TRATAMIENTOS | k-1=2   | SCTr=43.47  | CMTr=21.737| Fo=618.4| P=2e-161|
+| ERROR        | N-k=777 | SCE=27.31   | CME=0.035  |         |         |
+| TOTAL        | N-1=779 | SCT=70.78   |            |         |         |
+
+```{r}
+pf(618.4, 2, 777, lower.tail = FALSE)
+```
+
+El **p-value** es `r pf(0.002, 2, 87, lower.tail = FALSE)`, que es muchisimo menor que 0.05, por lo que rechazamos la hipótesis nula. Concluimos que hay diferencias significativas entre las variables **danceability**, **energy** y **acousticness**. Debido al **p-value**, que es pequeño, no hay ninguna duda de que hay diferencias significativas.
+
+Para analizar mejor las diferencias, realizamos un test de Tukey.
+
+```{r}
+TukeyHSD(an_sdf3)
+```
+
+-0.0099 < energy-danceability < 0.0673
+-0.5245 < acousticness-danceability < -0.4472
+-0.5532 < acousticness-energy < -0.4759
+
+energy = danceability
+acousticness < danceability
+acousticness < energy
+
+El órden más apropiado es **acousticness** < **danceability** = **energy**
+
+### Conclusión de Caso de estudio 3
+
+Concluimos que en spotify son más escuchadas las canciones con mayor danceability y energy, con un acousticness más bajo.
+
+Es decir, canciones como: *Blinding Lights* de The Weeknd, con **danceability** 0.514, **energy** 0.73 y **acousticness** 0.001, son más escuchadas que canciones como: *The Night We Met* de Lord Huron, con **danceability** 0.351, **energy** 0.405 y **acousticness** 0.86.
+
+
+## Caso de estudio 4 (Diseño de experimentos)
+
 
 **Conclusión:** Como el $p-valor=0.4139>\alpha=0.05$, aceptamos Ho con un 5% de significación. Es decir, podemos afirmar que la muestra es aleatoria (en relación a las edades) con un 95% de confianza.
 
