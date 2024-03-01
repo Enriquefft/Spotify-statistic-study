@@ -21,7 +21,7 @@ Este es un estudio que recopila datos de múltiples estudiantes universitarios d
 -   [ ] Estudio de la variable 'danceability', variable cuantitativa continua que mide qué tan bailable es una canción.
 -   [ ] Relación entre la 'danceability' y la edad.
     -   Hipótesis: La 'danceability' promedio de las canciones escuchadas es mayor al 50% en personas entre las edades de 15 y 25 años.
--   [ ] ¿Cómo ha evolucionado la intensidad promedio de las canciones con el tiempo (edad del oyente)?
+-   [ ] ¿Cómo ha evolucionado la intensidad promedio de 
 
 ## Obtención de datos
 
@@ -93,7 +93,7 @@ La cantidad mínima de datos que necesitamos son 200 entradas, pero para un estu
 +---------------------------------------------------------+-------------------+----------------+
 
 ```{r, message=FALSE, warning=FALSE}
-librerias <- c("dplyr", "ggplot2", "reshape2", "readr", "randtests", "tidyverse", "lmtest")
+librerias <- c("dplyr", "ggplot2", "reshape2", "readr", "randtests", "tidyverse", "lmtest", "purrr", "nortest", "ggcorrplot")
 for (paquete in librerias) {
   if (!require(paquete, character.only = TRUE)) {
     install.packages(paquete, dependencies = TRUE)
@@ -104,26 +104,22 @@ for (paquete in librerias) {
 
 ```{r}
 DF <- read_csv("spotify_data.csv")
-DF
+head(DF)
+
+variable_name <- names(DF)
 ```
+
+
 
 # Caso de Estudio #1
 
-```{r}
-# Study 1 parameters
-study_1_params <- list(
-  age_min = 15,
-  age_max = 18
-)
-```
+## Distribución de la media muestral de 'danceability' para los encuestados entre 15 a 18 años.
 
-## Distribución de la media muestral de 'danceability' para los encuestados entre `{r} study_1_params$age_min` y `{r} study_1_params$age_max` años.
-
-El objetivo del primer caso de estudio es evaluar la variable 'danceability' en encuestados entre las edades de `r study_1_params$age_min` y `r study_1_params$age_max` años. Tenemos como dato la media de la población, $\mu$, que podemos calcular usando RStudio. Luego, filtramos la base de datos para los encuestados que tienen entre `r study_1_params$age_min` y `r study_1_params$age_max` años. Esta será nuestra muestra, y entonces buscamos su tamaño (n) y la desviación muestral (s).
+El objetivo del primer caso de estudio es evaluar la variable 'danceability' en encuestados entre las edades de 15 y 18 años. Tenemos como dato la media de la población, $\mu$, que podemos calcular usando RStudio. Luego, filtramos la base de datos para los encuestados que tienen entre 15 y 18 años. Esta será nuestra muestra, y entonces buscamos su tamaño (n) y la desviación muestral (s).
 
 ```{r}
 mu = mean(DF$average_danceability)
-DFD <- filter(DF,age >= study_1_params$age_min & age <= study_1_params$age_max)
+DFD <- filter(DF,age >= 15 & age <= 18)
 n = sum(complete.cases(DFD))
 s = sd(DFD$average_danceability)
 paste("mu =", mu)
@@ -131,20 +127,19 @@ paste("n =", n)
 paste("s =", s)
 ```
 
-Entendemos para este caso que, como el tamaño de muestra es mayor a 30, la media muestral se distribuye con una normal ($norm(\mu, \frac{\sigma}{\sqrt{n}})$). Con esta información, podemos ahora resolver los siguientes incisos:
+Entendemos para este caso que, como el tamaño de muestra es menor a 30, la media muestral se distribuye con una T-student de $n-1$ grados de libertad. Con esta información, podemos ahora resolver los siguientes incisos:
 
-#### a. ¿Cuál es la probabilidad de que la media muestral sea mayor a 0.60?
+#### a. ¿Cuál es la probabilidad de que la media muestral sea mayor a 0.65?
 
-$$P(\overline{x}>0.60)$$
+$$P(\overline{x}>0.65)$$
 
-$$P(\frac{\overline{x}-\mu}{\frac{\sigma}{\sqrt{n}}} > \frac{0.60-\mu}{\frac{\sigma}{\sqrt{n}}})$$
+$$P\left(\frac{\overline{x}-\mu}{\frac{s}{\sqrt{n}}} > \frac{0.65-\mu}{\frac{s}{\sqrt{n}}}\right)$$
 
-$$P(N(\mu, \frac{\sigma}{\sqrt{n}})>\frac{0.60-\mu}{\frac{\sigma}{\sqrt{n}}})$$
+$$P\left(T(n-1)>\frac{0.65-\mu}{\frac{s}{\sqrt{n}}}\right)$$
 
 ```{r}
-a <- (0.6 - mu)/(s/sqrt(n))
-a_prob <- pnorm(a,mu, sqrt(n) ,lower.tail = FALSE)
-paste("La probabilidad de que la media muestral sea mayor a 0.60 es", a_prob,".")
+a <- (0.65 - mu)/(s/sqrt(n))
+paste("La probabilidad de que la media muestral sea mayor a 0.65 es", pt(a,n-1, lower.tail = FALSE),".")
 ```
 
 #### b. ¿Será posible determinar un intervalo de confianza para la media muestral? Consideremos un nivel de confianza del 95%.
@@ -162,18 +157,9 @@ paste("El intervalo de confianza para la media poblacional es [", test$conf.int[
 ```{r}
 Xs <- seq(-5, 5, by = 0.001)
 plot(Xs, dt(Xs,n-1), type = "l", col = "red")
-abline(v = c(-test$conf.int[1], test$conf.int[2]), col = "blue")
 lines(Xs[Xs > a], dt(Xs[Xs > a],n-1), col = "green")
-legend("topright", legend = c("T(x,n-1)", "respuesta de la a.", "respuesta de la b."), col = c("red", "blue","green"), lty = 1)
-```
-```{r}
-
-Xs <- seq(-5, 5, by = 0.001)
-plot(Xs, dnorm(Xs), type = "l", col = "red")
 abline(v = c(-test$conf.int[1], test$conf.int[2]), col = "blue")
-lines(Xs[Xs > a], dnorm(Xs[Xs > a]), col = "green")
-legend("topright", legend = c("N(x,mu, s)", "respuesta de la a.", "respuesta de la b."), col = c("red", "blue","green"), lty = 1)
-
+legend("topright", legend = c("T(x,n-1)", "respuesta de la a.", "respuesta de la b."), col = c("red", "green","blue"), lty = 1)
 ```
 
 # Caso de estudio #2
@@ -221,14 +207,14 @@ paste("El intervalo de confianza para la varianza poblacional es [", inferior, "
 
 # Caso de estudio #3
 
-Distribución de la diferencia de medias de la intensidad de la música escuchada por los encuestados de edad mayor a 22 años y la intensidad de la música escuchada por los encuestados de edad menor a 18 años.
+Distribución de la diferencia de medias de la intensidad de la música escuchada por los encuestados de edad mayor a 20 años y la intensidad de la música escuchada por los encuestados de edad menor a 20 años.
 
 ```{r}
 DF %>%
-  filter(age <= 18) %>%
+  filter(age <= 20) %>%
   select(average_loudness) -> df1
 DF %>%
-  filter(age > 22) %>%
+  filter(age > 20) %>%
   select(average_loudness) -> df2
 ```
 
@@ -308,7 +294,7 @@ paste("El intervalo de confianza para la varianza poblacional es [", ic[1], ";",
 Otra forma de calcularlo:
 
 ```{r}
-t.test(df1$loudness, df2$loudness, alternative = "two.sided", var.equal = FALSE, conf.level = 0.95)
+t.test(df1$average_loudness, df2$average_loudness, alternative = "two.sided", var.equal = FALSE, conf.level = 0.95)
 ```
 
 ¿Cómo se ve la distribución de la diferencia de medias?
@@ -347,15 +333,15 @@ Ahora analizaremos si es útil el modelo de regresión múltiple para predecir l
 Agrupo los datos en un data frame para hacer mejor el análisis de regresión múltiple y realizamos el modelo de regresión múltiple.
 
 ```{r}
-df <- DF %>% select(age, average_danceability, average_energy, average_acousticness)
-regression <- lm(age ~ average_danceability + average_energy + average_acousticness, data = df)
+df_caso_5 <- DF %>% select(age, average_danceability, average_energy, average_acousticness)
+regression <- lm(age ~ average_danceability + average_energy + average_acousticness, data = df_caso_5)
 ```
 
 
 Para empezar a visualizar cómo se relacionan, graficamos un heatmap de correlación.
 
 ```{r}
-cor_matrix <- cor(df[,c("age", "average_danceability", "average_energy", "average_acousticness")])
+cor_matrix <- cor(df_caso_5[,c("age", "average_danceability", "average_energy", "average_acousticness")])
 melted_cor_matrix <- melt(cor_matrix)
 ggplot(melted_cor_matrix, aes(x=Var1, y=Var2, fill=value)) +
   geom_tile() +
@@ -387,16 +373,16 @@ Graficamos las rectas de regresión múltiple y las comparamos con las rectas de
 
 ```{r, results='hold'}
 par(mfrow=c(1,3))
-plot(df$average_danceability, df$age)
+plot(df_caso_5$average_danceability, df_caso_5$age)
 abline(b_0, b_1, col="red")
-abline(lm(df$age ~ df$average_danceability), col="blue")
-plot(df$average_energy, df$age)
+abline(lm(df_caso_5$age ~ df_caso_5$average_danceability), col="blue")
+plot(df_caso_5$average_energy, df_caso_5$age)
 abline(b_0, b_2, col="red")
-abline(lm(df$age ~ df$average_energy), col="blue")
+abline(lm(df_caso_5$age ~ df_caso_5$average_energy), col="blue")
 title("Regresión múltiple")
-plot(df$average_acousticness, df$age)
+plot(df_caso_5$average_acousticness, df_caso_5$age)
 abline(b_0, b_3, col="red")
-abline(lm(df$age ~ df$average_acousticness), col="blue")
+abline(lm(df_caso_5$age ~ df_caso_5$average_acousticness), col="blue")
 legend("topleft", legend=c("Regresión múltiple", "Regresión simple"), col=c("red", "blue"), lty=1:1, cex=1)
 par(mfrow=c(1,1))
 ```
@@ -487,7 +473,7 @@ $$Ha: \text{El modelo es significativo}$$
 
 Vemos también que el **p-value** del modelo es menor que 0.05, por lo que rechazamos la hipótesis nula y concluimos que el modelo es significativamente diferente de cero.
 
-### Conclusión de Caso de estudio 1
+### Conclusión de Caso de estudio 5
 
 Determinamos que nuestro modelo de regresión múltiple es útil para predecir la edad de una persona a partir de las variables **danceability**, **energy** y **acousticness**. Además, concluimos que todas las variables son significativas para predecir la edad de una persona.
 
@@ -498,7 +484,7 @@ round(b_0 + b_1 * 0.514 + b_2 * 0.73 + b_3 * 0.001)
 ```
 
 
-## Caso de estudio 3 (Regresión Lineal Simple)
+## Caso de estudio 6 (Regresión Lineal Simple)
 
 ```{r}
 df2 <- select(DF, listened_artists, age)
@@ -518,7 +504,7 @@ summary(regression2)
 ```
 El **p-value** del coeficiente de la edad, del intercepto y del modelo son mayores que 0.05, por lo que fallamos en rechazar la hipótesis nula.
 
-### Conclusión de Caso de estudio 2 (Regresión Lineal Simple)
+### Conclusión de Caso de estudio 6 (Regresión Lineal Simple)
 
 Concluimos que el modelo de regresión simple no es útil para predecir la cantidad de artistas anuales que se escuchan a partir de la edad. No podemos decir que la edad influye en la cantidad de artistas anuales que se escuchan.
 
@@ -528,10 +514,10 @@ Si a pesar de esto, se insistiera en usar el modelo, se puede decir que: una per
 as.numeric(round(regression2$coefficients[1] + regression2$coefficients[2] * 20))
 ```
 
-## Caso de estudio 4 (Diseño de experimentos)
+## Caso de estudio 7 (Diseño de experimentos)
 
 ```{r}
-df %>% select(-age) %>% stack() -> sdf3
+df_caso_5 %>% select(-age) %>% stack() -> sdf3
 an_sdf3 <- aov(values ~ ind, data = sdf3)
 summary(an_sdf3)
 ```
@@ -564,14 +550,334 @@ acousticness < energy
 
 El órden más apropiado es **acousticness** < **danceability** = **energy**
 
-### Conclusión de Caso de estudio 3
+### Conclusión de Caso de estudio 7
 
 Concluimos que en spotify son más escuchadas las canciones con mayor danceability y energy, con un acousticness más bajo.
 
 Es decir, canciones como: *Blinding Lights* de The Weeknd, con **danceability** 0.514, **energy** 0.73 y **acousticness** 0.001, son más escuchadas que canciones como: *The Night We Met* de Lord Huron, con **danceability** 0.351, **energy** 0.405 y **acousticness** 0.86.
 
 
-## Caso de estudio 4 (Diseño de experimentos)
+## Caso de estudio 8: experimento de percepción de géneros
+
+En este experimento vamos a comparar como es que el genero percibido como favorito de las personas se relaciona con el volumen e intensidad de sus canciones escuchadas. En un estudio reciente se hablo de la "Guerra del volumen" y como es que existe una correlación entre popularidad de una cancion y su intensidad promedio. Nosotros vamos a utilizar la correlación entre intensidad y genero para responder a las siguientes preguntas:
+
+- Que genero es el que tiene mayor energía promedio?
+- Que genero es el que tiene mayor volumen promedio?
+
+- Que tan acertada es la percepción de las personas sobre su genero favorito?
+	Para este ultimo vamos a extraer la intensidad promedio de los generos más populares del siguiente [estudio]( https://github.com/isaackwy/loudness-wars-spotify)
+
+Los generos que seran considerados en este estudio son los siguientes:
+
+```{r}
+rock <- list(
+  loudness = -8.169173438842325,
+  energy = 0.7070176326516859
+)
+r_and_b <- list(
+  loudness = -7.8536782465833515,
+  energy = 0.5891415262417352
+)
+pop <- list(
+  loudness = -6.962477605529706,
+  energy = 0.6268352900526923
+)
+edm <- list(
+  loudness = -6.239374065852863,
+  energy = 0.783228764081047
+)
+latin <- list(
+  loudness = -7.167930645280326,
+  energy = 0.6853391368991688
+)
+rap <- list(
+  loudness = -7.402685040690765,
+  energy = 0.6688384486114174
+)
+
+average_genres_info <- data.frame(
+  name = c("rock", "r&b", "pop", "edm", "latin", "rap"),
+  loudness = c(rock$loudness, r_and_b$loudness, pop$loudness, edm$loudness, latin$loudness, rap$loudness),
+  energy = c(rock$energy, r_and_b$energy, pop$energy, edm$energy, latin$energy, rap$energy)
+)
+```
+
+
+
+| name              | loudness           |   energy |
+|-------------------|--------------------|----------|
+| Rock               | `r rock$loudness`   | `r rock$energy` |
+| R&B                | `r r_and_b$loudness`| `r r_and_b$energy` |
+| Pop                | `r pop$loudness`    | `r pop$energy` |
+| EDM                | `r edm$loudness`    | `r edm$energy` |
+| Latin              | `r latin$loudness`  | `r latin$energy` |
+| Rap                | `r rap$loudness`    | `r rap$energy` |
+
+Aqui podemos observar que, en promedio, el genero con mayor enería y volumen es el EDM, seguido por el Rock, vamos a ver si esto concuerda con la data que tenemos.
+
+
+
+```{r}
+
+# group by genre
+# do the same for the other genres  
+users_genre_data <- list(
+  rock = filter(DF, favourite_gender == "rock") %>% select(average_loudness, average_energy),
+  r_and_b = filter(DF, favourite_gender == "r&b") %>% select(average_loudness, average_energy),
+  pop = filter(DF, favourite_gender == "pop") %>% select(average_loudness, average_energy),
+  edm = filter(DF, favourite_gender == "edm") %>% select(average_loudness, average_energy),
+  latin = filter(DF, favourite_gender == "latin") %>% select(average_loudness, average_energy),
+  rap = filter(DF, favourite_gender == "rap") %>% select(average_loudness, average_energy)
+)
+
+biggest_genre_count <- max(sapply(users_genre_data, nrow))
+
+# Fill in the missing data with NA
+users_genre_data <- lapply(users_genre_data, function(x) {
+  if (nrow(x) < biggest_genre_count) {
+    x <- rbind(x, data.frame(average_loudness = rep(NA, biggest_genre_count - nrow(x)), average_energy = rep(NA, biggest_genre_count - nrow(x))))
+  }
+  return(x)
+})
+
+
+#combine all loudness data by genre
+users_loudness_data <- data.frame(
+  genre = rep(names(users_genre_data), each = biggest_genre_count),
+  loudness = unlist(lapply(users_genre_data, function(x) x$average_loudness))
+)
+users_energy_data <- data.frame(
+  genre = rep(names(users_genre_data), each = biggest_genre_count),
+  energy = unlist(lapply(users_genre_data, function(x) x$average_energy))
+)
+loudnes_aov <- aov(loudness~genre, data=users_loudness_data)
+energy_aov <- aov(energy~genre, data=users_energy_data)
+
+loudness_aov_summary <- summary(loudnes_aov)
+energy_aov_summary <- summary(energy_aov)
+
+k <- length(unique(users_loudness_data$genre))
+n <- nrow(users_loudness_data)
+loudness_aov_data <- list(
+  SCTr = loudness_aov_summary[[1]][["Sum Sq"]][1],
+  SCE = loudness_aov_summary[[1]][["Sum Sq"]][2],
+  SCT = loudness_aov_summary[[1]][["Sum Sq"]][1] + loudness_aov_summary[[1]][["Sum Sq"]][2],
+  CMTr = loudness_aov_summary[[1]][["Mean Sq"]][1],
+  CME = loudness_aov_summary[[1]][["Mean Sq"]][2],
+  f_value = loudness_aov_summary[[1]][["F value"]],
+  p_value = loudness_aov_summary[[1]][["Pr(>F)"]][1]
+)
+energy_aov_data <- list(
+  SCTr = energy_aov_summary[[1]][["Sum Sq"]][1],
+  SCE = energy_aov_summary[[1]][["Sum Sq"]][2],
+  SCT = energy_aov_summary[[1]][["Sum Sq"]][1] + energy_aov_summary[[1]][["Sum Sq"]][2],
+  CMTr = energy_aov_summary[[1]][["Mean Sq"]][1],
+  CME = energy_aov_summary[[1]][["Mean Sq"]][2],
+  f_value = energy_aov_summary[[1]][["F value"]],
+  p_value = energy_aov_summary[[1]][["Pr(>F)"]][1]
+)
+energy_aov_data
+loudness_aov_data
+
+```
+AOV loudness
+
+| FUENTE       | GL      | SC     | CM     | FO     | P VALOR |
+|--------------|---------|--------|--------|--------|---------|
+| TRATAMIENTOS | `r k-1` | `r loudness_aov_data$SCTr` | `r loudness_aov_data$CMTr` | `r loudness_aov_data$f_value` | `r loudness_aov_data$p_value` |
+| ERROR        | `r n-k` | `r loudness_aov_data$SCE` | `r loudness_aov_data$CME` |        |         |
+| TOTAL        | `r n-1` | `r loudness_aov_data$SCT` |        |        |         |
+
+AOV energy
+
+| FUENTE       | GL      | SC     | CM     | FO     | P VALOR |
+|--------------|---------|--------|--------|--------|---------|
+| TRATAMIENTOS | `r k-1` | `r energy_aov_data$SCTr` | `r energy_aov_data$CMTr` | `r energy_aov_data$f_value` | `r energy_aov_data$p_value` |
+| ERROR        | `r n-k` | `r energy_aov_data$SCE` | `r energy_aov_data$CME` |        |         |
+| TOTAL        | `r n-1` | `r energy_aov_data$SCT` |        |        |         |
+
+H0 : $\mu_1 = \mu_2 = \mu_3$  
+Ha: $\exists i \neq j$ tal que $\mu_i \neq \mu_j$
+
+Dado que los **p-value** son `r loudness_aov_data$p_value` y `r energy_aov_data$p_value`, ambos menores que 0.05, rechazamos la hipótesis nula. Concluimos que hay diferencias significativas entre los generos en cuanto a la intensidad y volumen de las canciones escuchadas. Sin embargo, las diferencias de loudness son significativamente menores que las diferencias de energía, esto se debe a que estan en una escala logaritmica y tambien debido a que estamos estudiando generos modernos, los cuales, segun la fuente original, tienen un loudness promedio muy alto y similar. En caso de haber estudiado generos como el jazz o la música clásica, las diferencias de loudness hubieran sido más significativas.
+
+Ahora vamos a calcular que genero es el que tiene mayor energía promedio y que genero es el que tiene mayor volumen promedio segun la data de los usuarios.
+
+```{r}
+highest_loudness_genre <- users_loudness_data %>% group_by(genre) %>% summarise(mean_loudness = mean(loudness)) %>% arrange(desc(mean_loudness)) %>% head(1)
+highest_energy_genre <- users_energy_data %>% group_by(genre) %>% summarise(mean_energy = mean(energy)) %>% arrange(desc(mean_energy)) %>% head(1)
+
+highest_loudness_genre
+highest_energy_genre
+```
+
+Dado que observamos que las diferencias de loudness son significativamente menores que las diferencias de energía, vamos a analizar si es que esta sigue una distribución normal con una prueba de Kolmogorov Smirnov.
+
+$H_0$: Los datos siguen una distribución normal  
+$H_a$: Los datos no siguen una distribución normal
+
+```{r}
+users_average_loudness_data <- DF$average_loudness
+ks_p_value <- ks.test(users_average_loudness_data, "pnorm", mean(users_average_loudness_data), sd(users_average_loudness_data))$p.value
+ks_p_value
+```
+Dado que el **p-value** es `r ks_p_value`, que es menor que 0.05, rechazamos la hipótesis nula. Concluimos que los datos no siguen una distribución normal.
+
+En la prueba de Kolmogorov Smirnov realizada existieron valores repetidos, por lo que para confirmar este resultado vamos a realizar una prueba de Anderson-Darling para verificar si los datos siguen una distribución normal y la acompañaremos con un histograma.
+
+
+```{r}
+ad.test(users_average_loudness_data)
+```
+Nuevamente, el **p-value** es menor que 0.05, por lo que rechazamos la hipótesis nula. Concluimos que los datos no siguen una distribución normal.
+
+
+```{r}
+
+mean_value <- mean(users_average_loudness_data)
+sd_value <- sd(users_average_loudness_data)
+
+x_values <- seq(min(users_average_loudness_data), max(users_average_loudness_data), length.out = 100)
+
+p <- ggplot(data.frame(x = users_average_loudness_data), aes(x = x)) +
+ geom_histogram(aes(y = ..density..), binwidth = diff(range(users_average_loudness_data))/30, fill = "lightgray", alpha = 0.5) +
+ stat_function(fun = dnorm, args = list(mean = mean_value, sd = sd_value), geom = "line", color = "blue") +
+ labs(title = "Normal Distribution vs. Actual Data", x = "Value", y = "Density")
+
+
+# actual data
+p <- ggplot(data.frame(x = users_average_loudness_data), aes(x = x)) +
+ geom_histogram(aes(y = after_stat(density)), binwidth = diff(range(users_average_loudness_data))/30, fill = "lightgray", alpha = 0.5) +
+ stat_function(fun = dnorm, args = list(mean = mean_value, sd = sd_value), geom = "line", color = "blue") +
+ labs(title = "Normal Distribution vs. Actual Data", x = "Value", y = "Density")
+
+p
+
+```
+
+
+
+
+A continuación, vamos a mapear un género para cada usuario segun el volumen promedio de las canciones que escuchan. Luego, vamos a comparar el género mapeado con el género percibido como favorito por el usuario.
+Para darle a cada usuario un genero estimado, vamos a asignarle aquel que tenga el volumen promedio más cercano al volumen promedio de las canciones que escucha segun la variable `average_genders_info`
+
+
+
+```{r}
+average_genres_loudness <- average_genres_info %>% select(name, loudness)
+
+# filter loudness & favourite_gender
+users_estimated_genre <- DF %>% select(average_loudness, favourite_gender)
+# We will add a new column to the dataframe with the estimated genre
+users_estimated_genre$estimated_genre <- NA
+users_estimated_genre$estimated_genre <- sapply(users_estimated_genre$average_loudness, function(x) {
+  genre <- average_genres_loudness$name[which.min(abs(average_genres_loudness$loudness - x))]
+  return(genre)
+})
+users_estimated_genre
+
+# Now we will add a new column to the dataframe with 0 if the favourite is the same as the estimated, 1 if it is different
+users_estimated_genre$correct <- ifelse(users_estimated_genre$favourite_gender == users_estimated_genre$estimated_genre, 0, 1)
+
+# Now we will calculate the percentage of correct estimations
+correct_estimations <- sum(users_estimated_genre$correct == 0) / nrow(users_estimated_genre) * 100
+```
+
+El porcentaje de aciertos es `r correct_estimations`, lo que significa que la percepción de las personas sobre su genero favorito es acertada en un 20% de los casos.
+
+
+## Caso de estudio 9
+
+En este caso de estudio vamos a analizar la relación entre el la corrección de la percepción de género y la cantidad de canciones escuchadas por año.
+Es posible que un usuario tenga más claro su género favorito si escucha menos canciones por año.
+Para esto vamos a realizar un test de independencia entre estas dos variables.
+
+```{r}
+summary(DF$listened_artists)
+```
+En primer lugar, vamos a categorizar la cantidad de canciones escuchadas por año en 4 categorias: muy baja, baja, media, alta y muy alta.
+
+| Categoría | Cantidad de canciones  |
+|-----------|------------------------|
+| Muy baja  | 0 - 100                |
+| Baja      | 100 - 500              |
+| Media     | 500 - 1500             |
+| Alta      | 1500 - 3000            |
+| Muy alta  | 3000 - 5000            |
+
+```{r}
+# generate a data frame with the correct estimations and the listened artists
+correct_estimations_listened_artists <- data.frame(
+  correct = users_estimated_genre$correct,
+  listened_artists = DF$listened_artists
+)
+
+# map listened artists to category
+correct_estimations_listened_artists$category <- NA
+correct_estimations_listened_artists$category <- sapply(correct_estimations_listened_artists$listened_artists, function(x) {
+  if (x >= 0 & x <= 100) {
+    return("Muy baja")
+  } else if (x > 100 & x <= 500) {
+    return("Baja")
+  } else if (x > 500 & x <= 1500) {
+    return("Media")
+  } else if (x > 1500 & x <= 3000) {
+    return("Alta")
+  } else if (x > 3000 & x <= 5000) {
+    return("Muy alta")
+  }
+})
+correct_estimations_listened_artists <- correct_estimations_listened_artists %>% select(correct, category)
+correct_estimations_listened_artists <- table(correct_estimations_listened_artists)
+correct_estimations_listened_artists 
+
+correct_estimations_listened_artists_p <- chisq.test(correct_estimations_listened_artists)$p.value
+
+
+  
+```
+$H_0$: La cantidad de canciones escuchadas por año es independiente de la corrección de la percepción de género
+$H_a$: La cantidad de canciones escuchadas por año no es independiente de la corrección de la percepción de género
+
+El **p-value** es `r correct_estimations_listened_artists_p`, que es mayor que 0.05, por lo que aceptamos la hipótesis nula. Concluimos que la cantidad de canciones escuchadas por año es independiente de la corrección de la percepción de género.
+
+## Caso 10
+
+### Relación entre ubicación y genero preferido
+
+Para este estudio vamos a investigar si es que la ubicación, ya sea de residencia o de estudio tiene alguna relación bcon su genero preferido.
+
+```{r}
+study_genre_df <- DF %>% select(study_center, favourite_gender)
+study_genre_tab <- table(study_genre_df)
+
+study_genre_p <- chisq.test(study_genre_tab)$p.value
+study_genre_p 
+
+district_genre_df <- DF %>% select(distrito, favourite_gender)
+district_genre_tab <- table(district_genre_df)
+
+district_genre_p <- chisq.test(district_genre_tab)$p.value
+district_genre_p 
+```
+
+$H_0$: La ubicación es independiente del genero preferido
+$H_a$: La ubicación no es independiente del genero preferido
+
+El **p-value** es `r study_genre_p` para el centro de estudio y `r district_genre_p` para el distrito, ambos mayores que 0.05, por lo que aceptamos la hipótesis nula. Concluimos que la ubicación es independiente del genero preferido. Sin embargo, es importante mencionar que el **p-value** para el distrito es muy cercano a 0.05, por lo que no podemos estar completamente seguros de que la ubicación sea independiente del genero preferido. Por ello, vamos a realizar un grafico para visualizar mejor la data.
+
+```{r}
+
+
+district_genre_df
+# remove the categories with less than 10 observations
+district_genre_df <- district_genre_df %>% filter(distrito != "Otros", distrito != "No especifica")
+
+model.matrix(~0+., data=district_genre_df) %>% 
+  cor(use="pairwise.complete.obs") %>% 
+  ggcorrplot(show.diag=FALSE, type="lower", lab=TRUE, lab_size=2)
+```
+
 
 
 **Conclusión:** Como el $p-valor=0.4139>\alpha=0.05$, aceptamos Ho con un 5% de significación. Es decir, podemos afirmar que la muestra es aleatoria (en relación a las edades) con un 95% de confianza.
@@ -610,3 +916,4 @@ ks.test(DF$energy,pnorm,mean=0.70,sd=0.10)
 -   Hujran, O., Alikaj, A., Durrani, U., & Al-Dmour, N. A. (2020). Big Data and its Effect on the Music Industry. ACM. https://doi.org/10.1145/3378936.3378957
 -   Álvarez, P., De Quirós, J. G., & Baldassarri, S. (2023). RIADA: a Machine-Learning based infrastructure for recognising the emotions of Spotify songs. International Journal of Interactive Multimedia and Artificial Intelligence, 8(2), 168. https://doi.org/10.9781/ijimai.2022.04.002
 -   Spotify for Developers. (18 de enero de 2024). https://developer.spotify.com/
+- Isaac Yu. loudness-wars-spotify. retrieved from https://github.com/isaackwy/loudness-wars-spotify

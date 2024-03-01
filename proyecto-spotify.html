@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>Hipótesis: La ‘danceability’ promedio de las canciones escuchadas es mayor al 50% en personas entre las edades de 15 y 25 años.</li>
 </ul></li>
-<li><input type="checkbox">¿Cómo ha evolucionado la intensidad promedio de las canciones con el tiempo (edad del oyente)?</li>
+<li><input type="checkbox">¿Cómo ha evolucionado la intensidad promedio de</li>
 </ul>
 </section>
 <section id="obtención-de-datos" class="level2">
@@ -245,7 +245,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>librerias <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>, <span class="st">"reshape2"</span>, <span class="st">"readr"</span>, <span class="st">"randtests"</span>, <span class="st">"tidyverse"</span>, <span class="st">"lmtest"</span>)</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>librerias <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>, <span class="st">"reshape2"</span>, <span class="st">"readr"</span>, <span class="st">"randtests"</span>, <span class="st">"tidyverse"</span>, <span class="st">"lmtest"</span>, <span class="st">"purrr"</span>, <span class="st">"nortest"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (paquete <span class="cf">in</span> librerias) {</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(paquete, <span class="at">character.only =</span> <span class="cn">TRUE</span>)) {</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(paquete, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
@@ -265,45 +265,34 @@ dbl (6): average_danceability, average_energy, average_loudness, average_aco...
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>DF</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(DF)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 260 × 11
-   favourite_gender average_danceability average_energy average_loudness
-   &lt;chr&gt;                           &lt;dbl&gt;          &lt;dbl&gt;            &lt;dbl&gt;
- 1 rock                            0.682          0.401           -10.1 
- 2 rock                            0.303          0.88             -4.74
- 3 r&amp;b                             0.845          0.652            -7.50
- 4 r&amp;b                             0.425          0.378            -5.82
- 5 pop                             0.76           0.887            -1.99
- 6 r&amp;b                             0.496          0.639            -6.16
- 7 r&amp;b                             0.764          0.594           -10.0 
- 8 r&amp;b                             0.743          0.86             -6.35
- 9 edm                             0.573          0.746            -4.89
-10 r&amp;b                             0.754          0.725            -6.06
-# ℹ 250 more rows
+<pre><code># A tibble: 6 × 11
+  favourite_gender average_danceability average_energy average_loudness
+  &lt;chr&gt;                           &lt;dbl&gt;          &lt;dbl&gt;            &lt;dbl&gt;
+1 rock                            0.682          0.401           -10.1 
+2 rock                            0.303          0.88             -4.74
+3 r&amp;b                             0.845          0.652            -7.50
+4 r&amp;b                             0.425          0.378            -5.82
+5 pop                             0.76           0.887            -1.99
+6 r&amp;b                             0.496          0.639            -6.16
 # ℹ 7 more variables: average_acousticness &lt;dbl&gt;, spotify_id &lt;chr&gt;, age &lt;dbl&gt;,
 #   percieved_variety &lt;chr&gt;, listened_artists &lt;dbl&gt;, study_center &lt;chr&gt;,
 #   distrito &lt;chr&gt;</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>variable_name <span class="ot">&lt;-</span> <span class="fu">names</span>(DF)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 </section>
 <section id="caso-de-estudio-1" class="level1">
 <h1>Caso de Estudio #1</h1>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Study 1 parameters</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>study_1_params <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">age_min =</span> <span class="dv">15</span>,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">age_max =</span> <span class="dv">18</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="distribución-de-la-media-muestral-de-danceability-para-los-encuestados-entre-r-study_1_paramsage_min-y-r-study_1_paramsage_max-años." class="level2">
-<h2 class="anchored" data-anchor-id="distribución-de-la-media-muestral-de-danceability-para-los-encuestados-entre-r-study_1_paramsage_min-y-r-study_1_paramsage_max-años.">Distribución de la media muestral de ‘danceability’ para los encuestados entre <code>{r} study_1_params$age_min</code> y <code>{r} study_1_params$age_max</code> años.</h2>
+<section id="distribución-de-la-media-muestral-de-danceability-para-los-encuestados-entre-15-a-18-años." class="level2">
+<h2 class="anchored" data-anchor-id="distribución-de-la-media-muestral-de-danceability-para-los-encuestados-entre-15-a-18-años.">Distribución de la media muestral de ‘danceability’ para los encuestados entre 15 a 18 años.</h2>
 <p>El objetivo del primer caso de estudio es evaluar la variable ‘danceability’ en encuestados entre las edades de 15 y 18 años. Tenemos como dato la media de la población, <span class="math inline">\(\mu\)</span>, que podemos calcular usando RStudio. Luego, filtramos la base de datos para los encuestados que tienen entre 15 y 18 años. Esta será nuestra muestra, y entonces buscamos su tamaño (n) y la desviación muestral (s).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">=</span> <span class="fu">mean</span>(DF<span class="sc">$</span>average_danceability)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>DFD <span class="ot">&lt;-</span> <span class="fu">filter</span>(DF,age <span class="sc">&gt;=</span> study_1_params<span class="sc">$</span>age_min <span class="sc">&amp;</span> age <span class="sc">&lt;=</span> study_1_params<span class="sc">$</span>age_max)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>DFD <span class="ot">&lt;-</span> <span class="fu">filter</span>(DF,age <span class="sc">&gt;=</span> <span class="dv">15</span> <span class="sc">&amp;</span> age <span class="sc">&lt;=</span> <span class="dv">18</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">complete.cases</span>(DFD))</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>s <span class="ot">=</span> <span class="fu">sd</span>(DFD<span class="sc">$</span>average_danceability)</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"mu ="</span>, mu)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -319,18 +308,17 @@ dbl (6): average_danceability, average_energy, average_loudness, average_aco...
 <pre><code>[1] "s = 0.146037375225229"</code></pre>
 </div>
 </div>
-<p>Entendemos para este caso que, como el tamaño de muestra es mayor a 30, la media muestral se distribuye con una normal (<span class="math inline">\(norm(\mu, \frac{\sigma}{\sqrt{n}})\)</span>). Con esta información, podemos ahora resolver los siguientes incisos:</p>
-<section id="a.-cuál-es-la-probabilidad-de-que-la-media-muestral-sea-mayor-a-0.60" class="level4">
-<h4 class="anchored" data-anchor-id="a.-cuál-es-la-probabilidad-de-que-la-media-muestral-sea-mayor-a-0.60">a. ¿Cuál es la probabilidad de que la media muestral sea mayor a 0.60?</h4>
-<p><span class="math display">\[P(\overline{x}&gt;0.60)\]</span></p>
-<p><span class="math display">\[P(\frac{\overline{x}-\mu}{\frac{\sigma}{\sqrt{n}}} &gt; \frac{0.60-\mu}{\frac{\sigma}{\sqrt{n}}})\]</span></p>
-<p><span class="math display">\[P(N(\mu, \frac{\sigma}{\sqrt{n}})&gt;\frac{0.60-\mu}{\frac{\sigma}{\sqrt{n}}})\]</span></p>
+<p>Entendemos para este caso que, como el tamaño de muestra es menor a 30, la media muestral se distribuye con una T-student de <span class="math inline">\(n-1\)</span> grados de libertad. Con esta información, podemos ahora resolver los siguientes incisos:</p>
+<section id="a.-cuál-es-la-probabilidad-de-que-la-media-muestral-sea-mayor-a-0.65" class="level4">
+<h4 class="anchored" data-anchor-id="a.-cuál-es-la-probabilidad-de-que-la-media-muestral-sea-mayor-a-0.65">a. ¿Cuál es la probabilidad de que la media muestral sea mayor a 0.65?</h4>
+<p><span class="math display">\[P(\overline{x}&gt;0.65)\]</span></p>
+<p><span class="math display">\[P\left(\frac{\overline{x}-\mu}{\frac{s}{\sqrt{n}}} &gt; \frac{0.65-\mu}{\frac{s}{\sqrt{n}}}\right)\]</span></p>
+<p><span class="math display">\[P\left(T(n-1)&gt;\frac{0.65-\mu}{\frac{s}{\sqrt{n}}}\right)\]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> (<span class="fl">0.6</span> <span class="sc">-</span> mu)<span class="sc">/</span>(s<span class="sc">/</span><span class="fu">sqrt</span>(n))</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>a_prob <span class="ot">&lt;-</span> <span class="fu">pnorm</span>(a,mu, <span class="fu">sqrt</span>(n) ,<span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"La probabilidad de que la media muestral sea mayor a 0.60 es"</span>, a_prob,<span class="st">"."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> (<span class="fl">0.65</span> <span class="sc">-</span> mu)<span class="sc">/</span>(s<span class="sc">/</span><span class="fu">sqrt</span>(n))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"La probabilidad de que la media muestral sea mayor a 0.65 es"</span>, <span class="fu">pt</span>(a,n<span class="dv">-1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>),<span class="st">"."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "La probabilidad de que la media muestral sea mayor a 0.60 es 0.697633998100492 ."</code></pre>
+<pre><code>[1] "La probabilidad de que la media muestral sea mayor a 0.65 es 0.812646209374997 ."</code></pre>
 </div>
 </div>
 </section>
@@ -350,21 +338,11 @@ dbl (6): average_danceability, average_energy, average_loudness, average_aco...
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Xs <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="at">by =</span> <span class="fl">0.001</span>)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Xs, <span class="fu">dt</span>(Xs,n<span class="dv">-1</span>), <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">c</span>(<span class="sc">-</span>test<span class="sc">$</span>conf.int[<span class="dv">1</span>], test<span class="sc">$</span>conf.int[<span class="dv">2</span>]), <span class="at">col =</span> <span class="st">"blue"</span>)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(Xs[Xs <span class="sc">&gt;</span> a], <span class="fu">dt</span>(Xs[Xs <span class="sc">&gt;</span> a],n<span class="dv">-1</span>), <span class="at">col =</span> <span class="st">"green"</span>)</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"T(x,n-1)"</span>, <span class="st">"respuesta de la a."</span>, <span class="st">"respuesta de la b."</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>,<span class="st">"green"</span>), <span class="at">lty =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(Xs[Xs <span class="sc">&gt;</span> a], <span class="fu">dt</span>(Xs[Xs <span class="sc">&gt;</span> a],n<span class="dv">-1</span>), <span class="at">col =</span> <span class="st">"green"</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">c</span>(<span class="sc">-</span>test<span class="sc">$</span>conf.int[<span class="dv">1</span>], test<span class="sc">$</span>conf.int[<span class="dv">2</span>]), <span class="at">col =</span> <span class="st">"blue"</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"T(x,n-1)"</span>, <span class="st">"respuesta de la a."</span>, <span class="st">"respuesta de la b."</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"green"</span>,<span class="st">"blue"</span>), <span class="at">lty =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="proyecto-spotify_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Xs <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>, <span class="at">by =</span> <span class="fl">0.001</span>)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Xs, <span class="fu">dnorm</span>(Xs), <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">c</span>(<span class="sc">-</span>test<span class="sc">$</span>conf.int[<span class="dv">1</span>], test<span class="sc">$</span>conf.int[<span class="dv">2</span>]), <span class="at">col =</span> <span class="st">"blue"</span>)</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(Xs[Xs <span class="sc">&gt;</span> a], <span class="fu">dnorm</span>(Xs[Xs <span class="sc">&gt;</span> a]), <span class="at">col =</span> <span class="st">"green"</span>)</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"N(x,mu, s)"</span>, <span class="st">"respuesta de la a."</span>, <span class="st">"respuesta de la b."</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>,<span class="st">"green"</span>), <span class="at">lty =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="proyecto-spotify_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<p><img src="proyecto-spotify_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -376,14 +354,14 @@ dbl (6): average_danceability, average_energy, average_loudness, average_aco...
 <h2 class="anchored" data-anchor-id="distribución-de-la-varianza-muestral-de-la-variedad-musical-de-los-encuestados.">Distribución de la varianza muestral de la variedad musical de los encuestados.</h2>
 <p>El objetivo del segundo caso de estudio es evaluar la variable ‘perceived_variety’. No obstante, nos falta como dato la varianza de la población, <span class="math inline">\(\sigma^2\)</span>, para poder trabajar el caso. Nuestra base de datos entera servirá en este caso como muestra, y al ser de un tamaño mayor a 30, podemos aproximar la varianza muestral a la varianza poblacional. El principal objetivo será entonces calcular la varianza poblacional usando RStudio, pero para ello, primero debemos refactorizar la data nominal a numérica:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>numeric_variety <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">factor</span>(DF<span class="sc">$</span>percieved_variety))</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>v <span class="ot">=</span> <span class="fu">var</span>(numeric_variety)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">complete.cases</span>(DF))</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"v ="</span>, v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>numeric_variety <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">factor</span>(DF<span class="sc">$</span>percieved_variety))</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>v <span class="ot">=</span> <span class="fu">var</span>(numeric_variety)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">complete.cases</span>(DF))</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"v ="</span>, v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "v = 2.18644193644194"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"n ="</span>, n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"n ="</span>, n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "n = 260"</code></pre>
 </div>
@@ -400,8 +378,8 @@ P\left(\frac{s^2(n-1)}{\sigma^2}\leq\frac{m(n-1)}{\sigma^2}\right)=0.90
 P\left(\chi^2_{(n-1)}\leq\frac{m(n-1)}{\sigma^2}\right)=0.90
 \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">=</span> <span class="fu">qchisq</span>(<span class="fl">0.90</span>,n<span class="dv">-1</span>) <span class="sc">*</span> v <span class="sc">/</span> (n<span class="dv">-1</span>)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"La máxima varianza muestral con probabilidad 0.90 es"</span>, m,<span class="st">"."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">=</span> <span class="fu">qchisq</span>(<span class="fl">0.90</span>,n<span class="dv">-1</span>) <span class="sc">*</span> v <span class="sc">/</span> (n<span class="dv">-1</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"La máxima varianza muestral con probabilidad 0.90 es"</span>, m,<span class="st">"."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "La máxima varianza muestral con probabilidad 0.90 es 2.43600258577709 ."</code></pre>
 </div>
@@ -410,11 +388,11 @@ P\left(\chi^2_{(n-1)}\leq\frac{m(n-1)}{\sigma^2}\right)=0.90
 <section id="b.-será-posible-determinar-un-intervalo-de-confianza-para-la-varianza-poblacional-consideremos-un-nivel-de-confianza-del-95." class="level4">
 <h4 class="anchored" data-anchor-id="b.-será-posible-determinar-un-intervalo-de-confianza-para-la-varianza-poblacional-consideremos-un-nivel-de-confianza-del-95.">b. ¿Será posible determinar un intervalo de confianza para la varianza poblacional? Consideremos un nivel de confianza del 95%.</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>nc <span class="ot">=</span> <span class="fl">0.95</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">=</span> <span class="dv">1</span> <span class="sc">-</span> nc</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>superior <span class="ot">=</span> (n<span class="dv">-1</span>) <span class="sc">*</span> v <span class="sc">/</span> <span class="fu">qchisq</span>(alpha<span class="sc">/</span><span class="dv">2</span>,n<span class="dv">-1</span>)</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>inferior <span class="ot">=</span> (n<span class="dv">-1</span>) <span class="sc">*</span> v <span class="sc">/</span> <span class="fu">qchisq</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>,n<span class="dv">-1</span>)</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"El intervalo de confianza para la varianza poblacional es ["</span>, inferior, <span class="st">";"</span>, superior, <span class="st">"]."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>nc <span class="ot">=</span> <span class="fl">0.95</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">=</span> <span class="dv">1</span> <span class="sc">-</span> nc</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>superior <span class="ot">=</span> (n<span class="dv">-1</span>) <span class="sc">*</span> v <span class="sc">/</span> <span class="fu">qchisq</span>(alpha<span class="sc">/</span><span class="dv">2</span>,n<span class="dv">-1</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>inferior <span class="ot">=</span> (n<span class="dv">-1</span>) <span class="sc">*</span> v <span class="sc">/</span> <span class="fu">qchisq</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>,n<span class="dv">-1</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"El intervalo de confianza para la varianza poblacional es ["</span>, inferior, <span class="st">";"</span>, superior, <span class="st">"]."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "El intervalo de confianza para la varianza poblacional es [ 1.85382009831019 ; 2.61788319596268 ]."</code></pre>
 </div>
@@ -424,68 +402,68 @@ P\left(\chi^2_{(n-1)}\leq\frac{m(n-1)}{\sigma^2}\right)=0.90
 </section>
 <section id="caso-de-estudio-3" class="level1">
 <h1>Caso de estudio #3</h1>
-<p>Distribución de la diferencia de medias de la intensidad de la música escuchada por los encuestados de edad mayor a 22 años y la intensidad de la música escuchada por los encuestados de edad menor a 18 años.</p>
+<p>Distribución de la diferencia de medias de la intensidad de la música escuchada por los encuestados de edad mayor a 20 años y la intensidad de la música escuchada por los encuestados de edad menor a 20 años.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>DF <span class="sc">%&gt;%</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&lt;=</span> <span class="dv">18</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(average_loudness) <span class="ot">-&gt;</span> df1</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>DF <span class="sc">%&gt;%</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;</span> <span class="dv">22</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(average_loudness) <span class="ot">-&gt;</span> df2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>DF <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&lt;=</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(average_loudness) <span class="ot">-&gt;</span> df1</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>DF <span class="sc">%&gt;%</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(age <span class="sc">&gt;</span> <span class="dv">20</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(average_loudness) <span class="ot">-&gt;</span> df2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parámetros</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(df1<span class="sc">$</span>average_loudness)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>mu2 <span class="ot">&lt;-</span> <span class="fu">mean</span>(df2<span class="sc">$</span>average_loudness)</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span> <span class="fu">sd</span>(df1<span class="sc">$</span>average_loudness)</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">sd</span>(df2<span class="sc">$</span>average_loudness)</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="fu">length</span>(df1<span class="sc">$</span>average_loudness)</span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="fu">length</span>(df2<span class="sc">$</span>average_loudness)</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"mu1 ="</span>, mu1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Parámetros</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>mu1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(df1<span class="sc">$</span>average_loudness)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>mu2 <span class="ot">&lt;-</span> <span class="fu">mean</span>(df2<span class="sc">$</span>average_loudness)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span> <span class="fu">sd</span>(df1<span class="sc">$</span>average_loudness)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">sd</span>(df2<span class="sc">$</span>average_loudness)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>n1 <span class="ot">&lt;-</span> <span class="fu">length</span>(df1<span class="sc">$</span>average_loudness)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>n2 <span class="ot">&lt;-</span> <span class="fu">length</span>(df2<span class="sc">$</span>average_loudness)</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"mu1 ="</span>, mu1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "mu1 = -5.94275949367089"</code></pre>
+<pre><code>[1] "mu1 = -6.43416853932584"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"mu2 ="</span>, mu2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"mu2 ="</span>, mu2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "mu2 = -8.04107692307692"</code></pre>
+<pre><code>[1] "mu2 = -7.57893902439024"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"s1 ="</span>, s1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"s1 ="</span>, s1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "s1 = 2.69950426700329"</code></pre>
+<pre><code>[1] "s1 = 2.80439262480004"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"s2 ="</span>, s2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"s2 ="</span>, s2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "s2 = 4.05063247331156"</code></pre>
+<pre><code>[1] "s2 = 3.38753398542493"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"n1 ="</span>, n1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"n1 ="</span>, n1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "n1 = 79"</code></pre>
+<pre><code>[1] "n1 = 178"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"n2 ="</span>, n2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"n2 ="</span>, n2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "n2 = 26"</code></pre>
+<pre><code>[1] "n2 = 82"</code></pre>
 </div>
 </div>
 <p>¿Cual es la distribución de la diferencia de medias?</p>
 <p>Calculamos si la varianza es igual o diferente:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var.test</span>(df1<span class="sc">$</span>average_loudness, df2<span class="sc">$</span>average_loudness, <span class="at">ratio =</span> <span class="dv">1</span>, <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">conf.level =</span> <span class="fl">0.95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var.test</span>(df1<span class="sc">$</span>average_loudness, df2<span class="sc">$</span>average_loudness, <span class="at">ratio =</span> <span class="dv">1</span>, <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">conf.level =</span> <span class="fl">0.95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     F test to compare two variances
 
 data:  df1$average_loudness and df2$average_loudness
-F = 0.44414, num df = 78, denom df = 25, p-value = 0.00709
+F = 0.68535, num df = 177, denom df = 81, p-value = 0.04006
 alternative hypothesis: true ratio of variances is not equal to 1
 95 percent confidence interval:
- 0.2199154 0.8047078
+ 0.4653713 0.9830978
 sample estimates:
 ratio of variances 
-         0.4441425 </code></pre>
+         0.6853467 </code></pre>
 </div>
 </div>
-<p>Vemos que las varianzas son iguales.</p>
-<p>Estamos en el caso de: no se conoce <span class="math inline">\(\sigma_1\)</span> y <span class="math inline">\(\sigma\_2\)</span> pero se sabe que son iguales.</p>
+<p>Vemos que las varianzas son diferentes.</p>
+<p>Estamos en el caso de: no se conoce <span class="math inline">\(\sigma_1\)</span> y <span class="math inline">\(\sigma\_2\)</span> pero se sabe que son diferentes.</p>
 <p>$$ <span class="math display">\[\begin{align*}
 &amp; T(v) = \frac{\overline{X}_1 - \overline{X}_2 - (\mu_1 - \mu_2)} {\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}} \,,\text{ siendo} \\
 
@@ -493,12 +471,12 @@ v &amp;= \frac{\left(\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}\right)^2} {\frac{\lef
 \end{align*}\]</span> $$</p>
 <p>Valores importantes</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> mu1 <span class="sc">-</span> mu2 </span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((s1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n1) <span class="sc">+</span> (s2<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n2)) </span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">round</span>(s1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n1 <span class="sc">+</span> s2<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n2)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>((s1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n1)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>(n1<span class="dv">-1</span>) <span class="sc">+</span> (s2<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n2)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>(n2<span class="dv">-1</span>)) </span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>,v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> mu1 <span class="sc">-</span> mu2 </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((s1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n1) <span class="sc">+</span> (s2<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n2)) </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> <span class="fu">round</span>( (s1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n1 <span class="sc">+</span> s2<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n2)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>((s1<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n1)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>(n1<span class="dv">-1</span>) <span class="sc">+</span> (s2<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>n2)<span class="sc">^</span><span class="dv">2</span><span class="sc">/</span>(n2<span class="dv">-1</span>))  )</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="dv">1</span><span class="sc">-</span>alpha<span class="sc">/</span><span class="dv">2</span>,v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="a.-cuál-es-la-probabilidad-de-que-en-promedio-la-intensidad-de-la-música-escuchada-por-los-encuestados-menores-a-18-años-supere-en-10-decibeles-a-la-intensidad-de-la-música-escuchada-por-los-encuestados-mayores-a-22-años" class="level4">
 <h4 class="anchored" data-anchor-id="a.-cuál-es-la-probabilidad-de-que-en-promedio-la-intensidad-de-la-música-escuchada-por-los-encuestados-menores-a-18-años-supere-en-10-decibeles-a-la-intensidad-de-la-música-escuchada-por-los-encuestados-mayores-a-22-años">a. ¿Cuál es la probabilidad de que, en promedio, la intensidad de la música escuchada por los encuestados menores a 18 años supere en 10 decibeles a la intensidad de la música escuchada por los encuestados mayores a 22 años?</h4>
@@ -506,10 +484,10 @@ v &amp;= \frac{\left(\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}\right)^2} {\frac{\lef
 \mathbb{P}(\overline{X}_1 - \overline{X}_2 &gt; 10) = 1 - \mathbb{P}(\overline{X}_1 - \overline{X}_2 \leq 10) = 1 - \mathbb{P}\left(T(v) \leq \frac{10 - (\mu_1 - \mu_2)}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}\right)
 \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">10</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pt</span>((x<span class="sc">-</span>m)<span class="sc">/</span>s,v, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pt</span>((x<span class="sc">-</span>m)<span class="sc">/</span>s,v, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.121958e-13</code></pre>
+<pre><code>[1] 9.746964e-44</code></pre>
 </div>
 </div>
 </section>
@@ -521,38 +499,38 @@ v &amp;= \frac{\left(\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}\right)^2} {\frac{\lef
 \]</span></p>
 <p>El intervalo de confianza es:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>ic <span class="ot">&lt;-</span> m <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>)<span class="sc">*</span>t<span class="sc">*</span>s</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"El intervalo de confianza para la varianza poblacional es ["</span>, ic[<span class="dv">1</span>], <span class="st">";"</span>, ic[<span class="dv">2</span>], <span class="st">"] con un nivel de confianza del 95%."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>ic <span class="ot">&lt;-</span> m <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>)<span class="sc">*</span>t<span class="sc">*</span>s</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">paste</span>(<span class="st">"El intervalo de confianza para la varianza poblacional es ["</span>, ic[<span class="dv">1</span>], <span class="st">";"</span>, ic[<span class="dv">2</span>], <span class="st">"] con un nivel de confianza del 95%."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] "El intervalo de confianza para la varianza poblacional es [ 0.398432352507696 ; 3.79820250630438 ] con un nivel de confianza del 95%."</code></pre>
+<pre><code>[1] "El intervalo de confianza para la varianza poblacional es [ 0.296085048979667 ; 1.99345592114914 ] con un nivel de confianza del 95%."</code></pre>
 </div>
 </div>
 <p>Otra forma de calcularlo:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(df1<span class="sc">$</span>average_loudness, df2<span class="sc">$</span>average_loudness, <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>, <span class="at">conf.level =</span> <span class="fl">0.95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(df1<span class="sc">$</span>average_loudness, df2<span class="sc">$</span>average_loudness, <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">var.equal =</span> <span class="cn">FALSE</span>, <span class="at">conf.level =</span> <span class="fl">0.95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
-    Two Sample t-test
+    Welch Two Sample t-test
 
 data:  df1$average_loudness and df2$average_loudness
-t = 3.0109, df = 103, p-value = 0.003277
+t = 2.6678, df = 134.1, p-value = 0.008575
 alternative hypothesis: true difference in means is not equal to 0
 95 percent confidence interval:
- 0.716154 3.480481
+ 0.296091 1.993450
 sample estimates:
 mean of x mean of y 
--5.942759 -8.041077 </code></pre>
+-6.434169 -7.578939 </code></pre>
 </div>
 </div>
 <p>¿Cómo se ve la distribución de la diferencia de medias?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>Xs <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">7</span>, <span class="dv">7</span>, <span class="at">by =</span> <span class="fl">0.001</span>)</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Xs, <span class="fu">dt</span>(Xs,v), <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">c</span>(ic[<span class="dv">1</span>], ic[<span class="dv">2</span>]), <span class="at">col =</span> <span class="st">"blue"</span>)</span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(Xs[Xs <span class="sc">&gt;</span> t], <span class="fu">dt</span>(Xs[Xs <span class="sc">&gt;</span> t],v), <span class="at">col =</span> <span class="st">"green"</span>)</span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"T(x,v)"</span>, <span class="st">"respuesta de la a."</span>, <span class="st">"respuesta de la b."</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>,<span class="st">"green"</span>, <span class="st">"blue"</span>), <span class="at">lty =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>Xs <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">7</span>, <span class="dv">7</span>, <span class="at">by =</span> <span class="fl">0.001</span>)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Xs, <span class="fu">dt</span>(Xs,v), <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">col =</span> <span class="st">"red"</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fu">c</span>(ic[<span class="dv">1</span>], ic[<span class="dv">2</span>]), <span class="at">col =</span> <span class="st">"blue"</span>)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(Xs[Xs <span class="sc">&gt;</span> t], <span class="fu">dt</span>(Xs[Xs <span class="sc">&gt;</span> t],v), <span class="at">col =</span> <span class="st">"green"</span>)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topright"</span>, <span class="at">legend =</span> <span class="fu">c</span>(<span class="st">"T(x,v)"</span>, <span class="st">"respuesta de la a."</span>, <span class="st">"respuesta de la b."</span>), <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>,<span class="st">"green"</span>, <span class="st">"blue"</span>), <span class="at">lty =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="proyecto-spotify_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+<p><img src="proyecto-spotify_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -560,7 +538,7 @@ mean of x mean of y
 <section id="caso-de-estudio-4" class="level1">
 <h1>Caso de estudio #4</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">runs.test</span>(DF<span class="sc">$</span>age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">runs.test</span>(DF<span class="sc">$</span>age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Runs Test
@@ -576,62 +554,62 @@ alternative hypothesis: nonrandomness</code></pre>
 <p>Ahora analizaremos si es útil el modelo de regresión múltiple para predecir la edad de una persona a partir de las variables <strong>danceability</strong>, <strong>energy</strong> y <strong>acousticness</strong>.</p>
 <p>Agrupo los datos en un data frame para hacer mejor el análisis de regresión múltiple y realizamos el modelo de regresión múltiple.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> DF <span class="sc">%&gt;%</span> <span class="fu">select</span>(age, average_danceability, average_energy, average_acousticness)</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>regression <span class="ot">&lt;-</span> <span class="fu">lm</span>(age <span class="sc">~</span> average_danceability <span class="sc">+</span> average_energy <span class="sc">+</span> average_acousticness, <span class="at">data =</span> df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>df_caso_5 <span class="ot">&lt;-</span> DF <span class="sc">%&gt;%</span> <span class="fu">select</span>(age, average_danceability, average_energy, average_acousticness)</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>regression <span class="ot">&lt;-</span> <span class="fu">lm</span>(age <span class="sc">~</span> average_danceability <span class="sc">+</span> average_energy <span class="sc">+</span> average_acousticness, <span class="at">data =</span> df_caso_5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Para empezar a visualizar cómo se relacionan, graficamos un heatmap de correlación.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>cor_matrix <span class="ot">&lt;-</span> <span class="fu">cor</span>(df[,<span class="fu">c</span>(<span class="st">"age"</span>, <span class="st">"average_danceability"</span>, <span class="st">"average_energy"</span>, <span class="st">"average_acousticness"</span>)])</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>melted_cor_matrix <span class="ot">&lt;-</span> <span class="fu">melt</span>(cor_matrix)</span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(melted_cor_matrix, <span class="fu">aes</span>(<span class="at">x=</span>Var1, <span class="at">y=</span>Var2, <span class="at">fill=</span>value)) <span class="sc">+</span></span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low=</span><span class="st">"blue"</span>, <span class="at">high=</span><span class="st">"red"</span>, <span class="at">mid=</span><span class="st">"white"</span>, </span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">midpoint=</span><span class="dv">0</span>, <span class="at">limit=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">space=</span><span class="st">"Lab"</span>, </span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">name=</span><span class="st">"Correlación"</span>) <span class="sc">+</span></span>
-<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">""</span>, <span class="at">y=</span><span class="st">""</span>, <span class="at">title=</span><span class="st">"Heatmap de correlación"</span>) <span class="sc">+</span></span>
-<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label=</span><span class="fu">round</span>(value, <span class="dv">2</span>)), <span class="at">size=</span><span class="dv">4</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>cor_matrix <span class="ot">&lt;-</span> <span class="fu">cor</span>(df_caso_5[,<span class="fu">c</span>(<span class="st">"age"</span>, <span class="st">"average_danceability"</span>, <span class="st">"average_energy"</span>, <span class="st">"average_acousticness"</span>)])</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>melted_cor_matrix <span class="ot">&lt;-</span> <span class="fu">melt</span>(cor_matrix)</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(melted_cor_matrix, <span class="fu">aes</span>(<span class="at">x=</span>Var1, <span class="at">y=</span>Var2, <span class="at">fill=</span>value)) <span class="sc">+</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low=</span><span class="st">"blue"</span>, <span class="at">high=</span><span class="st">"red"</span>, <span class="at">mid=</span><span class="st">"white"</span>, </span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">midpoint=</span><span class="dv">0</span>, <span class="at">limit=</span><span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>), <span class="at">space=</span><span class="st">"Lab"</span>, </span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">name=</span><span class="st">"Correlación"</span>) <span class="sc">+</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">""</span>, <span class="at">y=</span><span class="st">""</span>, <span class="at">title=</span><span class="st">"Heatmap de correlación"</span>) <span class="sc">+</span></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label=</span><span class="fu">round</span>(value, <span class="dv">2</span>)), <span class="at">size=</span><span class="dv">4</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="proyecto-spotify_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+<p><img src="proyecto-spotify_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>A priori, no parece haber una correlación fuerte entre las variables, por lo que el modelo de regresión múltiple podría ser útil.</p>
 <p>Extraemos los coeficientes de la regresión múltiple para graficar las rectas de regresión simple.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(regression)[<span class="st">"(Intercept)"</span>])</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(regression)[<span class="st">"average_danceability"</span>])</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>b_2 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(regression)[<span class="st">"average_energy"</span>])</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>b_3 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(regression)[<span class="st">"average_acousticness"</span>])</span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>b_3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>b_0 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(regression)[<span class="st">"(Intercept)"</span>])</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>b_1 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(regression)[<span class="st">"average_danceability"</span>])</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>b_2 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(regression)[<span class="st">"average_energy"</span>])</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>b_3 <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">coef</span>(regression)[<span class="st">"average_acousticness"</span>])</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>b_3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.446895</code></pre>
 </div>
 </div>
 <p>Graficamos las rectas de regresión múltiple y las comparamos con las rectas de regresión simple.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df<span class="sc">$</span>average_danceability, df<span class="sc">$</span>age)</span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(b_0, b_1, <span class="at">col=</span><span class="st">"red"</span>)</span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(df<span class="sc">$</span>age <span class="sc">~</span> df<span class="sc">$</span>average_danceability), <span class="at">col=</span><span class="st">"blue"</span>)</span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df<span class="sc">$</span>average_energy, df<span class="sc">$</span>age)</span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(b_0, b_2, <span class="at">col=</span><span class="st">"red"</span>)</span>
-<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(df<span class="sc">$</span>age <span class="sc">~</span> df<span class="sc">$</span>average_energy), <span class="at">col=</span><span class="st">"blue"</span>)</span>
-<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Regresión múltiple"</span>)</span>
-<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df<span class="sc">$</span>average_acousticness, df<span class="sc">$</span>age)</span>
-<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(b_0, b_3, <span class="at">col=</span><span class="st">"red"</span>)</span>
-<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(df<span class="sc">$</span>age <span class="sc">~</span> df<span class="sc">$</span>average_acousticness), <span class="at">col=</span><span class="st">"blue"</span>)</span>
-<span id="cb58-12"><a href="#cb58-12" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend=</span><span class="fu">c</span>(<span class="st">"Regresión múltiple"</span>, <span class="st">"Regresión simple"</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>), <span class="at">lty=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">cex=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df_caso_5<span class="sc">$</span>average_danceability, df_caso_5<span class="sc">$</span>age)</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(b_0, b_1, <span class="at">col=</span><span class="st">"red"</span>)</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(df_caso_5<span class="sc">$</span>age <span class="sc">~</span> df_caso_5<span class="sc">$</span>average_danceability), <span class="at">col=</span><span class="st">"blue"</span>)</span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df_caso_5<span class="sc">$</span>average_energy, df_caso_5<span class="sc">$</span>age)</span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(b_0, b_2, <span class="at">col=</span><span class="st">"red"</span>)</span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(df_caso_5<span class="sc">$</span>age <span class="sc">~</span> df_caso_5<span class="sc">$</span>average_energy), <span class="at">col=</span><span class="st">"blue"</span>)</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="st">"Regresión múltiple"</span>)</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df_caso_5<span class="sc">$</span>average_acousticness, df_caso_5<span class="sc">$</span>age)</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(b_0, b_3, <span class="at">col=</span><span class="st">"red"</span>)</span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(df_caso_5<span class="sc">$</span>age <span class="sc">~</span> df_caso_5<span class="sc">$</span>average_acousticness), <span class="at">col=</span><span class="st">"blue"</span>)</span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="at">legend=</span><span class="fu">c</span>(<span class="st">"Regresión múltiple"</span>, <span class="st">"Regresión simple"</span>), <span class="at">col=</span><span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"blue"</span>), <span class="at">lty=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">cex=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="proyecto-spotify_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid" width="672"></p>
+<p><img src="proyecto-spotify_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>De manera individual, las rectas son diferentes, pero en general siguen la misma tendencia. Para ver la utilidad del modelo de regresión múltiple, analizamos los errores usando la independencia, la normalidad y la homocedasticidad.</p>
 <section id="analizamos-los-errores" class="level3">
 <h3 class="anchored" data-anchor-id="analizamos-los-errores">Analizamos los errores</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>errores <span class="ot">&lt;-</span> regression<span class="sc">$</span>residuals</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>errores <span class="ot">&lt;-</span> regression<span class="sc">$</span>residuals</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="test-de-independencia" class="level4">
 <h4 class="anchored" data-anchor-id="test-de-independencia">Test de independencia</h4>
@@ -641,8 +619,8 @@ Ho: \text{Los errores son independientes} \\
 Ha: \text{Los errores no son independientes}
 \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>dw <span class="ot">&lt;-</span> <span class="fu">dwtest</span>(regression,<span class="at">alternative =</span><span class="st">"two.sided"</span>,<span class="at">iterations =</span> <span class="dv">1000</span>)</span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>dw</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>dw <span class="ot">&lt;-</span> <span class="fu">dwtest</span>(regression,<span class="at">alternative =</span><span class="st">"two.sided"</span>,<span class="at">iterations =</span> <span class="dv">1000</span>)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>dw</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Durbin-Watson test
@@ -662,8 +640,8 @@ Ho: \text{Los errores tienen distribución normal, con media cero}\\
 Ha: \text{Los errores no tienen distribución normal, con media cero}
 \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>ks <span class="ot">&lt;-</span> <span class="fu">ks.test</span>(errores, <span class="st">"pnorm"</span>, <span class="fu">mean</span>(errores), <span class="fu">sd</span>(errores))</span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>ks</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>ks <span class="ot">&lt;-</span> <span class="fu">ks.test</span>(errores, <span class="st">"pnorm"</span>, <span class="fu">mean</span>(errores), <span class="fu">sd</span>(errores))</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>ks</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Asymptotic one-sample Kolmogorov-Smirnov test
@@ -683,8 +661,8 @@ Ho: \text{Los errores tienen varianza constante (homocedasticidad)} \\
 Ha: \text{Los errores no tienen varianza constante (heterocedasticidad)}
 \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>bp <span class="ot">&lt;-</span> <span class="fu">bptest</span>(regression)</span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>bp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>bp <span class="ot">&lt;-</span> <span class="fu">bptest</span>(regression)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>bp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     studentized Breusch-Pagan test
@@ -711,12 +689,12 @@ BP = 2.3464, df = 3, p-value = 0.5037</code></pre>
 <p>Probaremos si <span class="math inline">\(\beta_0, \beta_1, \beta_2, \beta_3\)</span> son significativamente diferentes de cero. Para esto nos basta con ver el <strong>p-value</strong> de cada coeficiente en el modelo que nos da R.</p>
 <p><span class="math display">\[\mathsf{\text{Test de significancia de coeficientes}} \]</span> <span class="math display">\[Ho: \beta_0 = 0 \qquad \beta_1 = 0 \qquad \beta_2 = 0 \qquad \beta_3 = 0 \]</span> <span class="math display">\[Ha: \beta_0 \neq 0 \qquad \beta_1 \neq 0 \qquad \beta_2 \neq 0 \qquad \beta_3 \neq 0\]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(regression)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(regression)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
 lm(formula = age ~ average_danceability + average_energy + average_acousticness, 
-    data = df)
+    data = df_caso_5)
 
 Residuals:
     Min      1Q  Median      3Q     Max 
@@ -744,24 +722,24 @@ F-statistic: 14.03 on 3 and 256 DF,  p-value: 1.709e-08</code></pre>
 <p>Vemos también que el <strong>p-value</strong> del modelo es menor que 0.05, por lo que rechazamos la hipótesis nula y concluimos que el modelo es significativamente diferente de cero.</p>
 </section>
 </section>
-<section id="conclusión-de-caso-de-estudio-1" class="level3">
-<h3 class="anchored" data-anchor-id="conclusión-de-caso-de-estudio-1">Conclusión de Caso de estudio 1</h3>
+<section id="conclusión-de-caso-de-estudio-5" class="level3">
+<h3 class="anchored" data-anchor-id="conclusión-de-caso-de-estudio-5">Conclusión de Caso de estudio 5</h3>
 <p>Determinamos que nuestro modelo de regresión múltiple es útil para predecir la edad de una persona a partir de las variables <strong>danceability</strong>, <strong>energy</strong> y <strong>acousticness</strong>. Además, concluimos que todas las variables son significativas para predecir la edad de una persona.</p>
 <p>Un ejemplo de la aplicación de esto es: Si tenemos la canción <em>Blinding Lights</em> de The Weeknd, con <strong>danceability</strong> 0.514, <strong>energy</strong> 0.73 y <strong>acousticness</strong> 0.001, entonces la edad de la persona que escucha esta canción es:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(b_0 <span class="sc">+</span> b_1 <span class="sc">*</span> <span class="fl">0.514</span> <span class="sc">+</span> b_2 <span class="sc">*</span> <span class="fl">0.73</span> <span class="sc">+</span> b_3 <span class="sc">*</span> <span class="fl">0.001</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(b_0 <span class="sc">+</span> b_1 <span class="sc">*</span> <span class="fl">0.514</span> <span class="sc">+</span> b_2 <span class="sc">*</span> <span class="fl">0.73</span> <span class="sc">+</span> b_3 <span class="sc">*</span> <span class="fl">0.001</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 20</code></pre>
 </div>
 </div>
 </section>
 </section>
-<section id="caso-de-estudio-3-regresión-lineal-simple" class="level2">
-<h2 class="anchored" data-anchor-id="caso-de-estudio-3-regresión-lineal-simple">Caso de estudio 3 (Regresión Lineal Simple)</h2>
+<section id="caso-de-estudio-6-regresión-lineal-simple" class="level2">
+<h2 class="anchored" data-anchor-id="caso-de-estudio-6-regresión-lineal-simple">Caso de estudio 6 (Regresión Lineal Simple)</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">select</span>(DF, listened_artists, age)</span>
-<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>regression2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(df2<span class="sc">$</span>listened_artists <span class="sc">~</span> df2<span class="sc">$</span>age)</span>
-<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>regression2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> <span class="fu">select</span>(DF, listened_artists, age)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>regression2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(df2<span class="sc">$</span>listened_artists <span class="sc">~</span> df2<span class="sc">$</span>age)</span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>regression2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -773,15 +751,15 @@ Coefficients:
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df2<span class="sc">$</span>age, df2<span class="sc">$</span>listened_artists)</span>
-<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(df2<span class="sc">$</span>listened_artists <span class="sc">~</span> df2<span class="sc">$</span>age), <span class="at">col=</span><span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(df2<span class="sc">$</span>age, df2<span class="sc">$</span>listened_artists)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="fu">lm</span>(df2<span class="sc">$</span>listened_artists <span class="sc">~</span> df2<span class="sc">$</span>age), <span class="at">col=</span><span class="st">"blue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="proyecto-spotify_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid" width="672"></p>
+<p><img src="proyecto-spotify_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Podemos observar que a medida que las personas se hacen mayores, la cantidad de artistas que escuchan al año, no parece variar mucho.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(regression2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(regression2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -804,24 +782,24 @@ F-statistic: 0.03373 on 1 and 258 DF,  p-value: 0.8544</code></pre>
 </div>
 </div>
 <p>El <strong>p-value</strong> del coeficiente de la edad, del intercepto y del modelo son mayores que 0.05, por lo que fallamos en rechazar la hipótesis nula.</p>
-<section id="conclusión-de-caso-de-estudio-2-regresión-lineal-simple" class="level3">
-<h3 class="anchored" data-anchor-id="conclusión-de-caso-de-estudio-2-regresión-lineal-simple">Conclusión de Caso de estudio 2 (Regresión Lineal Simple)</h3>
+<section id="conclusión-de-caso-de-estudio-6-regresión-lineal-simple" class="level3">
+<h3 class="anchored" data-anchor-id="conclusión-de-caso-de-estudio-6-regresión-lineal-simple">Conclusión de Caso de estudio 6 (Regresión Lineal Simple)</h3>
 <p>Concluimos que el modelo de regresión simple no es útil para predecir la cantidad de artistas anuales que se escuchan a partir de la edad. No podemos decir que la edad influye en la cantidad de artistas anuales que se escuchan.</p>
 <p>Si a pesar de esto, se insistiera en usar el modelo, se puede decir que: una persona de 20 años escucha en promedio 1031 artistas al año.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(<span class="fu">round</span>(regression2<span class="sc">$</span>coefficients[<span class="dv">1</span>] <span class="sc">+</span> regression2<span class="sc">$</span>coefficients[<span class="dv">2</span>] <span class="sc">*</span> <span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.numeric</span>(<span class="fu">round</span>(regression2<span class="sc">$</span>coefficients[<span class="dv">1</span>] <span class="sc">+</span> regression2<span class="sc">$</span>coefficients[<span class="dv">2</span>] <span class="sc">*</span> <span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1031</code></pre>
 </div>
 </div>
 </section>
 </section>
-<section id="caso-de-estudio-4-diseño-de-experimentos" class="level2">
-<h2 class="anchored" data-anchor-id="caso-de-estudio-4-diseño-de-experimentos">Caso de estudio 4 (Diseño de experimentos)</h2>
+<section id="caso-de-estudio-7-diseño-de-experimentos" class="level2">
+<h2 class="anchored" data-anchor-id="caso-de-estudio-7-diseño-de-experimentos">Caso de estudio 7 (Diseño de experimentos)</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>age) <span class="sc">%&gt;%</span> <span class="fu">stack</span>() <span class="ot">-&gt;</span> sdf3</span>
-<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>an_sdf3 <span class="ot">&lt;-</span> <span class="fu">aov</span>(values <span class="sc">~</span> ind, <span class="at">data =</span> sdf3)</span>
-<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(an_sdf3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>df_caso_5 <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>age) <span class="sc">%&gt;%</span> <span class="fu">stack</span>() <span class="ot">-&gt;</span> sdf3</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>an_sdf3 <span class="ot">&lt;-</span> <span class="fu">aov</span>(values <span class="sc">~</span> ind, <span class="at">data =</span> sdf3)</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(an_sdf3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             Df Sum Sq Mean Sq F value Pr(&gt;F)    
 ind           2  43.47  21.737   618.4 &lt;2e-16 ***
@@ -877,7 +855,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </tbody>
 </table>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pf</span>(<span class="fl">618.4</span>, <span class="dv">2</span>, <span class="dv">777</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pf</span>(<span class="fl">618.4</span>, <span class="dv">2</span>, <span class="dv">777</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.080746e-161</code></pre>
 </div>
@@ -885,7 +863,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>El <strong>p-value</strong> es 0.998002, que es muchisimo menor que 0.05, por lo que rechazamos la hipótesis nula. Concluimos que hay diferencias significativas entre las variables <strong>danceability</strong>, <strong>energy</strong> y <strong>acousticness</strong>. Debido al <strong>p-value</strong>, que es pequeño, no hay ninguna duda de que hay diferencias significativas.</p>
 <p>Para analizar mejor las diferencias, realizamos un test de Tukey.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">TukeyHSD</span>(an_sdf3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">TukeyHSD</span>(an_sdf3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Tukey multiple comparisons of means
     95% family-wise confidence level
@@ -906,14 +884,454 @@ average_acousticness-average_energy       0.0000000</code></pre>
 <p>-0.0099 &lt; energy-danceability &lt; 0.0673 -0.5245 &lt; acousticness-danceability &lt; -0.4472 -0.5532 &lt; acousticness-energy &lt; -0.4759</p>
 <p>energy = danceability acousticness &lt; danceability acousticness &lt; energy</p>
 <p>El órden más apropiado es <strong>acousticness</strong> &lt; <strong>danceability</strong> = <strong>energy</strong></p>
-<section id="conclusión-de-caso-de-estudio-3" class="level3">
-<h3 class="anchored" data-anchor-id="conclusión-de-caso-de-estudio-3">Conclusión de Caso de estudio 3</h3>
+<section id="conclusión-de-caso-de-estudio-7" class="level3">
+<h3 class="anchored" data-anchor-id="conclusión-de-caso-de-estudio-7">Conclusión de Caso de estudio 7</h3>
 <p>Concluimos que en spotify son más escuchadas las canciones con mayor danceability y energy, con un acousticness más bajo.</p>
 <p>Es decir, canciones como: <em>Blinding Lights</em> de The Weeknd, con <strong>danceability</strong> 0.514, <strong>energy</strong> 0.73 y <strong>acousticness</strong> 0.001, son más escuchadas que canciones como: <em>The Night We Met</em> de Lord Huron, con <strong>danceability</strong> 0.351, <strong>energy</strong> 0.405 y <strong>acousticness</strong> 0.86.</p>
 </section>
 </section>
-<section id="caso-de-estudio-4-diseño-de-experimentos-1" class="level2">
-<h2 class="anchored" data-anchor-id="caso-de-estudio-4-diseño-de-experimentos-1">Caso de estudio 4 (Diseño de experimentos)</h2>
+<section id="caso-de-estudio-8-experimento-de-percepción-de-géneros" class="level2">
+<h2 class="anchored" data-anchor-id="caso-de-estudio-8-experimento-de-percepción-de-géneros">Caso de estudio 8: experimento de percepción de géneros</h2>
+<p>En este experimento vamos a comparar como es que el genero percibido como favorito de las personas se relaciona con el volumen e intensidad de sus canciones escuchadas. En un estudio reciente se hablo de la “Guerra del volumen” y como es que existe una correlación entre popularidad de una cancion y su intensidad promedio. Nosotros vamos a utilizar la correlación entre intensidad y genero para responder a las siguientes preguntas:</p>
+<ul>
+<li><p>Que genero es el que tiene mayor energía promedio?</p></li>
+<li><p>Que genero es el que tiene mayor volumen promedio?</p></li>
+<li><p>Que tan acertada es la percepción de las personas sobre su genero favorito? Para este ultimo vamos a extraer la intencidad promedio de los generos más populares del siguiente <a href="https://github.com/isaackwy/loudness-wars-spotify">estudio</a></p></li>
+</ul>
+<p>Los generos que seran considerados en este estudio son los siguientes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>rock <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">loudness =</span> <span class="sc">-</span><span class="fl">8.169173438842325</span>,</span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">energy =</span> <span class="fl">0.7070176326516859</span></span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>r_and_b <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">loudness =</span> <span class="sc">-</span><span class="fl">7.8536782465833515</span>,</span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">energy =</span> <span class="fl">0.5891415262417352</span></span>
+<span id="cb83-8"><a href="#cb83-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb83-9"><a href="#cb83-9" aria-hidden="true" tabindex="-1"></a>pop <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb83-10"><a href="#cb83-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">loudness =</span> <span class="sc">-</span><span class="fl">6.962477605529706</span>,</span>
+<span id="cb83-11"><a href="#cb83-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">energy =</span> <span class="fl">0.6268352900526923</span></span>
+<span id="cb83-12"><a href="#cb83-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb83-13"><a href="#cb83-13" aria-hidden="true" tabindex="-1"></a>edm <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb83-14"><a href="#cb83-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">loudness =</span> <span class="sc">-</span><span class="fl">6.239374065852863</span>,</span>
+<span id="cb83-15"><a href="#cb83-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">energy =</span> <span class="fl">0.783228764081047</span></span>
+<span id="cb83-16"><a href="#cb83-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb83-17"><a href="#cb83-17" aria-hidden="true" tabindex="-1"></a>latin <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb83-18"><a href="#cb83-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">loudness =</span> <span class="sc">-</span><span class="fl">7.167930645280326</span>,</span>
+<span id="cb83-19"><a href="#cb83-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">energy =</span> <span class="fl">0.6853391368991688</span></span>
+<span id="cb83-20"><a href="#cb83-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb83-21"><a href="#cb83-21" aria-hidden="true" tabindex="-1"></a>rap <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb83-22"><a href="#cb83-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">loudness =</span> <span class="sc">-</span><span class="fl">7.402685040690765</span>,</span>
+<span id="cb83-23"><a href="#cb83-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">energy =</span> <span class="fl">0.6688384486114174</span></span>
+<span id="cb83-24"><a href="#cb83-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb83-25"><a href="#cb83-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-26"><a href="#cb83-26" aria-hidden="true" tabindex="-1"></a>average_genres_info <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb83-27"><a href="#cb83-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="fu">c</span>(<span class="st">"rock"</span>, <span class="st">"r&amp;b"</span>, <span class="st">"pop"</span>, <span class="st">"edm"</span>, <span class="st">"latin"</span>, <span class="st">"rap"</span>),</span>
+<span id="cb83-28"><a href="#cb83-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">loudness =</span> <span class="fu">c</span>(rock<span class="sc">$</span>loudness, r_and_b<span class="sc">$</span>loudness, pop<span class="sc">$</span>loudness, edm<span class="sc">$</span>loudness, latin<span class="sc">$</span>loudness, rap<span class="sc">$</span>loudness),</span>
+<span id="cb83-29"><a href="#cb83-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">energy =</span> <span class="fu">c</span>(rock<span class="sc">$</span>energy, r_and_b<span class="sc">$</span>energy, pop<span class="sc">$</span>energy, edm<span class="sc">$</span>energy, latin<span class="sc">$</span>energy, rap<span class="sc">$</span>energy)</span>
+<span id="cb83-30"><a href="#cb83-30" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<table class="table">
+<thead>
+<tr class="header">
+<th>name</th>
+<th>loudness</th>
+<th>energy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Rock</td>
+<td>-8.1691734</td>
+<td>0.7070176</td>
+</tr>
+<tr class="even">
+<td>R&amp;B</td>
+<td>-7.8536782</td>
+<td>0.5891415</td>
+</tr>
+<tr class="odd">
+<td>Pop</td>
+<td>-6.9624776</td>
+<td>0.6268353</td>
+</tr>
+<tr class="even">
+<td>EDM</td>
+<td>-6.2393741</td>
+<td>0.7832288</td>
+</tr>
+<tr class="odd">
+<td>Latin</td>
+<td>-7.1679306</td>
+<td>0.6853391</td>
+</tr>
+<tr class="even">
+<td>Rap</td>
+<td>-7.402685</td>
+<td>0.6688384</td>
+</tr>
+</tbody>
+</table>
+<p>Aqui podemos observar que, en promedio, el genero con mayor enería y volumen es el EDM, seguido por el Rock, vamos a ver si esto concuerda con la data que tenemos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># group by genre</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="co"># do the same for the other genres  </span></span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>users_genre_data <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">rock =</span> <span class="fu">filter</span>(DF, favourite_gender <span class="sc">==</span> <span class="st">"rock"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(average_loudness, average_energy),</span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">r_and_b =</span> <span class="fu">filter</span>(DF, favourite_gender <span class="sc">==</span> <span class="st">"r&amp;b"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(average_loudness, average_energy),</span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">pop =</span> <span class="fu">filter</span>(DF, favourite_gender <span class="sc">==</span> <span class="st">"pop"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(average_loudness, average_energy),</span>
+<span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">edm =</span> <span class="fu">filter</span>(DF, favourite_gender <span class="sc">==</span> <span class="st">"edm"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(average_loudness, average_energy),</span>
+<span id="cb84-8"><a href="#cb84-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">latin =</span> <span class="fu">filter</span>(DF, favourite_gender <span class="sc">==</span> <span class="st">"latin"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(average_loudness, average_energy),</span>
+<span id="cb84-9"><a href="#cb84-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">rap =</span> <span class="fu">filter</span>(DF, favourite_gender <span class="sc">==</span> <span class="st">"rap"</span>) <span class="sc">%&gt;%</span> <span class="fu">select</span>(average_loudness, average_energy)</span>
+<span id="cb84-10"><a href="#cb84-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb84-11"><a href="#cb84-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-12"><a href="#cb84-12" aria-hidden="true" tabindex="-1"></a>biggest_genre_count <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">sapply</span>(users_genre_data, nrow))</span>
+<span id="cb84-13"><a href="#cb84-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-14"><a href="#cb84-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Fill in the missing data with NA</span></span>
+<span id="cb84-15"><a href="#cb84-15" aria-hidden="true" tabindex="-1"></a>users_genre_data <span class="ot">&lt;-</span> <span class="fu">lapply</span>(users_genre_data, <span class="cf">function</span>(x) {</span>
+<span id="cb84-16"><a href="#cb84-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(x) <span class="sc">&lt;</span> biggest_genre_count) {</span>
+<span id="cb84-17"><a href="#cb84-17" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">rbind</span>(x, <span class="fu">data.frame</span>(<span class="at">average_loudness =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, biggest_genre_count <span class="sc">-</span> <span class="fu">nrow</span>(x)), <span class="at">average_energy =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, biggest_genre_count <span class="sc">-</span> <span class="fu">nrow</span>(x))))</span>
+<span id="cb84-18"><a href="#cb84-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb84-19"><a href="#cb84-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x)</span>
+<span id="cb84-20"><a href="#cb84-20" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb84-21"><a href="#cb84-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-22"><a href="#cb84-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-23"><a href="#cb84-23" aria-hidden="true" tabindex="-1"></a><span class="co">#combine all loudness data by genre</span></span>
+<span id="cb84-24"><a href="#cb84-24" aria-hidden="true" tabindex="-1"></a>users_loudness_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb84-25"><a href="#cb84-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">genre =</span> <span class="fu">rep</span>(<span class="fu">names</span>(users_genre_data), <span class="at">each =</span> biggest_genre_count),</span>
+<span id="cb84-26"><a href="#cb84-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">loudness =</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(users_genre_data, <span class="cf">function</span>(x) x<span class="sc">$</span>average_loudness))</span>
+<span id="cb84-27"><a href="#cb84-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb84-28"><a href="#cb84-28" aria-hidden="true" tabindex="-1"></a>users_energy_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb84-29"><a href="#cb84-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">genre =</span> <span class="fu">rep</span>(<span class="fu">names</span>(users_genre_data), <span class="at">each =</span> biggest_genre_count),</span>
+<span id="cb84-30"><a href="#cb84-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">energy =</span> <span class="fu">unlist</span>(<span class="fu">lapply</span>(users_genre_data, <span class="cf">function</span>(x) x<span class="sc">$</span>average_energy))</span>
+<span id="cb84-31"><a href="#cb84-31" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb84-32"><a href="#cb84-32" aria-hidden="true" tabindex="-1"></a>loudnes_aov <span class="ot">&lt;-</span> <span class="fu">aov</span>(loudness<span class="sc">~</span>genre, <span class="at">data=</span>users_loudness_data)</span>
+<span id="cb84-33"><a href="#cb84-33" aria-hidden="true" tabindex="-1"></a>energy_aov <span class="ot">&lt;-</span> <span class="fu">aov</span>(energy<span class="sc">~</span>genre, <span class="at">data=</span>users_energy_data)</span>
+<span id="cb84-34"><a href="#cb84-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-35"><a href="#cb84-35" aria-hidden="true" tabindex="-1"></a>loudness_aov_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(loudnes_aov)</span>
+<span id="cb84-36"><a href="#cb84-36" aria-hidden="true" tabindex="-1"></a>energy_aov_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(energy_aov)</span>
+<span id="cb84-37"><a href="#cb84-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-38"><a href="#cb84-38" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(users_loudness_data<span class="sc">$</span>genre))</span>
+<span id="cb84-39"><a href="#cb84-39" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(users_loudness_data)</span>
+<span id="cb84-40"><a href="#cb84-40" aria-hidden="true" tabindex="-1"></a>loudness_aov_data <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb84-41"><a href="#cb84-41" aria-hidden="true" tabindex="-1"></a>  <span class="at">SCTr =</span> loudness_aov_summary[[<span class="dv">1</span>]][[<span class="st">"Sum Sq"</span>]][<span class="dv">1</span>],</span>
+<span id="cb84-42"><a href="#cb84-42" aria-hidden="true" tabindex="-1"></a>  <span class="at">SCE =</span> loudness_aov_summary[[<span class="dv">1</span>]][[<span class="st">"Sum Sq"</span>]][<span class="dv">2</span>],</span>
+<span id="cb84-43"><a href="#cb84-43" aria-hidden="true" tabindex="-1"></a>  <span class="at">SCT =</span> loudness_aov_summary[[<span class="dv">1</span>]][[<span class="st">"Sum Sq"</span>]][<span class="dv">1</span>] <span class="sc">+</span> loudness_aov_summary[[<span class="dv">1</span>]][[<span class="st">"Sum Sq"</span>]][<span class="dv">2</span>],</span>
+<span id="cb84-44"><a href="#cb84-44" aria-hidden="true" tabindex="-1"></a>  <span class="at">CMTr =</span> loudness_aov_summary[[<span class="dv">1</span>]][[<span class="st">"Mean Sq"</span>]][<span class="dv">1</span>],</span>
+<span id="cb84-45"><a href="#cb84-45" aria-hidden="true" tabindex="-1"></a>  <span class="at">CME =</span> loudness_aov_summary[[<span class="dv">1</span>]][[<span class="st">"Mean Sq"</span>]][<span class="dv">2</span>],</span>
+<span id="cb84-46"><a href="#cb84-46" aria-hidden="true" tabindex="-1"></a>  <span class="at">f_value =</span> loudness_aov_summary[[<span class="dv">1</span>]][[<span class="st">"F value"</span>]],</span>
+<span id="cb84-47"><a href="#cb84-47" aria-hidden="true" tabindex="-1"></a>  <span class="at">p_value =</span> loudness_aov_summary[[<span class="dv">1</span>]][[<span class="st">"Pr(&gt;F)"</span>]][<span class="dv">1</span>]</span>
+<span id="cb84-48"><a href="#cb84-48" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb84-49"><a href="#cb84-49" aria-hidden="true" tabindex="-1"></a>energy_aov_data <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb84-50"><a href="#cb84-50" aria-hidden="true" tabindex="-1"></a>  <span class="at">SCTr =</span> energy_aov_summary[[<span class="dv">1</span>]][[<span class="st">"Sum Sq"</span>]][<span class="dv">1</span>],</span>
+<span id="cb84-51"><a href="#cb84-51" aria-hidden="true" tabindex="-1"></a>  <span class="at">SCE =</span> energy_aov_summary[[<span class="dv">1</span>]][[<span class="st">"Sum Sq"</span>]][<span class="dv">2</span>],</span>
+<span id="cb84-52"><a href="#cb84-52" aria-hidden="true" tabindex="-1"></a>  <span class="at">SCT =</span> energy_aov_summary[[<span class="dv">1</span>]][[<span class="st">"Sum Sq"</span>]][<span class="dv">1</span>] <span class="sc">+</span> energy_aov_summary[[<span class="dv">1</span>]][[<span class="st">"Sum Sq"</span>]][<span class="dv">2</span>],</span>
+<span id="cb84-53"><a href="#cb84-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">CMTr =</span> energy_aov_summary[[<span class="dv">1</span>]][[<span class="st">"Mean Sq"</span>]][<span class="dv">1</span>],</span>
+<span id="cb84-54"><a href="#cb84-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">CME =</span> energy_aov_summary[[<span class="dv">1</span>]][[<span class="st">"Mean Sq"</span>]][<span class="dv">2</span>],</span>
+<span id="cb84-55"><a href="#cb84-55" aria-hidden="true" tabindex="-1"></a>  <span class="at">f_value =</span> energy_aov_summary[[<span class="dv">1</span>]][[<span class="st">"F value"</span>]],</span>
+<span id="cb84-56"><a href="#cb84-56" aria-hidden="true" tabindex="-1"></a>  <span class="at">p_value =</span> energy_aov_summary[[<span class="dv">1</span>]][[<span class="st">"Pr(&gt;F)"</span>]][<span class="dv">1</span>]</span>
+<span id="cb84-57"><a href="#cb84-57" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb84-58"><a href="#cb84-58" aria-hidden="true" tabindex="-1"></a>energy_aov_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$SCTr
+[1] 0.8059577
+
+$SCE
+[1] 7.979322
+
+$SCT
+[1] 8.78528
+
+$CMTr
+[1] 0.1611915
+
+$CME
+[1] 0.03141465
+
+$f_value
+[1] 5.131094       NA
+
+$p_value
+[1] 0.0001676276</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>loudness_aov_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$SCTr
+[1] 279.5373
+
+$SCE
+[1] 2115.576
+
+$SCT
+[1] 2395.113
+
+$CMTr
+[1] 55.90746
+
+$CME
+[1] 8.329039
+
+$f_value
+[1] 6.712354       NA
+
+$p_value
+[1] 6.792929e-06</code></pre>
+</div>
+</div>
+<p>AOV loudness</p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 16%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>FUENTE</th>
+<th>GL</th>
+<th>SC</th>
+<th>CM</th>
+<th>FO</th>
+<th>P VALOR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>TRATAMIENTOS</td>
+<td>5</td>
+<td>279.5372859</td>
+<td>55.9074572</td>
+<td>6.7123541, NA</td>
+<td>6.7929288^{-6}</td>
+</tr>
+<tr class="even">
+<td>ERROR</td>
+<td>336</td>
+<td>2115.5758295</td>
+<td>8.3290387</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>TOTAL</td>
+<td>341</td>
+<td>2395.1131154</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>AOV energy</p>
+<table class="table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 16%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>FUENTE</th>
+<th>GL</th>
+<th>SC</th>
+<th>CM</th>
+<th>FO</th>
+<th>P VALOR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>TRATAMIENTOS</td>
+<td>5</td>
+<td>0.8059577</td>
+<td>0.1611915</td>
+<td>5.1310937, NA</td>
+<td>1.6762761^{-4}</td>
+</tr>
+<tr class="even">
+<td>ERROR</td>
+<td>336</td>
+<td>7.9793223</td>
+<td>0.0314147</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>TOTAL</td>
+<td>341</td>
+<td>8.78528</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>H0 : <span class="math inline">\(\mu_1 = \mu_2 = \mu_3\)</span><br>
+Ha: <span class="math inline">\(\exists i \neq j\)</span> tal que <span class="math inline">\(\mu_i \neq \mu_j\)</span></p>
+<p>Dado que los <strong>p-value</strong> son 6.7929288^{-6} y 1.6762761^{-4}, ambos menores que 0.05, rechazamos la hipótesis nula. Concluimos que hay diferencias significativas entre los generos en cuanto a la intensidad y volumen de las canciones escuchadas. Sin embargo, las diferencias de loudness son significativamente menores que las diferencias de energía, esto se debe a que estan en una escala logaritmica y tambien debido a que estamos estudiando generos modernos, los cuales, segun la fuente original, tienen un loudness promedio muy alto y similar. En caso de haber estudiado generos como el jazz o la música clásica, las diferencias de loudness hubieran sido más significativas.</p>
+<p>Ahora vamos a calcular que genero es el que tiene mayor energía promedio y que genero es el que tiene mayor volumen promedio segun la data de los usuarios.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>highest_loudness_genre <span class="ot">&lt;-</span> users_loudness_data <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(genre) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">mean_loudness =</span> <span class="fu">mean</span>(loudness)) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_loudness)) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">1</span>)</span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>highest_energy_genre <span class="ot">&lt;-</span> users_energy_data <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(genre) <span class="sc">%&gt;%</span> <span class="fu">summarise</span>(<span class="at">mean_energy =</span> <span class="fu">mean</span>(energy)) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_energy)) <span class="sc">%&gt;%</span> <span class="fu">head</span>(<span class="dv">1</span>)</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>highest_loudness_genre</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  genre mean_loudness
+  &lt;chr&gt;         &lt;dbl&gt;
+1 pop           -6.29</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>highest_energy_genre</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  genre mean_energy
+  &lt;chr&gt;       &lt;dbl&gt;
+1 pop         0.701</code></pre>
+</div>
+</div>
+<p>Dado que observamos que las diferencias de loudness son significativamente menores que las diferencias de energía, vamos a analizar si es que esta sigue una distribución normal con una prueba de Kolmogorov Smirnov.</p>
+<p><span class="math inline">\(H_0\)</span>: Los datos siguen una distribución normal<br>
+<span class="math inline">\(H_a\)</span>: Los datos no siguen una distribución normal</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>users_average_loudness_data <span class="ot">&lt;-</span> DF<span class="sc">$</span>average_loudness</span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>ks_p_value <span class="ot">&lt;-</span> <span class="fu">ks.test</span>(users_average_loudness_data, <span class="st">"pnorm"</span>, <span class="fu">mean</span>(users_average_loudness_data), <span class="fu">sd</span>(users_average_loudness_data))<span class="sc">$</span>p.value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in ks.test.default(users_average_loudness_data, "pnorm",
+mean(users_average_loudness_data), : ties should not be present for the
+Kolmogorov-Smirnov test</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>ks_p_value</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.003660792</code></pre>
+</div>
+</div>
+<p>Dado que el <strong>p-value</strong> es 0.0036608, que es menor que 0.05, rechazamos la hipótesis nula. Concluimos que los datos no siguen una distribución normal.</p>
+<p>En la prueba de Kolmogorov Smirnov realizada existieron valores repetidos, por lo que para confirmar este resultado vamos a realizar una prueba de Anderson-Darling para verificar si los datos siguen una distribución normal y la acompañaremos con un histograma.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ad.test</span>(users_average_loudness_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Anderson-Darling normality test
+
+data:  users_average_loudness_data
+A = 4.6709, p-value = 1.332e-11</code></pre>
+</div>
+</div>
+<p>Nuevamente, el <strong>p-value</strong> es menor que 0.05, por lo que rechazamos la hipótesis nula. Concluimos que los datos no siguen una distribución normal.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co">#loudness_norm_vec &lt;- rnorm(260, mean(users_average_loudness_data), sd(users_average_loudness_data))</span></span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="co">#plotNormalHistogram(data_vector, prob = FALSE, main = "Normal Distribution overlay on Histogram", length = 1000)</span></span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Assuming your data is stored in a vector named 'data_vector'</span></span>
+<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a>mean_value <span class="ot">&lt;-</span> <span class="fu">mean</span>(users_average_loudness_data) <span class="co"># Replace with your mean value</span></span>
+<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a>sd_value <span class="ot">&lt;-</span> <span class="fu">sd</span>(users_average_loudness_data) <span class="co"># Replace with your SD value</span></span>
+<span id="cb98-7"><a href="#cb98-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-8"><a href="#cb98-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate a sequence of x values for plotting</span></span>
+<span id="cb98-9"><a href="#cb98-9" aria-hidden="true" tabindex="-1"></a>x_values <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(users_average_loudness_data), <span class="fu">max</span>(users_average_loudness_data), <span class="at">length.out =</span> <span class="dv">100</span>)</span>
+<span id="cb98-10"><a href="#cb98-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-11"><a href="#cb98-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the ggplot object</span></span>
+<span id="cb98-12"><a href="#cb98-12" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> users_average_loudness_data), <span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
+<span id="cb98-13"><a href="#cb98-13" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..), <span class="at">binwidth =</span> <span class="fu">diff</span>(<span class="fu">range</span>(users_average_loudness_data))<span class="sc">/</span><span class="dv">30</span>, <span class="at">fill =</span> <span class="st">"lightgray"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb98-14"><a href="#cb98-14" aria-hidden="true" tabindex="-1"></a> <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> mean_value, <span class="at">sd =</span> sd_value), <span class="at">geom =</span> <span class="st">"line"</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb98-15"><a href="#cb98-15" aria-hidden="true" tabindex="-1"></a> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Normal Distribution vs. Actual Data"</span>, <span class="at">x =</span> <span class="st">"Value"</span>, <span class="at">y =</span> <span class="st">"Density"</span>)</span>
+<span id="cb98-16"><a href="#cb98-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-17"><a href="#cb98-17" aria-hidden="true" tabindex="-1"></a><span class="co">#dnorm(mean_value, )</span></span>
+<span id="cb98-18"><a href="#cb98-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-19"><a href="#cb98-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the actual data as a histogram</span></span>
+<span id="cb98-20"><a href="#cb98-20" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="fu">data.frame</span>(<span class="at">x =</span> users_average_loudness_data), <span class="fu">aes</span>(<span class="at">x =</span> x)) <span class="sc">+</span></span>
+<span id="cb98-21"><a href="#cb98-21" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), <span class="at">binwidth =</span> <span class="fu">diff</span>(<span class="fu">range</span>(users_average_loudness_data))<span class="sc">/</span><span class="dv">30</span>, <span class="at">fill =</span> <span class="st">"lightgray"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb98-22"><a href="#cb98-22" aria-hidden="true" tabindex="-1"></a> <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> mean_value, <span class="at">sd =</span> sd_value), <span class="at">geom =</span> <span class="st">"line"</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb98-23"><a href="#cb98-23" aria-hidden="true" tabindex="-1"></a> <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Normal Distribution vs. Actual Data"</span>, <span class="at">x =</span> <span class="st">"Value"</span>, <span class="at">y =</span> <span class="st">"Density"</span>)</span>
+<span id="cb98-24"><a href="#cb98-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the plot</span></span>
+<span id="cb98-25"><a href="#cb98-25" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="proyecto-spotify_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>A continuación, vamos a mapear un género para cada usuario segun el volumen promedio de las canciones que escuchan. Luego, vamos a comparar el género mapeado con el género percibido como favorito por el usuario. Para darle a cada usuario un genero estimado, vamos a asignarle aquel que tenga el volumen promedio más cercano al volumen promedio de las canciones que escucha segun la variable <code>average_genders_info</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>average_genres_loudness <span class="ot">&lt;-</span> average_genres_info <span class="sc">%&gt;%</span> <span class="fu">select</span>(name, loudness)</span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a><span class="co"># filter loudness &amp; favourite_gender</span></span>
+<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a>users_estimated_genre <span class="ot">&lt;-</span> DF <span class="sc">%&gt;%</span> <span class="fu">select</span>(average_loudness, favourite_gender)</span>
+<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a><span class="co"># We will add a new column to the dataframe with the estimated genre</span></span>
+<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a>users_estimated_genre<span class="sc">$</span>estimated_genre <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb99-7"><a href="#cb99-7" aria-hidden="true" tabindex="-1"></a>users_estimated_genre<span class="sc">$</span>estimated_genre <span class="ot">&lt;-</span> <span class="fu">sapply</span>(users_estimated_genre<span class="sc">$</span>average_loudness, <span class="cf">function</span>(x) {</span>
+<span id="cb99-8"><a href="#cb99-8" aria-hidden="true" tabindex="-1"></a>  genre <span class="ot">&lt;-</span> average_genres_loudness<span class="sc">$</span>name[<span class="fu">which.min</span>(<span class="fu">abs</span>(average_genres_loudness<span class="sc">$</span>loudness <span class="sc">-</span> x))]</span>
+<span id="cb99-9"><a href="#cb99-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(genre)</span>
+<span id="cb99-10"><a href="#cb99-10" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb99-11"><a href="#cb99-11" aria-hidden="true" tabindex="-1"></a>users_estimated_genre</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 260 × 3
+   average_loudness favourite_gender estimated_genre
+              &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;          
+ 1           -10.1  rock             rock           
+ 2            -4.74 rock             edm            
+ 3            -7.50 r&amp;b              rap            
+ 4            -5.82 r&amp;b              edm            
+ 5            -1.99 pop              edm            
+ 6            -6.16 r&amp;b              edm            
+ 7           -10.0  r&amp;b              rock           
+ 8            -6.35 r&amp;b              edm            
+ 9            -4.89 edm              edm            
+10            -6.06 r&amp;b              edm            
+# ℹ 250 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Now we will add a new column to the dataframe with 0 if the favourite is the same as the estimated, 1 if it is different</span></span>
+<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>users_estimated_genre<span class="sc">$</span>correct <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(users_estimated_genre<span class="sc">$</span>favourite_gender <span class="sc">==</span> users_estimated_genre<span class="sc">$</span>estimated_genre, <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Now we will calculate the percentage of correct estimations</span></span>
+<span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a>correct_estimations <span class="ot">&lt;-</span> <span class="fu">sum</span>(users_estimated_genre<span class="sc">$</span>correct <span class="sc">==</span> <span class="dv">0</span>) <span class="sc">/</span> <span class="fu">nrow</span>(users_estimated_genre) <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>El porcentaje de aciertos es 20.7692308, lo que significa que la percepción de las personas sobre su genero favorito es acertada en un 20% de los casos.</p>
+</section>
+<section id="caso-de-estudio-9" class="level2">
+<h2 class="anchored" data-anchor-id="caso-de-estudio-9">Caso de estudio 9</h2>
+<p>En este caso de estudio vamos a analizar la relación entre el la corrección de la percepción de género y la cantidad de canciones escuchadas por año. Para esto vamos a realizar un test de independencia entre estas dos variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(DF<span class="sc">$</span>listened_artists)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    5.0   394.5   917.5  1030.0  1523.0  4097.0 </code></pre>
+</div>
+</div>
+<p>En primer lugar, vamos a categorizar la cantidad de canciones escuchadas por año en 4 categorias: muy baja, baja, media, alta y muy alta.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Categoría</th>
+<th>Cantidad de canciones</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Muy baja</td>
+<td>0 - 100</td>
+</tr>
+<tr class="even">
+<td>Baja</td>
+<td>100 - 500</td>
+</tr>
+<tr class="odd">
+<td>Media</td>
+<td>500 - 1500</td>
+</tr>
+<tr class="even">
+<td>Alta</td>
+<td>1500 - 3000</td>
+</tr>
+<tr class="odd">
+<td>Muy alta</td>
+<td>3000 - 5000</td>
+</tr>
+</tbody>
+</table>
 </section>
 <section id="referenicas-bibliográficas" class="level2">
 <h2 class="anchored" data-anchor-id="referenicas-bibliográficas">Referenicas bibliográficas</h2>
@@ -921,6 +1339,7 @@ average_acousticness-average_energy       0.0000000</code></pre>
 <li>Hujran, O., Alikaj, A., Durrani, U., &amp; Al-Dmour, N. A. (2020). Big Data and its Effect on the Music Industry. ACM. https://doi.org/10.1145/3378936.3378957</li>
 <li>Álvarez, P., De Quirós, J. G., &amp; Baldassarri, S. (2023). RIADA: a Machine-Learning based infrastructure for recognising the emotions of Spotify songs. International Journal of Interactive Multimedia and Artificial Intelligence, 8(2), 168. https://doi.org/10.9781/ijimai.2022.04.002</li>
 <li>Spotify for Developers. (18 de enero de 2024). https://developer.spotify.com/</li>
+<li>Isaac Yu. loudness-wars-spotify. retrieved from https://github.com/isaackwy/loudness-wars-spotify</li>
 </ul>
 </section>
 </section>
