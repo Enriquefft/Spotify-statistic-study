@@ -21,7 +21,7 @@ Este es un estudio que recopila datos de múltiples estudiantes universitarios d
 -   [ ] Estudio de la variable 'danceability', variable cuantitativa continua que mide qué tan bailable es una canción.
 -   [ ] Relación entre la 'danceability' y la edad.
     -   Hipótesis: La 'danceability' promedio de las canciones escuchadas es mayor al 50% en personas entre las edades de 15 y 25 años.
--   [ ] ¿Cómo ha evolucionado la intensidad promedio de 
+-   [ ] ¿Cómo ha evolucionado la intensidad promedio de
 
 ## Obtención de datos
 
@@ -49,10 +49,23 @@ Para obtener los IDs de usuario y los datos, necesitaremos crear un sistema de a
 
 ## Integrantes
 
-+---------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------+
-| ![Arturo Magno](https://avatars.githubusercontent.com/u/104233007?v=4){alt="Arturo Magno"}\ | ![Valentin Quezada](https://avatars.githubusercontent.com/u/91209653?v=4){alt="Valentin Quezada"}\ | ![Enrique Flores](https://avatars.githubusercontent.com/u/60308719?v=4){alt="Enrique Flores"}\ |
-| [Arturo Magno](https://github.com/xkal1bur)                                                 | [Valentin Quezada](https://github.com/ValentinQuezada)                                             | [Enrique Flores](https://github.com/Enriquefft)                                                |
-+---------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------+
+<table style="width:99%;">
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 34%" />
+<col style="width: 32%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><p><img src="https://avatars.githubusercontent.com/u/104233007?v=4" alt="Arturo Magno" /><br />
+<a href="https://github.com/xkal1bur">Arturo Magno</a></p></td>
+<td><p><img src="https://avatars.githubusercontent.com/u/91209653?v=4" alt="Valentin Quezada" /><br />
+<a href="https://github.com/ValentinQuezada">Valentin Quezada</a></p></td>
+<td><p><img src="https://avatars.githubusercontent.com/u/60308719?v=4" alt="Enrique Flores" /><br />
+<a href="https://github.com/Enriquefft">Enrique Flores</a></p></td>
+</tr>
+</tbody>
+</table>
 
 ## Variables utilizadas en el estudio
 
@@ -62,35 +75,23 @@ La cantidad mínima de datos que necesitamos son 200 entradas, pero para un estu
 
 #### Variables primarias
 
-+-------------------------------+-----------------------+------------------------------------------------------------+
 | Variable                      | Tipo                  | Restricciones                                              |
-+===============================+=======================+============================================================+
+|-------------------|-----------------|------------------------------------|
 | Centro de estudio             | Nominal categórica    | Ninguna                                                    |
-+-------------------------------+-----------------------+------------------------------------------------------------+
 | Edad                          | Cuantitativa discreta | \~ \[15, 40\]                                              |
-+-------------------------------+-----------------------+------------------------------------------------------------+
 | Distrito                      | Nominal categórica    | Distritos de Lima, Perú                                    |
-+-------------------------------+-----------------------+------------------------------------------------------------+
 | Variedad musical percibida    | Nominal ordinal       | {Ninguna (1), Baja (2), Media (3), Alta (4), Muy alta (5)} |
-+-------------------------------+-----------------------+------------------------------------------------------------+
 | Géneros preferidos percibidos | Nominal categórica    | Géneros musicales de Spotify                               |
-+-------------------------------+-----------------------+------------------------------------------------------------+
 
 #### Variables secundarias
 
-+---------------------------------------------------------+-------------------+----------------+
 | Variable                                                | Tipo              | Restricciones  |
-+=========================================================+===================+================+
+|----------------------------------------|----------------|----------------|
 | 'Danceability' promedio de canciones favoritas          | Numérica continua | \[0, 1\]       |
-+---------------------------------------------------------+-------------------+----------------+
 | Característica acústica promedio de canciones favoritas | Numérica continua | \[0, 1\]       |
-+---------------------------------------------------------+-------------------+----------------+
 | Nivel de energía promedio de canciones favoritas        | Numérica continua | \[0, 1\]       |
-+---------------------------------------------------------+-------------------+----------------+
 | Intensidad de volumen promedio de canciones favoritas   | Numérica continua | \[-60, 0\] DB  |
-+---------------------------------------------------------+-------------------+----------------+
 | Artistas escuchados por año                             | Numérica continua | $\mathbb{R}^+$ |
-+---------------------------------------------------------+-------------------+----------------+
 
 ```{r, message=FALSE, warning=FALSE}
 librerias <- c("dplyr", "ggplot2", "reshape2", "readr", "randtests", "tidyverse", "lmtest", "purrr", "nortest", "ggcorrplot")
@@ -108,8 +109,6 @@ head(DF)
 
 variable_name <- names(DF)
 ```
-
-
 
 # Caso de Estudio #1
 
@@ -246,13 +245,11 @@ Vemos que las varianzas son diferentes.
 
 Estamos en el caso de: no se conoce $\sigma_1$ y $\sigma\_2$ pero se sabe que son diferentes.
 
-$$ 
-\begin{align*}
+\$\$ \begin{align*}
 & T(v) = \frac{\overline{X}_1 - \overline{X}_2 - (\mu_1 - \mu_2)} {\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}} \,,\text{ siendo} \\
 
 v &= \frac{\left(\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}\right)^2} {\frac{\left(\frac{s_1^2}{n_1}\right)^2}{n_1 - 1} + \frac{\left(\frac{s_2^2}{n_2}\right)^2}{n_2 - 1}} = \text{grados de libertad} 
-\end{align*} 
-$$
+\end{align*} \$\$
 
 Valores importantes
 
@@ -326,9 +323,10 @@ Y corremos el *runs.test* sobre la columna 'Age' para hallar el $p-valor$:
 ```{r}
 runs.test(DF$age)
 ```
+
 ## Caso de estudio 5 (Regresión Lineal Múltiple)
 
-Ahora analizaremos si es útil el modelo de regresión múltiple para predecir la edad de una persona a partir de las variables **danceability**, **energy** y **acousticness**.
+Ahora analizaremos si es útil el modelo de regresión múltiple para predecir la edad de una persona a partir de las variables **average_danceability**, **average_energy** y **average_acousticness**.
 
 Agrupo los datos en un data frame para hacer mejor el análisis de regresión múltiple y realizamos el modelo de regresión múltiple.
 
@@ -336,7 +334,6 @@ Agrupo los datos en un data frame para hacer mejor el análisis de regresión m�
 df_caso_5 <- DF %>% select(age, average_danceability, average_energy, average_acousticness)
 regression <- lm(age ~ average_danceability + average_energy + average_acousticness, data = df_caso_5)
 ```
-
 
 Para empezar a visualizar cómo se relacionan, graficamos un heatmap de correlación.
 
@@ -367,9 +364,7 @@ b_3
 
 ```
 
-
 Graficamos las rectas de regresión múltiple y las comparamos con las rectas de regresión simple.
-
 
 ```{r, results='hold'}
 par(mfrow=c(1,3))
@@ -386,6 +381,7 @@ abline(lm(df_caso_5$age ~ df_caso_5$average_acousticness), col="blue")
 legend("topleft", legend=c("Regresión múltiple", "Regresión simple"), col=c("red", "blue"), lty=1:1, cex=1)
 par(mfrow=c(1,1))
 ```
+
 De manera individual, las rectas son diferentes, pero en general siguen la misma tendencia. Para ver la utilidad del modelo de regresión múltiple, analizamos los errores usando la independencia, la normalidad y la homocedasticidad.
 
 ### Analizamos los errores
@@ -455,9 +451,7 @@ $$
 
 Probaremos si $\beta_0, \beta_1, \beta_2, \beta_3$ son significativamente diferentes de cero. Para esto nos basta con ver el **p-value** de cada coeficiente en el modelo que nos da R.
 
-$$\mathsf{\text{Test de significancia de coeficientes}} $$
-$$Ho: \beta_0 = 0 \qquad \beta_1 = 0 \qquad \beta_2 = 0 \qquad \beta_3 = 0 $$
-$$Ha: \beta_0 \neq 0 \qquad \beta_1 \neq 0 \qquad \beta_2 \neq 0 \qquad \beta_3 \neq 0$$
+$$\mathsf{\text{Test de significancia de coeficientes}} $$ $$Ho: \beta_0 = 0 \qquad \beta_1 = 0 \qquad \beta_2 = 0 \qquad \beta_3 = 0 $$ $$Ha: \beta_0 \neq 0 \qquad \beta_1 \neq 0 \qquad \beta_2 \neq 0 \qquad \beta_3 \neq 0$$
 
 ```{r}
 summary(regression)
@@ -467,9 +461,7 @@ Observamos que los **p-value** de los coeficientes $\beta_0, \beta_1, \beta_2, \
 
 #### Prueba de significancia del modelo
 
-$$\mathsf{\text{Test de significancia del modelo}} $$
-$$Ho: \text{El modelo no es significativo} $$
-$$Ha: \text{El modelo es significativo}$$
+$$\mathsf{\text{Test de significancia del modelo}} $$ $$Ho: \text{El modelo no es significativo} $$ $$Ha: \text{El modelo es significativo}$$
 
 Vemos también que el **p-value** del modelo es menor que 0.05, por lo que rechazamos la hipótesis nula y concluimos que el modelo es significativamente diferente de cero.
 
@@ -482,7 +474,6 @@ Un ejemplo de la aplicación de esto es: Si tenemos la canción *Blinding Lights
 ```{r}
 round(b_0 + b_1 * 0.514 + b_2 * 0.73 + b_3 * 0.001)
 ```
-
 
 ## Caso de estudio 6 (Regresión Lineal Simple)
 
@@ -502,6 +493,7 @@ Podemos observar que a medida que las personas se hacen mayores, la cantidad de 
 ```{r}
 summary(regression2)
 ```
+
 El **p-value** del coeficiente de la edad, del intercepto y del modelo son mayores que 0.05, por lo que fallamos en rechazar la hipótesis nula.
 
 ### Conclusión de Caso de estudio 6 (Regresión Lineal Simple)
@@ -522,11 +514,11 @@ an_sdf3 <- aov(values ~ ind, data = sdf3)
 summary(an_sdf3)
 ```
 
-| FUENTE       | GL      | SC          | CM         | FO      | P VALOR |
-|--------------|---------|-------------|------------|---------|---------|
-| TRATAMIENTOS | k-1=2   | SCTr=43.47  | CMTr=21.737| Fo=618.4| P=2e-161|
-| ERROR        | N-k=777 | SCE=27.31   | CME=0.035  |         |         |
-| TOTAL        | N-1=779 | SCT=70.78   |            |         |         |
+| FUENTE       | GL      | SC         | CM          | FO       | P VALOR  |
+|--------------|---------|------------|-------------|----------|----------|
+| TRATAMIENTOS | k-1=2   | SCTr=43.47 | CMTr=21.737 | Fo=618.4 | P=2e-161 |
+| ERROR        | N-k=777 | SCE=27.31  | CME=0.035   |          |          |
+| TOTAL        | N-1=779 | SCT=70.78  |             |          |          |
 
 ```{r}
 pf(618.4, 2, 777, lower.tail = FALSE)
@@ -540,15 +532,11 @@ Para analizar mejor las diferencias, realizamos un test de Tukey.
 TukeyHSD(an_sdf3)
 ```
 
--0.0099 < energy-danceability < 0.0673
--0.5245 < acousticness-danceability < -0.4472
--0.5532 < acousticness-energy < -0.4759
+-0.0099 \< energy-danceability \< 0.0673 -0.5245 \< acousticness-danceability \< -0.4472 -0.5532 \< acousticness-energy \< -0.4759
 
-energy = danceability
-acousticness < danceability
-acousticness < energy
+energy = danceability acousticness \< danceability acousticness \< energy
 
-El órden más apropiado es **acousticness** < **danceability** = **energy**
+El órden más apropiado es **acousticness** \< **danceability** = **energy**
 
 ### Conclusión de Caso de estudio 7
 
@@ -556,16 +544,15 @@ Concluimos que en spotify son más escuchadas las canciones con mayor danceabili
 
 Es decir, canciones como: *Blinding Lights* de The Weeknd, con **danceability** 0.514, **energy** 0.73 y **acousticness** 0.001, son más escuchadas que canciones como: *The Night We Met* de Lord Huron, con **danceability** 0.351, **energy** 0.405 y **acousticness** 0.86.
 
-
 ## Caso de estudio 8: experimento de percepción de géneros
 
 En este experimento vamos a comparar como es que el genero percibido como favorito de las personas se relaciona con el volumen e intensidad de sus canciones escuchadas. En un estudio reciente se hablo de la "Guerra del volumen" y como es que existe una correlación entre popularidad de una cancion y su intensidad promedio. Nosotros vamos a utilizar la correlación entre intensidad y genero para responder a las siguientes preguntas:
 
-- Que genero es el que tiene mayor energía promedio?
-- Que genero es el que tiene mayor volumen promedio?
+-   Que genero es el que tiene mayor energía promedio?
 
-- Que tan acertada es la percepción de las personas sobre su genero favorito?
-	Para este ultimo vamos a extraer la intensidad promedio de los generos más populares del siguiente [estudio]( https://github.com/isaackwy/loudness-wars-spotify)
+-   Que genero es el que tiene mayor volumen promedio?
+
+-   Que tan acertada es la percepción de las personas sobre su genero favorito? Para este ultimo vamos a extraer la intensidad promedio de los generos más populares del siguiente [estudio](https://github.com/isaackwy/loudness-wars-spotify)
 
 Los generos que seran considerados en este estudio son los siguientes:
 
@@ -602,20 +589,16 @@ average_genres_info <- data.frame(
 )
 ```
 
-
-
-| name              | loudness           |   energy |
-|-------------------|--------------------|----------|
-| Rock               | `r rock$loudness`   | `r rock$energy` |
-| R&B                | `r r_and_b$loudness`| `r r_and_b$energy` |
-| Pop                | `r pop$loudness`    | `r pop$energy` |
-| EDM                | `r edm$loudness`    | `r edm$energy` |
-| Latin              | `r latin$loudness`  | `r latin$energy` |
-| Rap                | `r rap$loudness`    | `r rap$energy` |
+| name  | loudness             | energy             |
+|-------|----------------------|--------------------|
+| Rock  | `r rock$loudness`    | `r rock$energy`    |
+| R&B   | `r r_and_b$loudness` | `r r_and_b$energy` |
+| Pop   | `r pop$loudness`     | `r pop$energy`     |
+| EDM   | `r edm$loudness`     | `r edm$energy`     |
+| Latin | `r latin$loudness`   | `r latin$energy`   |
+| Rap   | `r rap$loudness`     | `r rap$energy`     |
 
 Aqui podemos observar que, en promedio, el genero con mayor enería y volumen es el EDM, seguido por el Rock, vamos a ver si esto concuerda con la data que tenemos.
-
-
 
 ```{r}
 
@@ -680,23 +663,24 @@ energy_aov_data
 loudness_aov_data
 
 ```
+
 AOV loudness
 
-| FUENTE       | GL      | SC     | CM     | FO     | P VALOR |
-|--------------|---------|--------|--------|--------|---------|
+| FUENTE       | GL      | SC                         | CM                         | FO                            | P VALOR                       |
+|------------|------------|------------|------------|------------|------------|
 | TRATAMIENTOS | `r k-1` | `r loudness_aov_data$SCTr` | `r loudness_aov_data$CMTr` | `r loudness_aov_data$f_value` | `r loudness_aov_data$p_value` |
-| ERROR        | `r n-k` | `r loudness_aov_data$SCE` | `r loudness_aov_data$CME` |        |         |
-| TOTAL        | `r n-1` | `r loudness_aov_data$SCT` |        |        |         |
+| ERROR        | `r n-k` | `r loudness_aov_data$SCE`  | `r loudness_aov_data$CME`  |                               |                               |
+| TOTAL        | `r n-1` | `r loudness_aov_data$SCT`  |                            |                               |                               |
 
 AOV energy
 
-| FUENTE       | GL      | SC     | CM     | FO     | P VALOR |
-|--------------|---------|--------|--------|--------|---------|
+| FUENTE       | GL      | SC                       | CM                       | FO                          | P VALOR                     |
+|------------|------------|------------|------------|------------|------------|
 | TRATAMIENTOS | `r k-1` | `r energy_aov_data$SCTr` | `r energy_aov_data$CMTr` | `r energy_aov_data$f_value` | `r energy_aov_data$p_value` |
-| ERROR        | `r n-k` | `r energy_aov_data$SCE` | `r energy_aov_data$CME` |        |         |
-| TOTAL        | `r n-1` | `r energy_aov_data$SCT` |        |        |         |
+| ERROR        | `r n-k` | `r energy_aov_data$SCE`  | `r energy_aov_data$CME`  |                             |                             |
+| TOTAL        | `r n-1` | `r energy_aov_data$SCT`  |                          |                             |                             |
 
-H0 : $\mu_1 = \mu_2 = \mu_3$  
+H0 : $\mu_1 = \mu_2 = \mu_3$\
 Ha: $\exists i \neq j$ tal que $\mu_i \neq \mu_j$
 
 Dado que los **p-value** son `r loudness_aov_data$p_value` y `r energy_aov_data$p_value`, ambos menores que 0.05, rechazamos la hipótesis nula. Concluimos que hay diferencias significativas entre los generos en cuanto a la intensidad y volumen de las canciones escuchadas. Sin embargo, las diferencias de loudness son significativamente menores que las diferencias de energía, esto se debe a que estan en una escala logaritmica y tambien debido a que estamos estudiando generos modernos, los cuales, segun la fuente original, tienen un loudness promedio muy alto y similar. En caso de haber estudiado generos como el jazz o la música clásica, las diferencias de loudness hubieran sido más significativas.
@@ -713,7 +697,7 @@ highest_energy_genre
 
 Dado que observamos que las diferencias de loudness son significativamente menores que las diferencias de energía, vamos a analizar si es que esta sigue una distribución normal con una prueba de Kolmogorov Smirnov.
 
-$H_0$: Los datos siguen una distribución normal  
+$H_0$: Los datos siguen una distribución normal\
 $H_a$: Los datos no siguen una distribución normal
 
 ```{r}
@@ -721,16 +705,16 @@ users_average_loudness_data <- DF$average_loudness
 ks_p_value <- ks.test(users_average_loudness_data, "pnorm", mean(users_average_loudness_data), sd(users_average_loudness_data))$p.value
 ks_p_value
 ```
+
 Dado que el **p-value** es `r ks_p_value`, que es menor que 0.05, rechazamos la hipótesis nula. Concluimos que los datos no siguen una distribución normal.
 
 En la prueba de Kolmogorov Smirnov realizada existieron valores repetidos, por lo que para confirmar este resultado vamos a realizar una prueba de Anderson-Darling para verificar si los datos siguen una distribución normal y la acompañaremos con un histograma.
 
-
 ```{r}
 ad.test(users_average_loudness_data)
 ```
-Nuevamente, el **p-value** es menor que 0.05, por lo que rechazamos la hipótesis nula. Concluimos que los datos no siguen una distribución normal.
 
+Nuevamente, el **p-value** es menor que 0.05, por lo que rechazamos la hipótesis nula. Concluimos que los datos no siguen una distribución normal.
 
 ```{r}
 
@@ -755,13 +739,7 @@ p
 
 ```
 
-
-
-
-A continuación, vamos a mapear un género para cada usuario segun el volumen promedio de las canciones que escuchan. Luego, vamos a comparar el género mapeado con el género percibido como favorito por el usuario.
-Para darle a cada usuario un genero estimado, vamos a asignarle aquel que tenga el volumen promedio más cercano al volumen promedio de las canciones que escucha segun la variable `average_genders_info`
-
-
+A continuación, vamos a mapear un género para cada usuario segun el volumen promedio de las canciones que escuchan. Luego, vamos a comparar el género mapeado con el género percibido como favorito por el usuario. Para darle a cada usuario un genero estimado, vamos a asignarle aquel que tenga el volumen promedio más cercano al volumen promedio de las canciones que escucha segun la variable `average_genders_info`
 
 ```{r}
 average_genres_loudness <- average_genres_info %>% select(name, loudness)
@@ -785,25 +763,23 @@ correct_estimations <- sum(users_estimated_genre$correct == 0) / nrow(users_esti
 
 El porcentaje de aciertos es `r correct_estimations`, lo que significa que la percepción de las personas sobre su genero favorito es acertada en un 20% de los casos.
 
-
 ## Caso de estudio 9
 
-En este caso de estudio vamos a analizar la relación entre el la corrección de la percepción de género y la cantidad de canciones escuchadas por año.
-Es posible que un usuario tenga más claro su género favorito si escucha menos canciones por año.
-Para esto vamos a realizar un test de independencia entre estas dos variables.
+En este caso de estudio vamos a analizar la relación entre el la corrección de la percepción de género y la cantidad de canciones escuchadas por año. Es posible que un usuario tenga más claro su género favorito si escucha menos canciones por año. Para esto vamos a realizar un test de independencia entre estas dos variables.
 
 ```{r}
 summary(DF$listened_artists)
 ```
+
 En primer lugar, vamos a categorizar la cantidad de canciones escuchadas por año en 4 categorias: muy baja, baja, media, alta y muy alta.
 
-| Categoría | Cantidad de canciones  |
-|-----------|------------------------|
-| Muy baja  | 0 - 100                |
-| Baja      | 100 - 500              |
-| Media     | 500 - 1500             |
-| Alta      | 1500 - 3000            |
-| Muy alta  | 3000 - 5000            |
+| Categoría | Cantidad de canciones |
+|-----------|-----------------------|
+| Muy baja  | 0 - 100               |
+| Baja      | 100 - 500             |
+| Media     | 500 - 1500            |
+| Alta      | 1500 - 3000           |
+| Muy alta  | 3000 - 5000           |
 
 ```{r}
 # generate a data frame with the correct estimations and the listened artists
@@ -836,8 +812,8 @@ correct_estimations_listened_artists_p <- chisq.test(correct_estimations_listene
 
   
 ```
-$H_0$: La cantidad de canciones escuchadas por año es independiente de la corrección de la percepción de género
-$H_a$: La cantidad de canciones escuchadas por año no es independiente de la corrección de la percepción de género
+
+$H_0$: La cantidad de canciones escuchadas por año es independiente de la corrección de la percepción de género $H_a$: La cantidad de canciones escuchadas por año no es independiente de la corrección de la percepción de género
 
 El **p-value** es `r correct_estimations_listened_artists_p`, que es mayor que 0.05, por lo que aceptamos la hipótesis nula. Concluimos que la cantidad de canciones escuchadas por año es independiente de la corrección de la percepción de género.
 
@@ -861,24 +837,21 @@ district_genre_p <- chisq.test(district_genre_tab)$p.value
 district_genre_p 
 ```
 
-$H_0$: La ubicación es independiente del genero preferido
-$H_a$: La ubicación no es independiente del genero preferido
+$H_0$: La ubicación es independiente del genero preferido $H_a$: La ubicación no es independiente del genero preferido
 
 El **p-value** es `r study_genre_p` para el centro de estudio y `r district_genre_p` para el distrito, ambos mayores que 0.05, por lo que aceptamos la hipótesis nula. Concluimos que la ubicación es independiente del genero preferido. Sin embargo, es importante mencionar que el **p-value** para el distrito es muy cercano a 0.05, por lo que no podemos estar completamente seguros de que la ubicación sea independiente del genero preferido. Por ello, vamos a realizar un grafico para visualizar mejor la data.
 
 ```{r}
 
 
-district_genre_df
-# remove the categories with less than 10 observations
-district_genre_df <- district_genre_df %>% filter(distrito != "Otros", distrito != "No especifica")
+district_genre_df <- district_genre_df %>%
+  group_by(distrito) %>%
+  filter(n() < 9)
 
 model.matrix(~0+., data=district_genre_df) %>% 
   cor(use="pairwise.complete.obs") %>% 
   ggcorrplot(show.diag=FALSE, type="lower", lab=TRUE, lab_size=2)
 ```
-
-
 
 **Conclusión:** Como el $p-valor=0.4139>\alpha=0.05$, aceptamos Ho con un 5% de significación. Es decir, podemos afirmar que la muestra es aleatoria (en relación a las edades) con un 95% de confianza.
 
@@ -887,8 +860,8 @@ model.matrix(~0+., data=district_genre_df) %>%
 'Energy' es una variable que mide el nivel enérgico promedio de las canciones que escuchan los encuestados. Haciendo un resumen de la variable:
 
 ```{r}
-summary(DF$energy)
-sd(DF$energy)
+summary(DF$average_energy)
+sd(DF$average_energy)
 ```
 
 Vemos que su media es aproximadamente 0.6934 y su mediana 0.7130. Se plantea entonces la siguiente cuestión: ¿será posible afirmar que la variable 'Energy' de la base de datos sigue una normal de media 0.70 y desviación estándar 0.10?
@@ -896,24 +869,24 @@ Vemos que su media es aproximadamente 0.6934 y su mediana 0.7130. Se plantea ent
 Planteamos como hipótesis las siguientes:
 
 $$
-Ho: \text{Los datos de 'energy' siguen una Normal con media 0.70 y desviación 0.10}
+Ho: \text{Los datos de 'average_energy' siguen una Normal con media 0.70 y desviación 0.10}
 $$
 
 $$
-Ha: \text{Los datos de 'energy' no siguen una normal con media 0.70 y desviación 0.10}
+Ha: \text{Los datos de 'average_energy' no siguen una normal con media 0.70 y desviación 0.10}
 $$
 
-Para ello, corremos el *ks.test* en la variable 'energy':
+Para ello, corremos el *ks.test* en la variable 'average_energy':
 
 ```{r}
-ks.test(DF$energy,pnorm,mean=0.70,sd=0.10)
+ks.test(DF$average_energy,pnorm,mean=0.70,sd=0.10)
 ```
 
-**Conclusión:** Como el $p-valor=0<\alpha=0.05$, rechazamos Ho con un 5% de significación. Es decir, podemos afirmar que los datos de 'energy' no siguen una normal con media 0.70 y desviación 0.10 con un 95% de confianza.
+**Conclusión:** Como el $p-valor=0<\alpha=0.05$, rechazamos Ho con un 5% de significación. Es decir, podemos afirmar que los datos de 'average_energy' no siguen una normal con media 0.70 y desviación 0.10 con un 95% de confianza.
 
 ## Referencias bibliográficas
 
 -   Hujran, O., Alikaj, A., Durrani, U., & Al-Dmour, N. A. (2020). Big Data and its Effect on the Music Industry. ACM. https://doi.org/10.1145/3378936.3378957
 -   Álvarez, P., De Quirós, J. G., & Baldassarri, S. (2023). RIADA: a Machine-Learning based infrastructure for recognising the emotions of Spotify songs. International Journal of Interactive Multimedia and Artificial Intelligence, 8(2), 168. https://doi.org/10.9781/ijimai.2022.04.002
 -   Spotify for Developers. (18 de enero de 2024). https://developer.spotify.com/
-- Isaac Yu. loudness-wars-spotify. retrieved from https://github.com/isaackwy/loudness-wars-spotify
+-   Isaac Yu. loudness-wars-spotify. retrieved from https://github.com/isaackwy/loudness-wars-spotify
