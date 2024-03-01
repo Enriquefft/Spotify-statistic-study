@@ -8,7 +8,7 @@ editor: visual
 
 Proyecto realizado para el curso de Estadística y Probabilidades II: @Utec
 
-## Relevance
+## Relevancia
 
 -   **Aplicaciones de datos en IA:** El uso de Inteligencia Artificial (IA) en Spotify incluye el reconocimiento de emociones en canciones, lo que sirve para mejorar listas de reproducción personalizadas y la experiencia general del usuario. Al analizar elementos como el tono, el tempo y la letra de una canción, Spotify puede determinar el estado de ánimo que transmite y sugerir música que se alinee con las emociones o el estado mental del usuario. Por ejemplo, si un usuario tiende a escuchar canciones tranquilas y melódicas por la noche, Spotify puede identificar esta tendencia y recomendar canciones similares durante ese momento del día. Además, Spotify utiliza algoritmos de aprendizaje automático en su sistema de recomendación. Estos algoritmos consideran factores como la popularidad de la canción, las tendencias musicales actuales y lo que están escuchando los usuarios con gustos similares. Esto permite a Spotify ofrecer recomendaciones altamente personalizadas.
 
@@ -325,12 +325,57 @@ legend("topright", legend = c("T(x,v)", "respuesta de la a.", "respuesta de la b
 
 # Caso de estudio #4
 
+Consideremos la muestra de encuestados utilizada. ¿Será posible afirmar a partir de la edad de los encuestados que la muestra escogida es aleatoria con un nivel de confianza del 95%?
+
+Planteamos como hipótesis las siguientes:
+
+$$
+Ho: \text{la muestra es aleatoria}
+$$
+
+$$
+Ha: \text{la muestra no es aleatoria}
+$$
+
+Y corremos el *runs.test* sobre la columna 'Age' para hallar el $p-valor$:
+
 ```{r}
 library("randtests")
-runs.test(DF$Edad)
+runs.test(DF$age)
 ```
 
-## Referenicas bibliográficas
+**Conclusión:** Como el $p-valor=0.4139>\alpha=0.05$, aceptamos Ho con un 5% de significación. Es decir, podemos afirmar que la muestra es aleatoria (en relación a las edades) con un 95% de confianza.
+
+# Caso de estudio #5
+
+'Energy' es una variable que mide el nivel enérgico promedio de las canciones que escuchan los encuestados. Haciendo un resumen de la variable:
+
+```{r}
+summary(DF$energy)
+sd(DF$energy)
+```
+
+Vemos que su media es aproximadamente 0.6934 y su mediana 0.7130. Se plantea entonces la siguiente cuestión: ¿será posible afirmar que la variable 'Energy' de la base de datos sigue una normal de media 0.70 y desviación estándar 0.10?
+
+Planteamos como hipótesis las siguientes:
+
+$$
+Ho: \text{Los datos de 'energy' siguen una Normal con media 0.70 y desviación 0.10}
+$$
+
+$$
+Ha: \text{Los datos de 'energy' no siguen una normal con media 0.70 y desviación 0.10}
+$$
+
+Para ello, corremos el *ks.test* en la variable 'energy':
+
+```{r}
+ks.test(DF$energy,pnorm,mean=0.70,sd=0.10)
+```
+
+**Conclusión:** Como el $p-valor=0<\alpha=0.05$, rechazamos Ho con un 5% de significación. Es decir, podemos afirmar que los datos de 'energy' no siguen una normal con media 0.70 y desviación 0.10 con un 95% de confianza.
+
+## Referencias bibliográficas
 
 -   Hujran, O., Alikaj, A., Durrani, U., & Al-Dmour, N. A. (2020). Big Data and its Effect on the Music Industry. ACM. https://doi.org/10.1145/3378936.3378957
 -   Álvarez, P., De Quirós, J. G., & Baldassarri, S. (2023). RIADA: a Machine-Learning based infrastructure for recognising the emotions of Spotify songs. International Journal of Interactive Multimedia and Artificial Intelligence, 8(2), 168. https://doi.org/10.9781/ijimai.2022.04.002
