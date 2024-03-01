@@ -1,0 +1,249 @@
+---
+title: "para_proyecto_final_xd"
+format: html
+editor: source
+---
+
+```{r, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(reshape2)
+library(lmtest)
+library(readr)
+library(tidyverse)
+```
+
+```{r}
+DF <- read_csv("csvs_proyecto/data_final.csv", col_types = cols(.default = col_guess()))
+```
+
+## Caso de estudio 1 (Regresión Lineal Múltiple)
+
+Ahora analizaremos si es útil el modelo de regresión múltiple para predecir la edad de una persona a partir de las variables **danceability**, **energy** y **acousticness**.
+
+Agrupo los datos en un data frame para hacer mejor el análisis de regresión múltiple y realizamos el modelo de regresión múltiple.
+
+```{r}
+df <- DF %>% select(age, danceability, energy, acousticness)
+regression <- lm(age ~ danceability + energy + acousticness, data = df)
+```
+
+
+Para empezar a visualizar cómo se relacionan, graficamos un heatmap de correlación.
+
+```{r}
+cor_matrix <- cor(df[,c("age", "danceability", "energy", "acousticness")])
+melted_cor_matrix <- melt(cor_matrix)
+ggplot(melted_cor_matrix, aes(x=Var1, y=Var2, fill=value)) +
+  geom_tile() +
+  theme_minimal() + 
+  scale_fill_gradient2(low="blue", high="red", mid="white", 
+                       midpoint=0, limit=c(-1,1), space="Lab", 
+                       name="Correlación") +
+  theme(axis.text.x = element_text(angle=45, hjust=1)) +
+  labs(x="", y="", title="Heatmap de correlación") +
+  geom_text(aes(label=round(value, 2)), size=4) 
+```
+
+A priori, no parece haber una correlación fuerte entre las variables, por lo que el modelo de regresión múltiple podría ser útil.
+
+Extraemos los coeficientes de la regresión múltiple para graficar las rectas de regresión simple.
+
+```{r}
+b_0 <- as.numeric(coef(regression)["(Intercept)"])
+b_1 <- as.numeric(coef(regression)["danceability"])
+b_2 <- as.numeric(coef(regression)["energy"])
+b_3 <- as.numeric(coef(regression)["acousticness"])
+```
+
+
+Graficamos las rectas de regresión múltiple y las comparamos con las rectas de regresión simple.
+
+
+```{r, results='hold'}
+par(mfrow=c(1,3))
+plot(df$danceability, df$age)
+abline(b_0, b_1, col="red")
+abline(lm(df$age ~ df$danceability), col="blue")
+plot(df$energy, df$age)
+abline(b_0, b_2, col="red")
+abline(lm(df$age ~ df$energy), col="blue")
+title("Regresión múltiple")
+plot(df$acousticness, df$age)
+abline(b_0, b_3, col="red")
+abline(lm(df$age ~ df$acousticness), col="blue")
+legend("topleft", legend=c("Regresión múltiple", "Regresión simple"), col=c("red", "blue"), lty=1:1, cex=1)
+par(mfrow=c(1,1))
+```
+De manera individual, las rectas son diferentes, pero en general siguen la misma tendencia. Para ver la utilidad del modelo de regresión múltiple, analizamos los errores usando la independencia, la normalidad y la homocedasticidad.
+
+### Analizamos los errores
+
+```{r}
+errores <- regression$residuals
+```
+
+#### Test de independencia
+
+$$
+\mathsf{\text{Test de Durwin Watson}} \\
+Ho: \text{Los errores son independientes} \\
+Ha: \text{Los errores no son independientes}
+$$
+
+```{r}
+dw <- dwtest(regression,alternative ="two.sided",iterations = 1000)
+dw
+```
+
+El **p-value** es `r dw$p.value`, que es mayor que 0.05, además DW está entre 1.5 y 2.5, por lo que fallamos en rechazar la hipótesis nula. Los errores son independientes.
+
+#### Test de normalidad
+
+$$
+\mathsf{\text{Test de Kolmogorov Smirnov}}\\
+Ho: \text{Los errores tienen distribución normal, con media cero}\\
+Ha: \text{Los errores no tienen distribución normal, con media cero}
+$$
+
+```{r}
+ks <- ks.test(errores, "pnorm", mean(errores), sd(errores))
+ks
+```
+
+El **p-value** es `r ks$p.value`, que es mayor que 0.05, por lo que fallamos en rechazar la hipótesis nula. Los errores tienen distribución normal, con media cero.
+
+#### Test de homocedasticidad
+
+$$
+\mathsf{\text{Test de Breusch Pagan}} \\
+Ho: \text{Los errores tienen varianza constante (homocedasticidad)} \\
+Ha: \text{Los errores no tienen varianza constante (heterocedasticidad)}
+$$
+
+```{r}
+bp <- bptest(regression)
+bp
+```
+
+El **p-value** es `r bp$p.value`, que es mayor que 0.05, por lo que fallamos en rechazar la hipótesis nula. Los errores tienen varianza constante (homocedasticidad).
+
+#### Conclusión de análisis de errores
+
+Los errores son independientes, tienen distribución normal y varianza constante, por lo que el modelo de regresión múltiple es útil para predecir la edad de una persona a partir de las variables **danceability**, **energy** y **acousticness**.
+
+### Prueba de hipótesis en la regresión múltiple
+
+Ahora probaremos la significancia de los coeficientes de la regresión múltiple. La ecuación es:
+
+$$
+\text{age} = \beta_0 + \beta_1 \times \text{danceability} + \beta_2 \times \text{energy} + \beta_3 \times \text{acousticness}
+$$
+
+#### Prueba de significancia de los coeficientes
+
+Probaremos si $\beta_0, \beta_1, \beta_2, \beta_3$ son significativamente diferentes de cero. Para esto nos basta con ver el **p-value** de cada coeficiente en el modelo que nos da R.
+
+$$\mathsf{\text{Test de significancia de coeficientes}} $$
+$$Ho: \beta_0 = 0 \qquad \beta_1 = 0 \qquad \beta_2 = 0 \qquad \beta_3 = 0 $$
+$$Ha: \beta_0 \neq 0 \qquad \beta_1 \neq 0 \qquad \beta_2 \neq 0 \qquad \beta_3 \neq 0$$
+
+```{r}
+summary(regression)
+```
+
+Observamos que los **p-value** de los coeficientes $\beta_0, \beta_1, \beta_2, \beta_3$ son todos menores que 0.05, por lo que rechazamos la hipótesis nula y concluimos que los coeficientes son significativamente diferentes de cero.
+
+#### Prueba de significancia del modelo
+
+$$\mathsf{\text{Test de significancia del modelo}} $$
+$$Ho: \text{El modelo no es significativo} $$
+$$Ha: \text{El modelo es significativo}$$
+
+Vemos también que el **p-value** del modelo es menor que 0.05, por lo que rechazamos la hipótesis nula y concluimos que el modelo es significativamente diferente de cero.
+
+### Conclusión de Caso de estudio 1
+
+Determinamos que nuestro modelo de regresión múltiple es útil para predecir la edad de una persona a partir de las variables **danceability**, **energy** y **acousticness**. Además, concluimos que todas las variables son significativas para predecir la edad de una persona.
+
+Un ejemplo de la aplicación de esto es: Si tenemos la canción *Blinding Lights* de The Weeknd, con **danceability** 0.514, **energy** 0.73 y **acousticness** 0.001, entonces la edad de la persona que escucha esta canción es:
+
+```{r}
+round(b_0 + b_1 * 0.514 + b_2 * 0.73 + b_3 * 0.001)
+```
+
+
+## Caso de estudio 2 (Regresión Lineal Simple)
+
+```{r}
+df2 <- select(DF, listened_artists, age)
+regression2 <- lm(df2$listened_artists ~ df2$age)
+regression2
+```
+
+```{r}
+plot(df2$age, df2$listened_artists)
+abline(lm(df2$listened_artists ~ df2$age), col="blue")
+```
+
+Podemos observar que a medida que las personas se hacen mayores, la cantidad de artistas que escuchan al año, no parece variar mucho.
+
+```{r}
+summary(regression2)
+```
+El **p-value** del coeficiente de la edad, del intercepto y del modelo son mayores que 0.05, por lo que fallamos en rechazar la hipótesis nula.
+
+### Conclusión de Caso de estudio 2 (Regresión Lineal Simple)
+
+Concluimos que el modelo de regresión simple no es útil para predecir la cantidad de artistas anuales que se escuchan a partir de la edad. No podemos decir que la edad influye en la cantidad de artistas anuales que se escuchan.
+
+Si a pesar de esto, se insistiera en usar el modelo, se puede decir que: una persona de 20 años escucha en promedio 1031 artistas al año.
+
+```{r}
+as.numeric(round(regression2$coefficients[1] + regression2$coefficients[2] * 20))
+```
+
+## Caso de estudio 3 (Diseño de experimentos)
+
+```{r}
+df %>% select(-age) %>% stack() -> sdf3
+an_sdf3 <- aov(values ~ ind, data = sdf3)
+summary(an_sdf3)
+```
+
+| FUENTE       | GL      | SC          | CM         | FO      | P VALOR |
+|--------------|---------|-------------|------------|---------|---------|
+| TRATAMIENTOS | k-1=2   | SCTr=43.47  | CMTr=21.737| Fo=618.4| P=2e-161|
+| ERROR        | N-k=777 | SCE=27.31   | CME=0.035  |         |         |
+| TOTAL        | N-1=779 | SCT=70.78   |            |         |         |
+
+```{r}
+pf(618.4, 2, 777, lower.tail = FALSE)
+```
+
+El **p-value** es `r pf(0.002, 2, 87, lower.tail = FALSE)`, que es muchisimo menor que 0.05, por lo que rechazamos la hipótesis nula. Concluimos que hay diferencias significativas entre las variables **danceability**, **energy** y **acousticness**. Debido al **p-value**, que es pequeño, no hay ninguna duda de que hay diferencias significativas.
+
+Para analizar mejor las diferencias, realizamos un test de Tukey.
+
+```{r}
+TukeyHSD(an_sdf3)
+```
+
+-0.0099 < energy-danceability < 0.0673
+-0.5245 < acousticness-danceability < -0.4472
+-0.5532 < acousticness-energy < -0.4759
+
+energy = danceability
+acousticness < danceability
+acousticness < energy
+
+El órden más apropiado es **acousticness** < **danceability** = **energy**
+
+### Conclusión de Caso de estudio 3
+
+Concluimos que en spotify son más escuchadas las canciones con mayor danceability y energy, con un acousticness más bajo.
+
+Es decir, canciones como: *Blinding Lights* de The Weeknd, con **danceability** 0.514, **energy** 0.73 y **acousticness** 0.001, son más escuchadas que canciones como: *The Night We Met* de Lord Huron, con **danceability** 0.351, **energy** 0.405 y **acousticness** 0.86.
+
+
+
